@@ -13,7 +13,7 @@ gem "puma", ">= 5.0"
 gem "bcrypt", "~> 3.1.7"
 gem 'enumerize', '~> 2.8', '>= 2.8.1'
 gem 'rack-cors'
-gem 'sidekiq', '~> 8.0', '>= 8.0.1'
+gem 'sidekiq', '~> 8.1'
 gem 'jwt'
 gem 'ruby-vips'
 gem "image_processing", "~> 1.2"
