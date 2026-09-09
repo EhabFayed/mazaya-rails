@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= content_for(:title) || "ألمنيوم مزايا — الأصل له اسم واحد" %></title>
+<meta name="description" content="<%= content_for(:description) %>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= content_for(:title) || "ألمنيوم مزايا — الأصل له اسم واحد" %>">
+<meta property="og:description" content="<%= content_for(:description) %>">
+<meta property="og:image" content="<%= request.base_url %>/assets/hero.jpg">
+<meta property="og:locale" content="ar_SA">
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<div class="page">
+<%= render "shared/header" %>
+<%= yield %>
+<%= render "shared/footer" %>
+</div>
+<script src="/site.js"></script>
+<%= content_for :page_script %>
+</body>
+</html>

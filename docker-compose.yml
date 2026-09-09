@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: tba_development
+      POSTGRES_DB: mazaya_development
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -23,16 +23,19 @@ services:
     depends_on:
       - db
       - redis
+    # host files are uid 1001; the image's default user is 1000
+    user: "1001:1001"
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/tba_development
+      DATABASE_URL: postgres://postgres:password@db:5432/mazaya_development
       REDIS_URL: redis://redis:6379/0
       RAILS_ENV: development
     volumes:
-      - .:/app
-      - storage:/app/storage
+      - .:/rails
+      - storage:/rails/storage
     ports:
       - "3000:3000"
-    command: ["bin/rails", "server", "-b", "0.0.0.0"]
+    entrypoint: []
+    command: ["bash", "-c", "bin/rails db:prepare && exec bin/rails server -b 0.0.0.0"]
 
   sidekiq:
     build: .
@@ -40,15 +43,17 @@ services:
     depends_on:
       - redis
       - db
+    user: "1001:1001"
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/tba_development
+      DATABASE_URL: postgres://postgres:password@db:5432/mazaya_development
       REDIS_URL: redis://redis:6379/0
       RAILS_ENV: development
     volumes:
-      - storage:/app/storage
+      - .:/rails
+      - storage:/rails/storage
+    entrypoint: []
     command: ["bundle", "exec", "sidekiq", "-r", "./config/environment.rb"]
 
 volumes:
   postgres_data:
   storage:
-
