@@ -79,10 +79,6 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  # One PostgreSQL database (DATABASE_URL) shared by the app and Solid Queue.
-  primary: &primary_production
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-  queue:
-    <<: *primary_production
-    migrations_paths: db/queue_migrate
+  # One PostgreSQL database (DATABASE_URL); Solid Queue tables live in it too.
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
