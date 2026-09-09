@@ -38,18 +38,21 @@ h1,h2,h3{text-wrap:pretty}
 .nav-item>a{display:block;padding:14px 14px;color:rgba(25,44,123,.72);border-radius:10px}
 .nav-item>a:hover,.nav-item:focus-within>a{color:var(--navy);background:var(--soft-2)}
 .nav-item.current>a{color:var(--navy);font-weight:800}
-.mega{position:absolute;top:100%;inset-inline-start:0;min-width:720px;padding-top:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s,transform .22s,visibility .22s;z-index:61}
+.mega{position:absolute;top:100%;inset-inline-start:0;min-width:880px;max-width:calc(100vw - 48px);padding-top:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s,transform .22s,visibility .22s;z-index:61}
 .mega-sm{min-width:560px}
 .nav-item:hover .mega,.nav-item:focus-within .mega{opacity:1;visibility:visible;transform:none}
-.mega-inner{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(25,44,123,.16);padding:26px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:26px}
-.mega-intro{grid-column:span 1;background:var(--navy);color:#fff;border-radius:14px;padding:22px;min-width:200px}
+.mega-inner{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(25,44,123,.16);padding:26px 28px;display:grid;grid-template-columns:250px repeat(3,minmax(0,1fr));gap:28px;align-items:start}
+.mega-sm .mega-inner{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.mega-intro{background:var(--navy);color:#fff;border-radius:14px;padding:22px;min-width:0}
 .mega-intro .mega-title{font-size:18px;font-weight:900;margin-bottom:8px}
 .mega-intro p{margin:0 0 14px;font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.75)}
 .mega-cta{color:var(--sky);font-weight:800;font-size:14px}
 .mega-cta:hover{color:#fff}
-.mega-col{display:flex;flex-direction:column;gap:9px}
+.mega-col{display:flex;flex-direction:column;gap:9px;min-width:0}
+.mega-col>a{line-height:1.5}
 .mega-head{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:.5px;margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 .mega-head a{color:var(--navy)}
+.mega-col>.mega-head:not(:first-child){margin-top:14px}
 .mega-col>a{font-size:14px;color:var(--gray);font-weight:500}
 .mega-col>a:hover{color:var(--navy)}
 .header-tools{display:flex;align-items:center;gap:10px;flex-shrink:0}
