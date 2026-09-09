@@ -1,0 +1,135 @@
+<% content_for :title, t("safety.title") %>
+<% content_for :description, t("safety.description") %>
+<% content_for :nav_active, "quality" %>
+<style>
+  .guide-toolbar{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+  .guide-toolbar [data-guide-search]{flex:1;min-width:240px}
+  .guide-toolbar [data-guide-filter]{width:auto;min-width:240px}
+  .guide-card .guide-cat{color:#9AA0A8;font-size:12.5px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+  .guide-card .guide-line{color:#686B70;font-size:14px;margin:0 0 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .guide-card .guide-docs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .guide-card .guide-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:auto}
+  .guide-card .btn-outline{padding:11px 20px;font-size:14.5px}
+</style>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      label: t("safety.hero.label"), h1: t("safety.hero.h1"), desc: t("safety.hero.desc"),
+      crumbs: [ [ t("nav.quality"), quality_path ], [ t("nav.safety_page"), nil ] ],
+      primary: [ t("safety.hero.cta"), "#library" ], secondary: :whatsapp %>
+
+<%# 02 — Choose the right product %>
+<section class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("safety.choose.label"), h2: t("safety.choose.h2"), desc: t("safety.choose.desc") %>
+    <div class="grid-4">
+      <% @choose.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="pillar">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3 style="margin:0 0 12px;color:#192C7B;font-size:20px;font-weight:800"><%= title %></h3>
+        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8"><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:44px"><a href="<%= products_path %>" class="btn-outline"><%= t("safety.choose.cta") %> ←</a></div>
+  </div>
+</section>
+
+<%# 03 — Inspect before use %>
+<section class="section-pad bg-soft">
+  <div class="wrap grid-2" style="align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker-gray"><%= t("safety.inspect.label") %></div>
+      <h2 style="margin:0 0 18px;color:#192C7B;font-size:42px;font-weight:900;line-height:1.25"><%= t("safety.inspect.h2") %></h2>
+      <p style="margin:0;color:#686B70;font-size:17.5px;line-height:1.8"><%= t("safety.inspect.desc") %></p>
+    </div>
+    <ul data-reveal class="checklist">
+      <% @checklist.each do |item| %><li><%= item %></li><% end %>
+    </ul>
+  </div>
+</section>
+
+<%# 04 — Safe use %>
+<section class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("safety.use.label"), h2: t("safety.use.h2"), desc: t("safety.use.desc") %>
+    <div class="grid-4">
+      <% @use.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="pillar">
+        <div class="num-badge soft"><%= num(i + 1) %></div>
+        <h3 style="margin:0 0 12px;color:#192C7B;font-size:20px;font-weight:800"><%= title %></h3>
+        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8"><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 05 — Guide library %>
+<section id="library" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("safety.library.label"), h2: t("safety.library.h2"), desc: t("safety.library.desc") %>
+    <div data-guide-library>
+      <div data-reveal class="guide-toolbar">
+        <input type="search" class="field" data-guide-search placeholder="<%= t("safety.library.search") %>" aria-label="<%= t("safety.library.search") %>">
+        <select class="field" data-guide-filter aria-label="<%= t("safety.library.filter") %>">
+          <option value=""><%= t("safety.library.filter") %></option>
+          <% @categories.each do |c| %><option value="<%= c[:slug] %>"><%= c[:name] %></option><% end %>
+        </select>
+      </div>
+      <div class="grid-3">
+        <% @guides.each do |p| %>
+        <% cat = SiteData.category(p[:category]) %>
+        <div class="feature-card guide-card card-hover" data-guide="<%= p[:name] %> <%= p[:slug] %>" data-guide-cat="<%= p[:category] %>">
+          <div class="guide-cat"><%= cat[:name] %></div>
+          <h3><%= p[:name] %></h3>
+          <p class="guide-line"><span><%= t("safety.library.code") %>:</span> <span class="pending"><%= t("common.pending") %></span></p>
+          <div class="guide-docs">
+            <% SiteData::GUIDE_DOCS.each do |d| %><span class="chip"><%= d %></span><% end %>
+          </div>
+          <div class="guide-actions">
+            <a href="<%= product_path(p[:category], p[:slug]) %>" class="btn-outline"><%= t("safety.library.view") %></a>
+            <a href="<%= download_path("user-guide") %>" class="chip"><%= t("safety.library.download") %></a>
+          </div>
+        </div>
+        <% end %>
+      </div>
+      <div data-guide-empty hidden class="feature-card soft" style="text-align:center;color:#686B70;font-weight:700;margin-top:24px;background:#fff"><%= t("safety.library.empty") %></div>
+    </div>
+  </div>
+</section>
+
+<%# 06 — Find the right guide %>
+<section class="section-pad bg-white">
+  <div class="wrap">
+    <div data-reveal class="feature-card soft" style="flex-direction:row;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:48px 56px;border-radius:26px">
+      <div style="max-width:680px">
+        <div class="kicker-gray"><%= t("safety.find.label") %></div>
+        <h2 style="margin:0 0 12px;color:#192C7B;font-size:32px;font-weight:900;line-height:1.3"><%= t("safety.find.h2") %></h2>
+        <p style="font-size:16.5px"><%= t("safety.find.desc") %></p>
+      </div>
+      <a href="<%= contact_path(dept: "technical") %>" class="btn-navy"><%= t("safety.find.cta") %></a>
+    </div>
+  </div>
+</section>
+
+<%# 07 — Quality & testing %>
+<section class="section-pad bg-soft">
+  <div class="wrap">
+    <div data-reveal class="grid-2" style="background:#0D1744;border-radius:26px;padding:56px 60px;align-items:center;gap:48px;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 15% 50%,rgba(185,198,242,.14),transparent 70%);pointer-events:none"></div>
+      <div style="position:relative">
+        <div class="kicker"><%= t("safety.quality.label") %></div>
+        <h2 style="margin:0 0 18px;color:#fff;font-size:36px;font-weight:900;line-height:1.25"><%= t("safety.quality.h2") %></h2>
+        <p style="margin:0 0 30px;color:rgba(255,255,255,.78);font-size:17px;line-height:1.8"><%= t("safety.quality.desc") %></p>
+        <a href="<%= quality_path %>" class="btn-white"><%= t("safety.quality.cta") %></a>
+      </div>
+      <div style="position:relative;height:320px;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)"><img src="/assets/cat-ladders.jpg" alt="" class="cover" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<%# 08 — Final CTA %>
+<%= render "shared/cta_band",
+      label: t("safety.final.label"), h2: t("safety.final.h2"), desc: t("safety.final.desc"),
+      primary: [ t("safety.final.primary"), contact_path(dept: "technical") ], secondary: [ t("common.explore_products"), products_path ] %>

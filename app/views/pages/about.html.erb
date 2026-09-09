@@ -1,148 +1,152 @@
-<% content_for :title, "من نحن — ألمنيوم مزايا" %>
-<% content_for :description, "٣٥ عامًا من الألمنيوم السعودي: قصة مصنع مزايا في الرياض منذ ١٩٨٩، قيمنا، ورحلة النمو." %>
-<% content_for :nav_active, "about" %>
+<% content_for :title, t("about.title") %>
+<% content_for :description, t("about.description") %>
+<% content_for :nav_active, "company" %>
+<% profile = SiteData::DOWNLOADS["company-profile"] %>
+<style>
+  /* About page */
+  .story-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+  .story-img{height:440px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(25,44,123,.18)}
+  .range-row{flex-direction:row;align-items:center;gap:22px;padding:22px 26px}
+  .range-row .range-thumb{width:76px;height:76px;border-radius:16px;overflow:hidden;flex-shrink:0}
+  .range-row h3{margin:0 0 4px}
+  .range-row .card-link{margin:0;white-space:nowrap}
+  .what-card .cat-media{height:280px}
+  @media (max-width:960px){.story-grid{grid-template-columns:1fr;gap:32px}.story-img{height:300px}.range-row{flex-wrap:wrap}}
+</style>
 
-<section style="position:relative;min-height:62vh;display:flex;align-items:end;background:#0D1744;overflow:hidden">
-  <img src="/assets/hero.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:heroZoom 2.4s ease-out both">
-  <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,23,68,.95) 0%,rgba(13,23,68,.45) 60%,rgba(13,23,68,.55) 100%)"></div>
-  <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;padding:150px 48px 70px;box-sizing:border-box">
-    <div data-reveal class="kicker">من نحن</div>
-    <h1 data-reveal style="margin:0 0 16px;color:#fff;font-size:clamp(40px,4.5vw,64px);font-weight:900;line-height:1.2">٣٥ عامًا من الألمنيوم السعودي</h1>
-    <p data-reveal style="margin:0;color:rgba(255,255,255,.8);font-size:19px;line-height:1.8;max-width:640px">من مصنع واحد في الرياض عام ١٩٨٩ إلى الاسم الأول في السلالم والعربات الصناعية بالمملكة وسبعة أسواق تصدير.</p>
-  </div>
-</section>
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.company"), nil ], [ t("nav.about"), nil ] ],
+      label: t("about.hero.label"), h1: t("about.hero.h1"), desc: t("about.hero.desc"),
+      primary: [ t("about.profile.cta"), download_path("company-profile"), "company-profile" ],
+      secondary: [ t("common.explore_products"), products_path ],
+      image: "/assets/hero.jpg" %>
 
-<section style="padding:100px 48px;background:#fff">
-  <div class="grid-2" style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center">
+<%# 02 — Story %>
+<section id="story" class="section-pad bg-white">
+  <div class="wrap story-grid">
     <div data-reveal>
-      <h2 style="margin:0 0 20px;color:#192C7B;font-size:40px;font-weight:900">نبذة عن الشركة</h2>
-      <p style="margin:0 0 16px;color:#686B70;font-size:17px;line-height:1.9">بدأت مزايا بخط بثق واحد وفكرة بسيطة: منتج ألمنيوم سعودي يضاهي المستورد ويتفوق عليه. اليوم نُشغّل مصنعًا متكاملًا يغطي البثق والتجميع والاختبار والتغليف تحت سقف واحد.</p>
-      <p style="margin:0 0 32px;color:#686B70;font-size:17px;line-height:1.9">نخدم ثلاث فئات من العملاء: المقاول الذي يحتاج منتجًا يتحمل الموقع، والموزّع الذي يبحث عن علامة تبيع نفسها، والمشاريع الكبرى التي تحتاج حلولًا مصممة خصيصًا.</p>
-      <div style="display:flex;gap:40px;flex-wrap:wrap">
-        <div><div style="color:#192C7B;font-size:34px;font-weight:900"><span data-count="35">0</span>+</div><div style="color:#686B70;font-size:14px;margin-top:4px">سنة خبرة</div></div>
-        <div><div style="color:#192C7B;font-size:34px;font-weight:900"><span data-count="88">0</span>٪</div><div style="color:#686B70;font-size:14px;margin-top:4px">حصة السوق</div></div>
-        <div><div style="color:#192C7B;font-size:34px;font-weight:900"><span data-count="7">0</span></div><div style="color:#686B70;font-size:14px;margin-top:4px">أسواق تصدير</div></div>
-      </div>
+      <div class="kicker-gray"><%= t("about.story.label") %></div>
+      <h2 style="margin:0 0 20px;color:#192C7B;font-size:40px;font-weight:900;line-height:1.25"><%= t("about.story.h2") %></h2>
+      <p style="margin:0 0 16px;color:#686B70;font-size:17px;line-height:1.9"><%= t("about.story.p1") %></p>
+      <p style="margin:0;color:#686B70;font-size:17px;line-height:1.9"><%= t("about.story.p2") %></p>
     </div>
-    <div data-reveal style="height:440px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(25,44,123,.18)"><img src="/assets/cat-custom.jpg" alt="صورة من المصنع" class="cover" loading="lazy"></div>
+    <div data-reveal class="story-img"><img src="/assets/cat-custom.jpg" alt="" class="cover" loading="lazy"></div>
   </div>
 </section>
 
-<section style="padding:100px 48px;background:#F4F5F7">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="text-align:center;margin-bottom:56px">
-      <div class="kicker-gray">قيمنا</div>
-      <h2 style="margin:0;color:#192C7B;font-size:42px;font-weight:900">ست قيم تحكم كل قرار</h2>
-    </div>
-    <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-      
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:34px 30px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;margin-bottom:18px">٠١</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:20px;font-weight:800">الأصالة</h3>
-        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">اسم محفور على كل منتج، وتاريخ لا يقبل التقليد.</p>
+<%# 03 — Values %>
+<section id="values" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("about.values.label"), h2: t("about.values.h2"), center: true %>
+    <div class="grid-3">
+      <% t("about.values.items").each_with_index do |(title, desc), i| %>
+      <div data-reveal class="feature-card card-hover">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
       </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:34px 30px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;margin-bottom:18px">٠٢</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:20px;font-weight:800">السلامة</h3>
-        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">اختبارات أحمال موثقة على كل دفعة إنتاج.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:34px 30px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;margin-bottom:18px">٠٣</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:20px;font-weight:800">الاعتمادية</h3>
-        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">منتجات تعمل اليوم كما اشتُريت قبل عقد.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:34px 30px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;margin-bottom:18px">٠٤</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:20px;font-weight:800">الإتقان</h3>
-        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">تفاصيل التصنيع تُراجع قطعة قطعة قبل الشحن.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:34px 30px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;margin-bottom:18px">٠٥</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:20px;font-weight:800">الشراكة</h3>
-        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">نكسب عندما يكسب موزّعونا وعملاؤنا.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:34px 30px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;margin-bottom:18px">٠٦</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:20px;font-weight:800">الالتزام</h3>
-        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">مواعيد توريد نحترمها لأن المصنع هنا.</p>
-      </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section style="padding:100px 48px;background:#192C7B;overflow:hidden">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="margin-bottom:60px">
-      <div class="kicker">رحلة النمو</div>
-      <h2 style="margin:0;color:#fff;font-size:42px;font-weight:900">محطات صنعت الاسم</h2>
-    </div>
-    <div style="position:relative">
-      <div style="position:absolute;top:26px;inset-inline:0;height:2px;background:rgba(255,255,255,.18)"></div>
-      <div class="grid-2m" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px">
-        
-        <div data-reveal style="position:relative;padding-top:56px">
-          <div style="position:absolute;top:18px;inset-inline-start:0;width:16px;height:16px;border-radius:50%;background:#B9C6F2;border:4px solid #192C7B;box-shadow:0 0 0 2px #B9C6F2"></div>
-          <div style="color:#B9C6F2;font-size:26px;font-weight:900;margin-bottom:8px">١٩٨٩</div>
-          <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:6px">التأسيس</div>
-          <div style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7">أول خط بثق في مصنع الرياض.</div>
-        </div>
-        <div data-reveal style="position:relative;padding-top:56px">
-          <div style="position:absolute;top:18px;inset-inline-start:0;width:16px;height:16px;border-radius:50%;background:#B9C6F2;border:4px solid #192C7B;box-shadow:0 0 0 2px #B9C6F2"></div>
-          <div style="color:#B9C6F2;font-size:26px;font-weight:900;margin-bottom:8px">١٩٩٨</div>
-          <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:6px">التوسعة الأولى</div>
-          <div style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7">خطوط تجميع السلالم والعربات.</div>
-        </div>
-        <div data-reveal style="position:relative;padding-top:56px">
-          <div style="position:absolute;top:18px;inset-inline-start:0;width:16px;height:16px;border-radius:50%;background:#B9C6F2;border:4px solid #192C7B;box-shadow:0 0 0 2px #B9C6F2"></div>
-          <div style="color:#B9C6F2;font-size:26px;font-weight:900;margin-bottom:8px">٢٠٠٨</div>
-          <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:6px">التصدير</div>
-          <div style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7">أول شحنة لأسواق الخليج.</div>
-        </div>
-        <div data-reveal style="position:relative;padding-top:56px">
-          <div style="position:absolute;top:18px;inset-inline-start:0;width:16px;height:16px;border-radius:50%;background:#B9C6F2;border:4px solid #192C7B;box-shadow:0 0 0 2px #B9C6F2"></div>
-          <div style="color:#B9C6F2;font-size:26px;font-weight:900;margin-bottom:8px">٢٠١٦</div>
-          <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:6px">صدارة السوق</div>
-          <div style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7">٨٨٪ حصة السوق المحلي.</div>
-        </div>
-        <div data-reveal style="position:relative;padding-top:56px">
-          <div style="position:absolute;top:18px;inset-inline-start:0;width:16px;height:16px;border-radius:50%;background:#B9C6F2;border:4px solid #192C7B;box-shadow:0 0 0 2px #B9C6F2"></div>
-          <div style="color:#B9C6F2;font-size:26px;font-weight:900;margin-bottom:8px">٢٠٢٤</div>
-          <div style="color:#fff;font-size:17px;font-weight:700;margin-bottom:6px">جيل جديد</div>
-          <div style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.7">تحديث كامل لخطوط الإنتاج.</div>
-        </div>
+<%# 04 — Numbers %>
+<section id="numbers" class="section-pad bg-navy" style="padding:80px 48px">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("about.numbers.label"), h2: t("about.numbers.h2"), dark: true, center: true %>
+    <div class="stat-grid">
+      <% t("about.numbers.items").each do |big, sub| %>
+      <div data-reveal class="stat">
+        <div class="stat-num" style="font-size:clamp(28px,2.8vw,38px)"><%= big %></div>
+        <div class="stat-sub"><%= sub %></div>
       </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section style="padding:100px 48px;background:#fff">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:52px;flex-wrap:wrap">
-      <div>
-        <div class="kicker-gray">المصنع</div>
-        <h2 style="margin:0;color:#192C7B;font-size:42px;font-weight:900">تحت سقف واحد</h2>
+<%# 05 — Company profile %>
+<section id="profile" class="section-pad bg-white">
+  <div data-reveal class="cta-band" style="background:#0D1744">
+    <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap">
+      <a data-gate="company-profile" data-gate-title="<%= profile[:title] %>" href="<%= download_path("company-profile") %>" class="catalog-cover" style="width:150px;flex-shrink:0" aria-label="<%= profile[:title] %>">
+        <img src="/assets/logo-white.png" alt="">
+        <span><%= profile[:title] %></span>
+      </a>
+      <div style="max-width:560px">
+        <div class="kicker" style="margin-bottom:10px"><%= t("about.profile.label") %></div>
+        <h2 style="margin:0 0 10px;color:#fff;font-size:30px;font-weight:900"><%= t("about.profile.h2") %></h2>
+        <p style="margin:0;color:rgba(255,255,255,.75);font-size:16.5px;line-height:1.8"><%= t("about.profile.desc") %></p>
       </div>
-      <a href="/quality" style="font-weight:700;font-size:16px">اعرف معايير الجودة ←</a>
     </div>
-    <div class="grid-2m grid-rows-auto" style="display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:260px 260px;gap:20px">
-      <div data-reveal style="grid-row:span 2;border-radius:20px;overflow:hidden;min-height:260px"><img src="/assets/cat-ladders.jpg" alt="خط البثق" class="cover" loading="lazy"></div>
-      <div data-reveal style="border-radius:20px;overflow:hidden;min-height:220px"><div class="ph-slot">التجميع</div></div>
-      <div data-reveal style="border-radius:20px;overflow:hidden;min-height:220px"><div class="ph-slot">الاختبار</div></div>
-      <div data-reveal style="border-radius:20px;overflow:hidden;min-height:220px"><div class="ph-slot">التغليف</div></div>
-      <div data-reveal style="border-radius:20px;overflow:hidden;min-height:220px"><img src="/assets/cat-carts.jpg" alt="المستودع" class="cover" loading="lazy"></div>
+    <div style="display:grid;gap:10px;justify-items:center">
+      <a data-gate="company-profile" data-gate-title="<%= profile[:title] %>" href="<%= download_path("company-profile") %>" class="btn-white"><%= t("about.profile.cta") %></a>
+      <span class="pending"><%= t("about.profile.meta") %></span>
     </div>
   </div>
 </section>
 
-<section style="padding:90px 48px;background:#F4F5F7">
-  <div data-reveal style="max-width:1080px;margin:0 auto;background:#192C7B;border-radius:28px;padding:64px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
-    <div>
-      <h2 style="margin:0 0 12px;color:#fff;font-size:34px;font-weight:900">شاهد المنتجات بنفسك</h2>
-      <p style="margin:0;color:rgba(255,255,255,.75);font-size:17px">ثلاث فئات، معيار واحد — منذ ١٩٨٩.</p>
-    </div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="/products" class="btn-white" style="font-size:16px;padding:15px 30px">تصفح المنتجات</a>
-      <a href="/contact" class="btn-ghost">حمّل بروفايل الشركة</a>
+<%# 06 — What we do %>
+<section id="what" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("about.what.label"), h2: t("about.what.h2"), desc: t("about.what.intro"), center: true %>
+    <div class="grid-2">
+      <a href="<%= products_path %>" data-reveal class="cat-card card-hover-lg what-card">
+        <div class="cat-media"><img src="/assets/cat-ladders.jpg" alt="" loading="lazy"><span class="tag tag-ready" style="position:absolute;top:16px;inset-inline-start:16px"><%= t("common.ready") %></span></div>
+        <div class="cat-body" style="padding:30px 32px 34px">
+          <h3 style="font-size:26px"><%= t("about.what.ready_title") %></h3>
+          <p style="font-size:15.5px"><%= t("about.what.ready_desc") %></p>
+          <span class="card-link"><%= t("common.explore_products") %> ←</span>
+        </div>
+      </a>
+      <a href="<%= solutions_path %>" data-reveal class="cat-card card-hover-lg what-card">
+        <div class="cat-media"><img src="/assets/cat-custom.jpg" alt="" loading="lazy"><span class="tag tag-custom" style="position:absolute;top:16px;inset-inline-start:16px"><%= t("common.custom") %></span></div>
+        <div class="cat-body" style="padding:30px 32px 34px">
+          <h3 style="font-size:26px"><%= t("about.what.custom_title") %></h3>
+          <p style="font-size:15.5px"><%= t("about.what.custom_desc") %></p>
+          <span class="card-link"><%= t("about.what.custom_cta") %> ←</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
+
+<%# 07 — Product range %>
+<section id="range" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("about.range.label"), h2: t("about.range.h2"), link: [ t("about.range.cta"), products_path ] %>
+    <div style="display:grid;gap:14px">
+      <% @categories.each do |c| %>
+      <a href="<%= product_category_path(c[:slug]) %>" data-reveal class="feature-card soft card-hover range-row">
+        <div class="range-thumb"><img src="<%= c[:image] %>" alt="" class="cover" loading="lazy"></div>
+        <div style="flex:1;min-width:220px">
+          <h3><%= c[:name] %></h3>
+          <p><%= c[:about] %></p>
+        </div>
+        <span class="card-link"><%= t("common.explore_category") %> ←</span>
+      </a>
+      <% end %>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:40px"><a href="<%= products_path %>" class="btn-outline"><%= t("about.range.cta") %> ←</a></div>
+  </div>
+</section>
+
+<%# 08 — Manufacturing capabilities %>
+<section id="capabilities" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("about.capabilities.label"), h2: t("about.capabilities.h2"), desc: t("about.capabilities.intro"), center: true %>
+    <div class="grid-4">
+      <% t("about.capabilities.items").each_with_index do |(title, desc), i| %>
+      <div data-reveal class="step">
+        <div class="step-num" style="color:#192C7B"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 09 — Closing CTA %>
+<%= render "shared/cta_band", label: t("about.final.label"), h2: t("about.final.h2"), desc: t("about.final.desc"), primary: [ t("about.final.primary"), products_path ], secondary: [ t("about.final.secondary"), rfq_path ] %>

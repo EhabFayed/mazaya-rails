@@ -1,0 +1,9 @@
+<%# locals: project, tall (optional) %>
+<a href="<%= project_path(project[:slug]) %>" data-reveal class="proj-tile<%= ' tall' if local_assigns[:tall] %>">
+  <img src="<%= project[:image] %>" alt="<%= project[:name] %>" class="cover" loading="lazy">
+  <div class="proj-shade">
+    <div class="proj-en"><%= project[:en] %></div>
+    <div class="proj-name"><%= project[:name] %></div>
+    <span class="proj-cta"><%= t("common.view_project") %> ←</span>
+  </div>
+</a>

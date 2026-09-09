@@ -1,0 +1,59 @@
+<% content_for :title, t("projects.title") %>
+<% content_for :description, t("projects.description") %>
+<% content_for :nav_active, "b2b" %>
+
+<style>
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.proj-grid .span2{grid-column:span 2;display:grid}
+@media(max-width:960px){.proj-grid{grid-template-columns:1fr}.proj-grid .span2{grid-column:auto}}
+</style>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.projects"), nil ] ],
+      label: t("projects.hero.label"), h1: t("projects.hero.h1"), desc: t("projects.hero.desc"),
+      image: "/assets/proj-roshn.jpg",
+      primary: [ t("projects.final.primary"), rfq_path ],
+      secondary: [ t("nav.custom_solutions"), solutions_path ] %>
+
+<%# 02 — Intro + grid of reference projects %>
+<section id="list" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("projects.intro.label"), h2: t("projects.intro.h2"), desc: t("projects.intro.desc") %>
+    <div class="proj-grid">
+      <% @projects.each_with_index do |p, i| %>
+        <% if i == 0 %>
+          <div class="span2"><%= render "shared/project_card", project: p, tall: true %></div>
+        <% elsif i == 1 %>
+          <%= render "shared/project_card", project: p, tall: true %>
+        <% else %>
+          <%= render "shared/project_card", project: p %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 03 — Custom solutions band %>
+<section id="custom" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 15% 50%,rgba(185,198,242,.14),transparent 70%)"></div>
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker"><%= t("projects.custom_cta.label") %></div>
+      <h2 style="margin:0 0 20px;color:#fff;font-size:42px;font-weight:900;line-height:1.25"><%= t("projects.custom_cta.h2") %></h2>
+      <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= t("projects.custom_cta.desc") %></p>
+      <a href="<%= solutions_path %>" class="btn-white"><%= t("projects.custom_cta.cta") %></a>
+    </div>
+    <div data-reveal class="grid-2m" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <% SiteData::SOLUTIONS.first(4).each do |s| %>
+      <a href="<%= solution_path(s[:slug]) %>" class="feature-card dark card-hover" style="padding:24px 22px">
+        <div class="product-cat" dir="ltr" style="text-align:end;color:#B9C6F2;margin-bottom:8px"><%= s[:en] %></div>
+        <h3 style="font-size:17px;margin:0"><%= s[:name] %></h3>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 04 — Final CTA %>
+<%= render "shared/cta_band", bg: "#F4F5F7", label: t("projects.final.label"), h2: t("projects.final.h2"), desc: t("projects.final.desc"), primary: [ t("projects.final.primary"), rfq_path ], secondary: [ t("projects.final.secondary"), rfq_path ] %>

@@ -1,0 +1,37 @@
+<% content_for :title, "الطلبات" %>
+<div style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px">
+  <div>
+    <h1 style="margin:0 0 6px;color:#192C7B;font-size:30px;font-weight:900">الطلبات الواردة</h1>
+    <div style="color:#686B70;font-size:14.5px">إجمالي <%= Lead.count %> طلب · كل نموذج في الموقع بيوصل هنا مع مصدره ونوعه.</div>
+  </div>
+  <a href="<%= admin_leads_path(format: :csv, kind: @kind) %>" class="btn-navy" style="padding:11px 20px;font-size:14.5px">تصدير CSV</a>
+</div>
+
+<div class="filters">
+  <a href="<%= admin_leads_path %>" class="filter<%= ' active' if @kind.nil? %>">الكل (<%= @counts.values.sum %>)</a>
+  <% Admin::LeadsController::KINDS.each do |k| %>
+    <a href="<%= admin_leads_path(kind: k) %>" class="filter<%= ' active' if @kind == k %>"><%= LeadMailer::KIND_LABELS[k] %> (<%= @counts[k] || 0 %>)</a>
+  <% end %>
+</div>
+
+<% if @leads.empty? %>
+  <div class="adm-card" style="text-align:center;color:#686B70">لا توجد طلبات بعد.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th>#</th><th>الوقت</th><th>النوع</th><th>الاسم</th><th>التواصل</th><th>الاهتمام / الملف</th><th>المصدر</th><th>مرفقات</th></tr></thead>
+  <tbody>
+    <% @leads.each do |l| %>
+    <tr>
+      <td><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td>
+      <td dir="ltr" style="white-space:nowrap"><%= l.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+      <td><span class="kind kind-<%= l.kind %>"><%= LeadMailer::KIND_LABELS[l.kind] %></span></td>
+      <td><a href="<%= admin_lead_path(l) %>"><%= l.name %></a><% if l.payload["company"].present? %><div style="color:#686B70;font-size:13px"><%= l.payload["company"] %></div><% end %></td>
+      <td dir="ltr" style="text-align:end"><%= l.phone %><% if l.email.present? %><div style="color:#686B70;font-size:13px"><%= l.email %></div><% end %></td>
+      <td><%= l.interest || l.download_key || l.payload["product"] || l.payload["project_type"] %></td>
+      <td style="color:#686B70;font-size:13px;max-width:220px"><%= l.source %></td>
+      <td><%= l.files.attached? ? l.files.size : "—" %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

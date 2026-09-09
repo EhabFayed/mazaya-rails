@@ -1,0 +1,28 @@
+<div dir="rtl" style="font-family:Tahoma,Arial,sans-serif;max-width:640px;margin:0 auto;color:#1A1C20">
+  <div style="background:#192C7B;color:#fff;padding:18px 24px;border-radius:12px 12px 0 0">
+    <div style="font-size:13px;opacity:.75">ألومنيوم مزايا — طلب جديد من الموقع</div>
+    <div style="font-size:20px;font-weight:bold;margin-top:4px"><%= @kind %></div>
+  </div>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #E6E8EC">
+    <% rows = [
+         [ "الاسم", @lead.name ], [ "الجوال", @lead.phone ], [ "البريد", @lead.email ],
+         [ "نوع الجهة", @lead.org_type ], [ "الاهتمام", @lead.interest ], [ "الرسالة", @lead.message ],
+         [ "الملف المطلوب", @lead.download_key ], [ "المصدر", @lead.source ], [ "الوقت", I18n.l(@lead.created_at, format: :long) ]
+       ] %>
+    <% rows.each do |label, value| %>
+      <% next if value.blank? %>
+      <tr><th style="text-align:start;padding:10px 16px;background:#F4F5F7;border-bottom:1px solid #E6E8EC;width:32%;color:#192C7B"><%= label %></th><td style="padding:10px 16px;border-bottom:1px solid #E6E8EC"><%= simple_format(value.to_s) %></td></tr>
+    <% end %>
+    <% @lead.payload.each do |key, value| %>
+      <% next if value.blank? %>
+      <tr><th style="text-align:start;padding:10px 16px;background:#F4F5F7;border-bottom:1px solid #E6E8EC;color:#686B70"><%= key %></th><td style="padding:10px 16px;border-bottom:1px solid #E6E8EC"><%= simple_format(value.to_s) %></td></tr>
+    <% end %>
+    <% if @lead.files.attached? %>
+      <tr><th style="text-align:start;padding:10px 16px;background:#F4F5F7;color:#192C7B">المرفقات</th><td style="padding:10px 16px"><%= @lead.files.map(&:filename).join("، ") %></td></tr>
+    <% end %>
+  </table>
+  <p style="font-size:13px;color:#686B70;padding:14px 4px">
+    <%= link_to "افتح الطلب في لوحة الإدارة", admin_lead_url(@lead), style: "color:#192C7B;font-weight:bold" %>
+    <% if @lead.phone.present? %> · <a href="https://wa.me/<%= @lead.phone.delete('^0-9') %>" style="color:#25D366;font-weight:bold">واتساب العميل</a><% end %>
+  </p>
+</div>

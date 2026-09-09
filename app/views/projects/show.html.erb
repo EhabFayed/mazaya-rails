@@ -1,0 +1,94 @@
+<% content_for :title, "#{@project[:name]} — #{t("nav.projects")} — #{t("brand")}" %>
+<% content_for :description, t("projects.description") %>
+<% content_for :nav_active, "b2b" %>
+
+<%# 01 — Hero: label / name / English name %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.projects"), projects_path ], [ @project[:name], nil ] ],
+      label: t("projects.show.label"), h1: @project[:name],
+      desc: content_tag(:span, @project[:en], dir: "ltr", style: "display:inline-block;unicode-bidi:isolate;color:#B9C6F2;font-weight:700;letter-spacing:1.5px;font-size:16px"),
+      image: @project[:image],
+      primary: [ t("common.request_quote"), rfq_path ],
+      secondary: :whatsapp %>
+
+<%# 02 — Overview: 4 data cells, values pending %>
+<section id="overview" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("projects.show.label"), h2: t("projects.show.overview") %>
+    <div class="grid-4">
+      <% @fields.each_with_index do |label, i| %>
+      <div data-reveal class="pillar">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <div style="color:#686B70;font-size:13.5px;font-weight:700;letter-spacing:.5px;margin-bottom:10px"><%= label %></div>
+        <span class="pending" style="background:#fff"><%= t("common.pending") %></span>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 03 — Requirements & solution %>
+<section id="story" class="section-pad bg-soft">
+  <div class="wrap grid-2">
+    <div data-reveal class="feature-card" style="padding:40px 36px">
+      <div class="num-badge soft"><%= num(1) %></div>
+      <h2 style="margin:0 0 14px;color:#192C7B;font-size:28px;font-weight:900"><%= t("projects.show.requirements_h2") %></h2>
+      <p class="pending" style="display:block;padding:16px 20px;font-size:15px;line-height:1.8"><%= t("projects.show.requirements_pending") %></p>
+    </div>
+    <div data-reveal class="feature-card" style="padding:40px 36px">
+      <div class="num-badge soft"><%= num(2) %></div>
+      <h2 style="margin:0 0 14px;color:#192C7B;font-size:28px;font-weight:900"><%= t("projects.show.solution_h2") %></h2>
+      <p class="pending" style="display:block;padding:16px 20px;font-size:15px;line-height:1.8"><%= t("projects.show.solution_pending") %></p>
+    </div>
+  </div>
+</section>
+
+<%# 04 — Gallery %>
+<section id="gallery" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", h2: t("projects.show.gallery_h2") %>
+    <div class="grid-3">
+      <% 3.times do %>
+      <div data-reveal style="height:260px;border-radius:20px;overflow:hidden"><div class="ph-slot"><%= t("projects.show.gallery_pending") %></div></div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 05 — Solutions used in this project %>
+<section id="solutions" class="section-pad bg-navy" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 20%,rgba(185,198,242,.16),transparent 70%)"></div>
+  <div class="wrap" style="position:relative">
+    <%= render "shared/section_head", dark: true, label: t("nav.custom_solutions"), h2: t("projects.show.solutions_h2"), link: [ t("common.explore_solutions"), solutions_path ] %>
+    <% if @solutions.any? %>
+    <div class="grid-2">
+      <% @solutions.each do |s| %>
+      <a href="<%= solution_path(s[:slug]) %>" data-reveal class="cat-card dark card-hover" style="flex-direction:row;align-items:stretch">
+        <div class="cat-media" style="height:auto;width:42%;flex-shrink:0"><img src="<%= s[:image] %>" alt="<%= s[:name] %>" loading="lazy"></div>
+        <div class="cat-body">
+          <div class="product-cat" dir="ltr" style="text-align:end;color:#B9C6F2"><%= s[:en] %></div>
+          <h3><%= s[:name] %></h3>
+          <p><%= SiteData.category(s[:category])[:b2b] %></p>
+          <span class="card-link"><%= t("common.explore_solutions") %> ←</span>
+        </div>
+      </a>
+      <% end %>
+    </div>
+    <% else %>
+    <p data-reveal><span class="pending"><%= t("common.pending") %></span></p>
+    <% end %>
+  </div>
+</section>
+
+<%# 06 — More projects %>
+<section id="more" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("projects.intro.label"), h2: t("projects.show.more_h2"), link: [ t("nav.projects"), projects_path ] %>
+    <div class="grid-3">
+      <% @more.each do |p| %><%= render "shared/project_card", project: p %><% end %>
+    </div>
+  </div>
+</section>
+
+<%# 07 — Final CTA %>
+<%= render "shared/cta_band", bg: "#F4F5F7", label: t("projects.final.label"), h2: t("projects.final.h2"), desc: t("projects.final.desc"), primary: [ t("projects.final.primary"), rfq_path ], secondary: :whatsapp %>

@@ -1,0 +1,250 @@
+<% content_for :title, "#{@product[:name]} — #{@category[:name]} — #{t('brand')}" %>
+<% content_for :description, "#{@product[:name]}: #{@product[:summary]} #{@category[:b2c]}" %>
+<% content_for :nav_active, "b2c" %>
+<%# Product template (client's MML-000 prototype): hero gallery → key features → applications → specs + sizes → technical docs → authenticity → related → FAQ → final CTA %>
+<% images = @product[:images] || [] %>
+<% specs = @product[:specs] || @category[:specs].map { |l| [ l, nil ] } %>
+<% size_cols = @product[:size_cols] || t("product.sizes_cols") %>
+<% content_for :head do %>
+<%= product_jsonld(@product, @category) %>
+<%= breadcrumb_jsonld([ [ t("common.home"), root_path ], [ t("nav.b2c"), products_path ], [ @category[:name], product_category_path(@category[:slug]) ], [ @product[:name], product_path(@category[:slug], @product[:slug]) ] ]) %>
+<% end %>
+<style>
+  .pd-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:start}
+  .pd-main{height:460px;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(25,44,123,.12);background:#E9EBF0}
+  .pd-main img{width:100%;height:100%;object-fit:cover}
+  .pd-thumbs{display:grid;grid-template-columns:repeat(<%= [images.size, 4].max.clamp(4, 6) %>,1fr);gap:12px;margin-top:14px}
+  .pd-thumbs .ph-slot{font-size:13px;gap:6px;height:92px;border-radius:14px}
+  .pd-thumbs .ph-slot::before{width:26px;height:26px;border-radius:8px}
+  .pd-thumbs .ph-slot::after{display:none}
+  .pd-title{margin:12px 0 14px;color:#192C7B;font-size:clamp(32px,3.4vw,44px);font-weight:900;line-height:1.25}
+  .pd-summary{margin:0 0 28px;color:#686B70;font-size:18px;line-height:1.8}
+  .pd-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .pd-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid #E6E8EC}
+  .pd-h2{margin:0 0 8px;color:#192C7B;font-size:28px;font-weight:900}
+  .pd-band{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:30px 34px}
+  .pd-split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 4px 20px rgba(25,44,123,.07)}
+  .pd-split .ph-slot{min-height:340px;border-radius:0}
+  @media (max-width:960px){.pd-grid,.pd-split{grid-template-columns:1fr;gap:32px}.pd-main{height:320px}.pd-thumbs{grid-template-columns:repeat(3,1fr)}.pd-thumb,.pd-thumbs .ph-slot{height:72px}}
+</style>
+
+<%# 01 — Slim crumb bar %>
+<section class="bg-dark" style="padding:100px 48px 22px">
+  <div class="wrap">
+    <div class="crumb" style="margin:0">
+      <a href="<%= root_path %>"><%= t("common.home") %></a>
+      <span class="crumb-sep">/</span><a href="<%= products_path %>"><%= t("nav.b2c") %></a>
+      <span class="crumb-sep">/</span><a href="<%= product_category_path(@category[:slug]) %>"><%= @category[:name] %></a>
+      <% if @subcategory %><span class="crumb-sep">/</span><a href="<%= product_category_path(@category[:slug], sub: @subcategory[:slug]) %>"><%= @subcategory[:name] %></a><% end %>
+      <span class="crumb-sep">/</span><span style="color:#fff"><%= @product[:code] || @product[:name] %></span>
+    </div>
+  </div>
+</section>
+
+<%# 02 — Gallery + product info %>
+<section class="section-pad bg-white" style="padding-top:64px">
+  <div class="wrap pd-grid">
+    <div data-reveal data-gallery>
+      <% if images.any? %>
+        <div class="pd-main"><img data-gallery-main src="<%= images.first[:src] %>" alt="<%= @product[:name] %> — <%= images.first[:label] %>"></div>
+        <div class="pd-thumbs">
+          <% images.each_with_index do |img, i| %>
+          <div class="pd-thumb<%= ' active' if i.zero? %>" data-gallery-thumb data-src="<%= img[:src] %>" data-label="<%= img[:label] %>" role="button" tabindex="0">
+            <img src="<%= img[:src] %>" alt="<%= img[:label] %>" loading="lazy"><span><%= img[:label] %></span>
+          </div>
+          <% end %>
+        </div>
+        <p style="margin:12px 0 0;color:#9AA0A8;font-size:13.5px;text-align:center" data-gallery-caption><%= images.first[:label] %></p>
+      <% else %>
+        <div class="pd-main"><div class="ph-slot"><%= @product[:name] %></div></div>
+        <div class="pd-thumbs"><% (1..4).each do |n| %><div class="ph-slot"><%= num(n) %></div><% end %></div>
+        <p style="margin:12px 0 0;color:#9AA0A8;font-size:13.5px;text-align:center"><%= t("product.gallery_note") %></p>
+      <% end %>
+    </div>
+    <div data-reveal>
+      <a href="<%= product_category_path(@category[:slug]) %>" class="product-cat" style="display:inline-block"><%= @category[:name] %></a>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <span class="tag tag-<%= @product[:kind] %>"><%= SiteData.kind_label(@product[:kind]) %></span>
+        <% if @product[:code] %><span class="chip" dir="ltr"><%= @product[:code] %></span><% end %>
+      </div>
+      <h1 class="pd-title"><%= @product[:name] %><% if @product[:code] %> <span dir="ltr" style="unicode-bidi:isolate;color:#B9C6F2"><%= @product[:code] %></span><% end %></h1>
+      <p class="pd-summary"><%= @product[:summary] %></p>
+      <div class="pd-actions">
+        <a class="btn-navy" href="<%= rfq_path %>"><%= @product[:kind] == :ready ? t("product.quote_cta") : t("product.custom_cta") %></a>
+        <a data-wa href="#" class="btn-wa"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
+        <span class="btn-disabled" aria-disabled="true"><%= t("product.buy_soon") %></span>
+      </div>
+      <div class="pd-chips">
+        <a href="<%= product_category_path(@category[:slug]) %>" class="chip"><%= @category[:name] %></a>
+        <% if @subcategory %><a href="<%= product_category_path(@category[:slug], sub: @subcategory[:slug]) %>" class="chip"><%= @subcategory[:name] %></a><% end %>
+        <span class="chip"><%= SiteData.kind_label(@product[:kind]) %></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if @product[:features].present? %>
+<%# 03 — Key features %>
+<section class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("product.features_label"), h2: t("product.features_h2") %>
+    <div class="grid-4">
+      <% @product[:features].each_with_index do |(title, desc), i| %>
+      <div data-reveal class="feature-card"><div class="num-badge"><%= num(i + 1) %></div><h3><%= title %></h3><p><%= desc %></p></div>
+      <% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<% if @product[:applications].present? %>
+<%# 04 — Applications %>
+<section class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("product.applications_label"), h2: t("product.applications_h2") %>
+    <div class="grid-4">
+      <% @product[:applications].each do |(title, desc)| %>
+      <div data-reveal class="feature-card soft"><h3><%= title %></h3><p><%= desc %></p></div>
+      <% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<%# 05 — Specs + sizes %>
+<section id="specs" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("product.specs_label"), h2: t("product.specs_h2"), desc: t("product.specs_intro") %>
+    <div class="grid-2" style="gap:40px;align-items:start">
+      <div data-reveal>
+        <table class="spec-table">
+          <thead><tr><th scope="col"><%= t("product.spec_col") %></th><th scope="col"><%= t("product.detail_col") %></th></tr></thead>
+          <tbody>
+            <% specs.each do |label, value| %>
+            <tr><th scope="row"><%= label %></th><td><% if value %><%= value %><% else %><span class="pending"><%= t("product.spec_pending") %></span><% end %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div data-reveal>
+        <h3 class="pd-h2" style="font-size:22px;margin-bottom:14px"><%= t("product.sizes_h2") %></h3>
+        <div style="overflow-x:auto">
+          <table class="spec-table">
+            <thead><tr><% size_cols.each do |col| %><th scope="col"><%= col %></th><% end %></tr></thead>
+            <tbody>
+              <% 2.times do %>
+              <tr><% size_cols.each do |col| %><td><span class="pending">[<%= col %>]</span></td><% end %></tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# 06 — Technical documents %>
+<section id="downloads" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("product.docs_label"), h2: t("product.docs_h2") %>
+    <div class="grid-3">
+      <div data-reveal class="feature-card soft">
+        <div class="num-badge">PDF</div>
+        <h3><%= t("product.tds_h3") %></h3>
+        <p style="margin-bottom:22px"><%= t("product.tds_desc") %></p>
+        <div style="margin-top:auto"><a data-gate="tds" data-gate-title="TDS — <%= @product[:name] %>" href="<%= download_path("tds") %>" class="btn-outline"><%= t("product.tds_cta") %></a></div>
+      </div>
+      <div data-reveal class="feature-card soft">
+        <div class="num-badge">✓</div>
+        <h3><%= t("product.guide_safety_h3") %></h3>
+        <p style="margin-bottom:22px"><%= t("product.guide_desc") %></p>
+        <div style="margin-top:auto;display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center">
+          <a href="<%= safety_path(anchor: 'library') %>" class="btn-outline"><%= t("product.guide_cta") %></a>
+          <a href="<%= download_path("user-guide") %>" class="card-link" style="margin:0"><%= t("common.download_pdf") %> ←</a>
+        </div>
+      </div>
+      <div data-reveal class="feature-card soft">
+        <div class="num-badge">★</div>
+        <h3><%= t("product.quality_cta") %></h3>
+        <p style="margin-bottom:22px"><%= t("safety.quality.desc") %></p>
+        <div style="margin-top:auto"><a href="<%= quality_path %>" class="btn-outline"><%= t("product.quality_cta") %></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# 07 — Authenticity %>
+<section class="section-pad bg-soft" style="padding-top:0">
+  <div class="wrap">
+    <div data-reveal class="pd-split">
+      <div class="ph-slot"><%= t("product.original_visual") %></div>
+      <div style="padding:40px 44px">
+        <div class="kicker-gray"><%= t("product.original_label") %></div>
+        <h2 class="pd-h2"><%= t("product.original_h2") %></h2>
+        <p style="margin:0 0 24px;color:#686B70;font-size:16px;line-height:1.8"><%= t("product.original_p") %></p>
+        <a href="<%= original_path %>" class="btn-navy"><%= t("home.original.cta") %></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if @safety || @solutions.any? %>
+<section class="section-pad-sm bg-soft" style="padding-top:0">
+  <div class="wrap" style="display:grid;gap:18px">
+    <% if @safety %>
+    <a href="<%= safety_article_path(@safety[:slug]) %>" data-reveal class="feature-card card-hover pd-band" style="border:1px solid #E6E8EC">
+      <div style="display:flex;align-items:center;gap:22px;flex:1;min-width:260px">
+        <div class="num-badge soft" style="margin:0"><%= @safety[:step] %></div>
+        <div>
+          <div class="kicker-gray" style="margin-bottom:6px"><%= t("nav.safety_page") %></div>
+          <h3 style="margin:0 0 6px"><%= @safety[:name] %></h3>
+          <p style="max-width:680px"><%= @safety[:summary] %></p>
+        </div>
+      </div>
+      <span class="card-link" style="margin:0"><%= t("common.read_article") %> ←</span>
+    </a>
+    <% end %>
+    <% if @solutions.any? %>
+    <div data-reveal class="feature-card dark pd-band" style="background:#0D1744">
+      <div style="flex:1;min-width:260px">
+        <div class="kicker" style="margin-bottom:6px"><%= t("nav.custom_solutions") %></div>
+        <h3 style="margin:0 0 6px"><%= t("product.custom_band_h3") %></h3>
+        <p><%= t("b2b.custom.desc") %></p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <% @solutions.each do |s| %><a href="<%= solution_path(s[:slug]) %>" class="btn-ghost" style="padding:11px 18px;font-size:14.5px"><%= s[:name] %> ←</a><% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</section>
+<% end %>
+
+<% if @related.any? %>
+<%# 08 — Related products %>
+<section id="related" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("product.related_label"), h2: t("product.related_h2b"), link: [ t("common.explore_category"), product_category_path(@category[:slug]) ] %>
+    <div class="grid-3">
+      <% @related.each do |p| %><%= render "shared/product_card", product: p %><% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<% if @product[:faq].present? %>
+<%# 09 — FAQ %>
+<section class="section-pad bg-soft">
+  <div class="wrap-md">
+    <%= render "shared/section_head", label: t("product.faq_label"), h2: t("product.faq_h2") %>
+    <div class="faq" data-reveal style="display:grid;gap:12px">
+      <% @product[:faq].each do |(q, a)| %>
+      <details><summary><%= q %></summary><p><%= a %></p></details>
+      <% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<%# 10 — Final CTA %>
+<%= render "shared/cta_band", bg: "#fff", h2: t("product.final_h2"), desc: t("product.final_desc"), primary: [ t("common.request_quote"), rfq_path ], secondary: :whatsapp %>

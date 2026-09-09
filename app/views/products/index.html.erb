@@ -1,0 +1,125 @@
+<% content_for :title, t("b2c.title") %>
+<% content_for :description, t("b2c.description") %>
+<% content_for :nav_active, "b2c" %>
+<style>
+  /* B2C hub: 5 category cards (3 + 2) and finder pill-radios */
+  .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:24px}
+  .cat-grid>*{grid-column:span 2}
+  .cat-grid>*:nth-child(n+4){grid-column:span 3}
+  .finder-q{display:grid;gap:12px;padding:6px 0}
+  .finder-q+.finder-q{border-top:1px solid #E6E8EC;padding-top:20px}
+  .finder-label{color:#192C7B;font-size:16px;font-weight:900}
+  .chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip-opt{position:relative;cursor:pointer}
+  .chip-opt input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+  .chip-opt span{display:inline-block;border:1.5px solid #D9DEEA;background:#fff;color:#686B70;border-radius:999px;padding:10px 20px;font-size:14.5px;font-weight:700;transition:all .2s}
+  .chip-opt:hover span{border-color:#192C7B;color:#192C7B}
+  .chip-opt input:checked+span{background:#192C7B;border-color:#192C7B;color:#fff}
+  .chip-opt input:focus-visible+span{outline:2px solid #B9C6F2;outline-offset:2px}
+  @media (max-width:960px){.cat-grid{grid-template-columns:1fr}.cat-grid>*{grid-column:auto}}
+</style>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      label: t("b2c.hero.label"), h1: t("b2c.hero.h1"), desc: t("b2c.hero.desc"),
+      crumbs: [ [ t("nav.b2c"), nil ] ],
+      primary: [ t("b2c.hero.primary"), "#categories" ], secondary: :whatsapp,
+      image: "/assets/cat-ladders.jpg" %>
+
+<%# 02 — Categories %>
+<section id="categories" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("b2c.categories.label"), h2: t("b2c.categories.h2"), desc: t("b2c.categories.desc"), center: true %>
+    <div class="cat-grid">
+      <% @categories.each do |c| %>
+      <a href="<%= product_category_path(c[:slug]) %>" data-reveal class="cat-card card-hover">
+        <div class="cat-media"><img src="<%= c[:image] %>" alt="<%= c[:name] %>" loading="lazy"></div>
+        <div class="cat-body">
+          <div class="product-cat" dir="ltr" style="text-align:end"><%= c[:en] %></div>
+          <h3><%= c[:name] %></h3>
+          <p><%= c[:b2c] %></p>
+          <span class="card-link"><%= t("common.explore_category") %> ←</span>
+        </div>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 03 — Product finder %>
+<section id="finder" class="section-pad bg-white">
+  <div class="wrap-md">
+    <%= render "shared/section_head", label: t("b2c.finder.label"), h2: t("b2c.finder.h2"), desc: t("b2c.finder.desc"), center: true %>
+    <form data-finder data-reveal class="form-card" style="max-width:860px;margin:0 auto;gap:20px">
+      <fieldset class="finder-q" style="border:none;padding:0;margin:0">
+        <legend class="finder-label" style="padding:0;margin-bottom:12px"><%= num(1) %> — <%= t("b2c.finder.q1") %></legend>
+        <div class="chips">
+          <% @categories.each_with_index do |c, i| %>
+          <label class="chip-opt"><input type="radio" name="q1" value="<%= product_category_path(c[:slug]) %>"<%= ' required' if i.zero? %>><span><%= c[:finder] %></span></label>
+          <% end %>
+        </div>
+      </fieldset>
+      <fieldset class="finder-q" style="border:none;padding:0;margin:0">
+        <legend class="finder-label" style="padding:0;margin-bottom:12px"><%= num(2) %> — <%= t("b2c.finder.q2") %></legend>
+        <div class="chips">
+          <% t("b2c.finder.q2_options").zip(%w[indoor outdoor both]).each do |label, value| %>
+          <label class="chip-opt"><input type="radio" name="q2" value="<%= value %>"><span><%= label %></span></label>
+          <% end %>
+        </div>
+      </fieldset>
+      <fieldset class="finder-q" style="border:none;padding:0;margin:0">
+        <legend class="finder-label" style="padding:0;margin-bottom:12px"><%= num(3) %> — <%= t("b2c.finder.q3") %></legend>
+        <div class="chips">
+          <% t("b2c.finder.q3_options").zip(%w[personal professional commercial]).each do |label, value| %>
+          <label class="chip-opt"><input type="radio" name="q3" value="<%= value %>"><span><%= label %></span></label>
+          <% end %>
+        </div>
+      </fieldset>
+      <button type="submit" class="form-btn" style="margin-top:6px"><%= t("b2c.finder.cta") %></button>
+    </form>
+  </div>
+</section>
+
+<%# 04 — Most popular %>
+<section id="popular" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("b2c.popular.label"), h2: t("b2c.popular.h2"), desc: t("b2c.popular.desc"), link: [ t("nav.b2c_hub"), "#categories" ] %>
+    <div class="grid-3">
+      <% @popular.each do |p| %><%= render "shared/product_card", product: p %><% end %>
+    </div>
+  </div>
+</section>
+
+<%# 05 — Why Mazaya %>
+<section id="why" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("b2c.why.label"), h2: t("b2c.why.h2"), center: true %>
+    <div class="grid-3">
+      <% t("b2c.why.cards").each_with_index do |(title, desc), i| %>
+      <div data-reveal class="pillar">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3 style="margin:0 0 12px;color:#192C7B;font-size:21px;font-weight:800"><%= title %></h3>
+        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8"><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:44px"><a href="<%= about_path %>" class="btn-outline"><%= t("b2c.why.cta") %> ←</a></div>
+  </div>
+</section>
+
+<%# 06 — Online store (soon) %>
+<section id="store" class="section-pad bg-soft" style="padding-bottom:48px">
+  <div class="wrap">
+    <div data-reveal style="background:#fff;border:1.5px dashed #C9CDD6;border-radius:28px;padding:52px 64px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+      <div style="max-width:640px">
+        <span class="chip" style="background:#192C7B;color:#fff;margin-bottom:16px"><%= t("b2c.store.label") %></span>
+        <h2 style="margin:0 0 10px;color:#192C7B;font-size:32px;font-weight:900"><%= t("b2c.store.h2") %></h2>
+        <p style="margin:0;color:#686B70;font-size:16.5px;line-height:1.8"><%= t("b2c.store.desc") %></p>
+      </div>
+      <span class="btn-disabled" aria-disabled="true" title="<%= t("common.soon") %>"><%= t("b2c.store.cta") %> · <%= t("common.soon") %></span>
+    </div>
+  </div>
+</section>
+
+<%# 07 — Final CTA %>
+<%= render "shared/cta_band", label: t("b2c.final.label"), h2: t("b2c.final.h2"), desc: t("b2c.final.desc"), primary: [ t("common.contact_us"), contact_path ], secondary: :whatsapp %>

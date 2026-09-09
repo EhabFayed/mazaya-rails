@@ -1,103 +1,114 @@
-<% content_for :title, "الجودة والسلامة — ألمنيوم مزايا" %>
-<% content_for :description, "اختبارات أحمال موثقة على كل دفعة إنتاج: من بثق الخامة إلى الفحص النهائي قبل الشحن." %>
+<% content_for :title, t("quality.title") %>
+<% content_for :description, t("quality.description") %>
 <% content_for :nav_active, "quality" %>
+<style>
+  .video-slot{position:relative;height:460px;border-radius:26px;overflow:hidden;background:#0D1744;box-shadow:0 24px 64px rgba(0,0,0,.35)}
+  .video-slot .ph-slot::before{display:none}
+  .video-slot .play{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 44px rgba(0,0,0,.45);margin-bottom:6px}
+  .video-slot .play::after{content:'';width:0;height:0;border-block:17px solid transparent;border-inline-start:28px solid #192C7B;margin-inline-end:-7px}
+  .doc-slot{height:160px;border-radius:14px;overflow:hidden;border:1.5px dashed #C9CDD6;margin-bottom:22px}
+</style>
 
-<section style="background:#0D1744;padding:170px 48px 80px">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal class="kicker">الجودة والسلامة</div>
-    <h1 data-reveal style="margin:0 0 16px;color:#fff;font-size:clamp(40px,4.5vw,64px);font-weight:900">السلامة ليست وعدًا.<br>إنها إجراء موثق.</h1>
-    <p data-reveal style="margin:0;color:rgba(255,255,255,.75);font-size:19px;line-height:1.8;max-width:620px">كل دفعة إنتاج تمر بنفس السلسلة: اختبار خامة، اختبار حمل، فحص نهائي — وأرقامها تُسجل وتُحفظ.</p>
-  </div>
-</section>
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      label: t("quality.hero.label"), h1: t("quality.hero.h1"), desc: t("quality.hero.desc"),
+      crumbs: [ [ t("nav.quality_page"), nil ] ],
+      primary: [ t("quality.hero.cta"), "#certifications" ], secondary: :whatsapp %>
 
-<section style="background:#192C7B;padding:56px 48px">
-  <div class="grid-2m" style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center">
-    <div data-reveal><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="150">0</span> كجم</div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">حمل اختبار كل درجة سلم</div></div>
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.15)"><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="750">0</span> كجم</div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">حمل اختبار منصات السقالات</div></div>
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.15)"><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="1000">0</span></div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">دورة فتح/إغلاق للمفاصل</div></div>
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.15)"><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="100">0</span>٪</div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">فحص بصري قبل الشحن</div></div>
-  </div>
-</section>
-
-<section style="padding:100px 48px;background:#fff">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="text-align:center;margin-bottom:60px">
-      <div class="kicker-gray">من الخامة إلى الشحنة</div>
-      <h2 style="margin:0;color:#192C7B;font-size:42px;font-weight:900">أربع محطات، لا استثناءات</h2>
+<%# 02 — Approach %>
+<section class="section-pad bg-white">
+  <div class="wrap grid-2" style="align-items:center;gap:60px">
+    <div data-reveal style="height:420px;border-radius:26px;overflow:hidden;box-shadow:0 24px 60px rgba(25,44,123,.14)"><img src="/assets/cat-ladders.jpg" alt="" class="cover" loading="lazy"></div>
+    <div data-reveal>
+      <div class="kicker-gray"><%= t("quality.approach.label") %></div>
+      <h2 style="margin:0 0 20px;color:#192C7B;font-size:42px;font-weight:900;line-height:1.25"><%= t("quality.approach.h2") %></h2>
+      <p style="margin:0;color:#686B70;font-size:17.5px;line-height:1.8"><%= t("quality.approach.desc") %></p>
     </div>
-    <div class="grid-2m" style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px">
-      
-      <div data-reveal style="background:#F4F5F7;border-radius:20px;overflow:hidden">
-        <div style="height:170px"><div class="ph-slot">البثق</div></div>
-        <div style="padding:24px 24px 28px">
-          <div style="color:#B9C6F2;font-size:22px;font-weight:900;margin-bottom:6px">٠١</div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:19px;font-weight:800">بثق الخامة</h3>
-          <p style="margin:0;color:#686B70;font-size:14px;line-height:1.75">قطاعات تُبثق من سبائك عالية النقاء بسماكات محسوبة.</p>
-        </div>
+  </div>
+</section>
+
+<%# 03 — Certifications %>
+<section id="certifications" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("quality.certifications.label"), h2: t("quality.certifications.h2"), desc: t("quality.certifications.intro"), center: true %>
+    <div class="grid-4">
+      <% @certifications.each do |c| %>
+      <div data-reveal class="feature-card card-hover">
+        <div class="doc-slot"><div class="ph-slot doc"><%= c[:name] %></div></div>
+        <h3><%= c[:name] %></h3>
+        <p style="margin-bottom:18px"><%= c[:desc] %></p>
+        <a href="#documents" class="card-link"><%= c[:cta] %> ←</a>
       </div>
-      <div data-reveal style="background:#F4F5F7;border-radius:20px;overflow:hidden">
-        <div style="height:170px"><div class="ph-slot">التجميع</div></div>
-        <div style="padding:24px 24px 28px">
-          <div style="color:#B9C6F2;font-size:22px;font-weight:900;margin-bottom:6px">٠٢</div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:19px;font-weight:800">التجميع</h3>
-          <p style="margin:0;color:#686B70;font-size:14px;line-height:1.75">تعاشق ميكانيكي بدون لحامات ضعيفة، بمفاصل مختبرة.</p>
-        </div>
-      </div>
-      <div data-reveal style="background:#F4F5F7;border-radius:20px;overflow:hidden">
-        <div style="height:170px"><div class="ph-slot">الاختبار</div></div>
-        <div style="padding:24px 24px 28px">
-          <div style="color:#B9C6F2;font-size:22px;font-weight:900;margin-bottom:6px">٠٣</div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:19px;font-weight:800">اختبار الأحمال</h3>
-          <p style="margin:0;color:#686B70;font-size:14px;line-height:1.75">عينات من كل دفعة تحت حمل يفوق الاستخدام الفعلي.</p>
-        </div>
-      </div>
-      <div data-reveal style="background:#F4F5F7;border-radius:20px;overflow:hidden">
-        <div style="height:170px"><div class="ph-slot">الفحص النهائي</div></div>
-        <div style="padding:24px 24px 28px">
-          <div style="color:#B9C6F2;font-size:22px;font-weight:900;margin-bottom:6px">٠٤</div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:19px;font-weight:800">الفحص والتغليف</h3>
-          <p style="margin:0;color:#686B70;font-size:14px;line-height:1.75">فحص بصري كامل وختم دفعة قبل مغادرة المصنع.</p>
-        </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section style="padding:0 48px 90px;background:#fff">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="position:relative;height:460px;border-radius:26px;overflow:hidden;background:#0D1744">
-      <img src="/assets/cat-ladders.jpg" alt="فيديو اختبار التحمل" class="cover" loading="lazy">
-      <div style="position:absolute;inset:0;background:rgba(13,23,68,.45);pointer-events:none"></div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;pointer-events:none">
-        <div style="width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 44px rgba(0,0,0,.45)">
-          <div style="width:0;height:0;border-block:17px solid transparent;border-inline-start:28px solid #192C7B;margin-inline-end:-7px"></div>
-        </div>
-        <div style="color:#fff;font-size:18px;font-weight:800">شاهد اختبار التحمل الفعلي</div>
+<%# 04 — Load testing %>
+<section id="load-testing" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 20%,rgba(185,198,242,.14),transparent 70%)"></div>
+  <div class="wrap" style="position:relative">
+    <%= render "shared/section_head", label: t("quality.load.label"), h2: t("quality.load.h2"), desc: t("quality.load.desc"), dark: true, center: true %>
+    <div data-reveal class="video-slot">
+      <div class="ph-slot dark video" style="color:#fff;font-size:18px"><span class="play" aria-hidden="true"></span><%= t("quality.load.video") %></div>
+    </div>
+    <div class="grid-3" style="margin-top:24px">
+      <% 3.times do |i| %>
+      <div data-reveal style="height:200px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14)"><div class="ph-slot dark"><%= t("quality.load.images") %> <%= num(i + 1) %></div></div>
+      <% end %>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:44px"><a href="#documents" class="btn-white"><%= t("quality.load.cta") %></a></div>
+  </div>
+</section>
+
+<%# 05 — Quality in manufacturing %>
+<section class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("quality.manufacturing.label"), h2: t("quality.manufacturing.h2"), desc: t("quality.manufacturing.desc") %>
+    <div class="steps">
+      <% @steps.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="step card-hover">
+        <div class="step-num"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
       </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section style="padding:0 48px 90px;background:#fff">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="margin-bottom:36px">
-      <h2 style="margin:0;color:#192C7B;font-size:32px;font-weight:900">الشهادات والاعتمادات</h2>
-      <p style="margin:10px 0 0;color:#686B70;font-size:15.5px">تُرفع الشهادات الرسمية هنا فور اعتمادها من العميل.</p>
-    </div>
-    <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
-      <div data-reveal style="height:220px;border-radius:18px;overflow:hidden;border:1.5px dashed #C9CDD6"><div class="ph-slot">شهادة جودة ١</div></div>
-      <div data-reveal style="height:220px;border-radius:18px;overflow:hidden;border:1.5px dashed #C9CDD6"><div class="ph-slot">شهادة جودة ٢</div></div>
-      <div data-reveal style="height:220px;border-radius:18px;overflow:hidden;border:1.5px dashed #C9CDD6"><div class="ph-slot">شهادة سلامة</div></div>
+<%# 06 — Documents %>
+<section id="documents" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("quality.documents.label"), h2: t("quality.documents.h2"), desc: t("quality.documents.desc") %>
+    <div class="grid-3">
+      <% @documents.each do |name, cta| %>
+      <div data-reveal class="feature-card soft">
+        <div class="doc-slot" style="height:200px"><div class="ph-slot doc"><%= name %></div></div>
+        <h3><%= name %></h3>
+        <p style="margin-bottom:20px"><%= t("quality.documents.pending") %></p>
+        <span class="btn-disabled" style="align-self:start;font-size:14.5px;padding:12px 22px" title="<%= t("quality.documents.pending") %>" aria-disabled="true"><%= cta %></span>
+      </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section style="padding:0 48px 100px;background:#fff">
-  <div data-reveal class="cta-band" style="padding:56px 64px">
-    <div>
-      <h2 style="margin:0 0 10px;color:#fff;font-size:30px;font-weight:900">تحتاج التفاصيل الفنية؟</h2>
-      <p style="margin:0;color:rgba(255,255,255,.75);font-size:16.5px">نرسل لك مواصفات الاختبار وتقارير الأحمال لأي منتج.</p>
+<%# 07 — Link to products %>
+<section class="section-pad bg-soft" style="padding-bottom:60px">
+  <div class="wrap">
+    <div data-reveal class="feature-card" style="flex-direction:row;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:48px 56px;border-radius:26px;box-shadow:0 10px 40px rgba(25,44,123,.08)">
+      <div style="max-width:680px">
+        <div class="kicker-gray"><%= t("quality.products.label") %></div>
+        <h2 style="margin:0 0 12px;color:#192C7B;font-size:32px;font-weight:900;line-height:1.3"><%= t("quality.products.h2") %></h2>
+        <p style="font-size:16.5px"><%= t("quality.products.desc") %></p>
+      </div>
+      <a href="<%= products_path %>" class="btn-navy"><%= t("common.explore_products") %></a>
     </div>
-    <a href="/contact" class="btn-white">تواصل مع الفريق الفني</a>
   </div>
 </section>
+
+<%# 08 — Final CTA %>
+<%= render "shared/cta_band",
+      label: t("quality.final.label"), h2: t("quality.final.h2"), desc: t("quality.final.desc"),
+      primary: [ t("quality.final.cta"), contact_path(dept: "technical") ], secondary: :whatsapp %>

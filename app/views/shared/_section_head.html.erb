@@ -1,0 +1,10 @@
+<%# Section heading block. locals: label, h2, desc, dark (bool), center (bool), link: [text, href] %>
+<% dark = local_assigns[:dark]; center = local_assigns[:center] %>
+<div data-reveal class="section-head<%= ' center' if center %><%= ' dark' if dark %>">
+  <div>
+    <% if local_assigns[:label] %><div class="<%= dark ? 'kicker' : 'kicker-gray' %>"><%= label %></div><% end %>
+    <h2><%= h2 %></h2>
+    <% if local_assigns[:desc] %><p><%= desc %></p><% end %>
+  </div>
+  <% if local_assigns[:link] %><a href="<%= link[1] %>" class="section-link"><%= link[0] %> ←</a><% end %>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<% @paths.each do |path| %>
+<% ar = "#{@base}#{path == '/' ? '/' : path}"; en = "#{@base}/en#{path == '/' ? '' : path}" %>
+  <url>
+    <loc><%= ar %></loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="<%= ar %>"/>
+    <xhtml:link rel="alternate" hreflang="en" href="<%= en %>"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="<%= ar %>"/>
+    <changefreq><%= path == "/" ? "weekly" : "monthly" %></changefreq>
+    <priority><%= path == "/" ? "1.0" : (path.count("/") == 1 ? "0.8" : "0.6") %></priority>
+  </url>
+  <url>
+    <loc><%= en %></loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="<%= ar %>"/>
+    <xhtml:link rel="alternate" hreflang="en" href="<%= en %>"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="<%= ar %>"/>
+    <changefreq>monthly</changefreq>
+    <priority><%= path == "/" ? "0.9" : "0.5" %></priority>
+  </url>
+<% end %>
+</urlset>

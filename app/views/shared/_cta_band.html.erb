@@ -1,0 +1,18 @@
+<%# Reusable final-CTA band. locals: label (optional), h2, desc, primary: [text, href], secondary: [text, href] or :whatsapp %>
+<section class="section-pad" style="padding-top:0;background:<%= local_assigns.fetch(:bg, '#F4F5F7') %>">
+  <div data-reveal class="cta-band">
+    <div>
+      <% if local_assigns[:label] %><div class="kicker" style="margin-bottom:10px"><%= label %></div><% end %>
+      <h2 style="margin:0 0 10px;color:#fff;font-size:30px;font-weight:900"><%= h2 %></h2>
+      <p style="margin:0;color:rgba(255,255,255,.75);font-size:16.5px;line-height:1.8;max-width:620px"><%= desc %></p>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <% if local_assigns[:primary] %><a href="<%= primary[1] %>" class="btn-white"<%= raw(' data-gate="' + primary[2] + '"') if primary[2] %>><%= primary[0] %></a><% end %>
+      <% if local_assigns[:secondary] == :whatsapp %>
+        <a data-wa href="#" class="btn-wa"><%= t("common.whatsapp") %></a>
+      <% elsif local_assigns[:secondary] %>
+        <a href="<%= secondary[1] %>" class="btn-ghost"><%= secondary[0] %></a>
+      <% end %>
+    </div>
+  </div>
+</section>

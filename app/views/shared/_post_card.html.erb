@@ -1,0 +1,10 @@
+<%# locals: post %>
+<a href="<%= news_post_path(post[:slug]) %>" data-reveal class="card-hover post-card<%= ' is-template' if post[:template] %>">
+  <div class="post-media"><% if post[:image] && !post[:template] %><img src="<%= post[:image] %>" alt="" class="cover" loading="lazy"><% else %><div class="ph-slot"><%= post[:category] %></div><% end %></div>
+  <div class="post-body">
+    <div class="post-meta"><span class="post-cat"><%= post[:category] %></span><% if post[:date] %><span>·</span><span><%= post[:date] %></span><% end %></div>
+    <h3><%= post[:title] %></h3>
+    <p><%= post[:excerpt] %></p>
+    <span class="card-link"><%= post[:type] == :news ? t("common.read_news") : t("common.read_article") %> ←</span>
+  </div>
+</a>

@@ -1,24 +1,65 @@
-# README
+# ألومنيوم مزايا — Mazaya Aluminium website
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Rails 8 marketing site for Mazaya Aluminium (Arabic, RTL). Information
+architecture v2: two tracks (B2B "حلول الأعمال" / B2C "المنتجات") plus a shared
+trunk (about, quality, safety, original-vs-counterfeit, news, contact).
 
-Things you may want to cover:
+## Sources of truth
 
-* Ruby version
+| What | Where |
+|---|---|
+| Page copy (headlines, descriptions, CTAs) | `config/locales/ar.yml` + `en.yml` — transcribed from the client copy deck. `[…]` = placeholder the client still has to supply. |
+| Structured data (catalog tree, products, solutions, projects, news, safety, certifications) | `app/models/site_data.rb` — every string is a `Bilingual` (`bi(ar, en)`) that renders in the current locale; `nil` / `PENDING` renders as a visible `.pending` placeholder; never invent a value. |
+| Design system | `public/site.css` (v1 colours, GE SS Two font, radii) + partials in `app/views/shared/` |
+| Behaviour | `public/site.js` (WhatsApp wiring, mega menu, lead forms, gated downloads, filters) |
 
-* System dependencies
+## Routes
 
-* Configuration
+```
+/                     home (router between the two tracks)
+/b2b                  B2B hub          /solutions, /solutions/:slug
+/catalog              e-catalog        /rfq            /partners
+/projects, /projects/:slug
+/products             B2C hub          /products/:category(?sub=&kind=)  /products/:category/:slug
+/about /original /quality /safety(/:slug) /news(/:slug) /contact /search?q=
+POST /leads           every form (kind: rfq|quote|partner|download|contact)
+/downloads/:key       gated files (needs the mz_gate cookie set by a download lead)
+```
 
-* Database creation
+Arabic is the default at `/…`; English lives at `/en/…` (same routes). The header language pill links to the same page in the other language and `<link hreflang>` tags are emitted.
 
-* Database initialization
+Legacy v1 URLs (`/ladders`, `/carts`, `/custom`, `*.html`) redirect permanently.
 
-* How to run the test suite
+## Local setup (macOS)
 
-* Services (job queues, cache servers, search engines, etc.)
+```sh
+brew install ruby@3.2 libpq vips postgresql@17   # or use the Docker compose file
+export PATH="/opt/homebrew/opt/ruby@3.2/bin:$PATH"
+bundle config set --local build.pg --with-pg-config=/opt/homebrew/opt/libpq/bin/pg_config
+bundle install
+bin/rails db:prepare
+bin/rails server
+```
 
-* Deployment instructions
+## Leads, notifications, admin
 
-* ...
+- Every form POSTs to `/leads`; attachments go to Active Storage (`storage/`, or set `ACTIVE_STORAGE_SERVICE`).
+- `LeadMailer` emails each new lead to `LEADS_NOTIFY_TO` (comma-separated) via SMTP settings in `.env.example`. Unset = no email, lead still saved.
+- `/admin/leads` lists, filters and exports leads (CSV). HTTP Basic auth via `ADMIN_USER` / `ADMIN_PASSWORD` (`admin`/`admin` outside production).
+- `/sitemap.xml` (both locales, hreflang), `robots.txt`, JSON-LD (Organization everywhere; Product + BreadcrumbList on product pages), styled `public/404|422|500.html`.
+- Deploy: `config/deploy.yml` (Kamal) with the variables from `.env.example`.
+
+## Checks
+
+```sh
+bin/rails test        # smoke test of every route + lead capture
+bin/rubocop
+bin/brakeman --no-pager
+```
+
+## Pending from the client
+
+- Excel sheet of categories / sub-categories / products (replaces the sample tree in `SiteData`).
+- Real PDFs: full catalogue, per-category catalogues, technical catalogue, company profile, TDS, user guides (all currently `public/downloads/placeholder.pdf`).
+- Project details and photos for the five reference projects; certificates and test reports; factory address, hours, phone, email, Google Maps embed; official WhatsApp number (`SiteData::WHATSAPP_DISPLAY`).
+- Confirmation of which client logos may appear in the trust strip.
