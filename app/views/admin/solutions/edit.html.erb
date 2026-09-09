@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@solution.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @solution.name_ar %></h1><p dir="ltr" style="text-align:end">/solutions/<%= @solution.slug %></p></div>
+  <div class="head-actions">
+    <a href="<%= solution_path(slug: @solution.slug) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a>
+    <a href="<%= admin_solutions_path %>" class="btn-outline sm">← كل الحلول</a>
+  </div>
+</div>
+<%= render "form", solution: @solution %>

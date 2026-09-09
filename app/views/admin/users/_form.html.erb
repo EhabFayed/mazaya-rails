@@ -1,0 +1,52 @@
+<%# locals: user %>
+<% full_access = current_user.admin? && user != current_user %>
+<%= errors_for(user) %>
+<%= form_with model: [ :admin, user ], local: true do |f| %>
+  <div class="section">
+    <h2>البيانات الأساسية</h2>
+    <div class="form-grid">
+      <div>
+        <%= f.label :name, "الاسم *", class: "field-label" %>
+        <%= f.text_field :name, class: "field sm", required: true %>
+      </div>
+      <div>
+        <%= f.label :email, "البريد الإلكتروني *", class: "field-label" %>
+        <%= f.email_field :email, class: "field sm", required: true, dir: "ltr", disabled: !current_user.admin?, autocomplete: "off" %>
+        <% unless current_user.admin? %><div class="hint">يغيّره المدير فقط.</div><% end %>
+      </div>
+      <% if full_access %>
+      <div>
+        <%= f.label :role, "الصلاحية", class: "field-label" %>
+        <%= f.select :role, Admin::UsersController::ROLE_LABELS.map { |k, v| [ v, k ] }, {}, class: "field sm" %>
+        <div class="hint">مدير: كل الأقسام · محرر: المحتوى ونصوص الصفحات · مبيعات: الطلبات فقط.</div>
+      </div>
+      <div>
+        <label class="field-label">الحالة</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px"><%= f.check_box :active %> نشط (يمكنه تسجيل الدخول)</label>
+      </div>
+      <% else %>
+      <div class="full hint">الصلاحية: <strong><%= Admin::UsersController::ROLE_LABELS.fetch(user.role, user.role) %></strong> — لا يمكنك تغيير صلاحيتك أو حالتك من هنا.</div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>كلمة المرور</h2>
+    <p class="sub"><%= user.persisted? ? "اتركها فارغة للإبقاء على كلمة المرور الحالية." : "٨ أحرف على الأقل." %></p>
+    <div class="form-grid">
+      <div>
+        <%= f.label :password, "كلمة المرور#{' *' unless user.persisted?}", class: "field-label" %>
+        <%= f.password_field :password, class: "field sm", dir: "ltr", autocomplete: "new-password", required: !user.persisted? %>
+      </div>
+      <div>
+        <%= f.label :password_confirmation, "تأكيد كلمة المرور", class: "field-label" %>
+        <%= f.password_field :password_confirmation, class: "field sm", dir: "ltr", autocomplete: "new-password" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-actions">
+    <%= f.submit "حفظ", class: "btn-navy sm", name: nil %>
+    <a href="<%= current_user.admin? ? admin_users_path : admin_root_path %>" class="btn-outline sm">إلغاء</a>
+  </div>
+<% end %>

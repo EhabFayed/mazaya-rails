@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@document.title_ar}" %>
+<div class="page-head">
+  <div><h1><%= @document.title_ar %></h1><p dir="ltr" style="text-align:end">/downloads/<%= @document.key %></p></div>
+  <div class="head-actions">
+    <a href="<%= download_path(key: @document.key) %>" target="_blank" rel="noopener" class="btn-outline sm">رابط التحميل ↗</a>
+    <a href="<%= admin_documents_path %>" class="btn-outline sm">← كل الوثائق</a>
+  </div>
+</div>
+<%= render "form", document: @document %>

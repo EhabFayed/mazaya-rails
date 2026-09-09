@@ -8,8 +8,8 @@ trunk (about, quality, safety, original-vs-counterfeit, news, contact).
 
 | What | Where |
 |---|---|
-| Page copy (headlines, descriptions, CTAs) | `config/locales/ar.yml` + `en.yml` — transcribed from the client copy deck. `[…]` = placeholder the client still has to supply. |
-| Structured data (catalog tree, products, solutions, projects, news, safety, certifications) | `app/models/site_data.rb` — every string is a `Bilingual` (`bi(ar, en)`) that renders in the current locale; `nil` / `PENDING` renders as a visible `.pending` placeholder; never invent a value. |
+| Page copy (headlines, descriptions, CTAs) | `config/locales/ar.yml` + `en.yml` (defaults) — every key can be overridden from **/admin/translations** (stored in `translations`, layered via `I18n::DbOverrides`). |
+| Structured content (categories, products, solutions, projects, posts, safety guides, documents, clients, departments, lists, settings) | Database tables managed from **/admin**. `app/models/site_data.rb` exposes them to the views with the original constant API (`SiteData::PRODUCTS`, `SiteData.product(slug)`…) via `const_missing`, cached per `settings.content_version`. Empty tables fall back to the seed defaults in `app/models/site_data/defaults.rb`; `db/seeds.rb` imports those defaults (idempotent). |
 | Design system | `public/site.css` (v1 colours, GE SS Two font, radii) + partials in `app/views/shared/` |
 | Behaviour | `public/site.js` (WhatsApp wiring, mega menu, lead forms, gated downloads, filters) |
 
@@ -41,7 +41,13 @@ bin/rails db:prepare
 bin/rails server
 ```
 
-## Leads, notifications, admin
+## Admin (/admin)
+
+Session login (`users` table, bcrypt). Roles: `admin` (everything), `editor` (content), `sales` (leads).
+First user is created by `bin/rails db:seed` (`ADMIN_EMAIL` / `ADMIN_PASSWORD`, default admin@mazaya.local / mazaya-admin-2026 — change it).
+Sections: dashboard (KPIs + "pending before launch" checklist), leads pipeline, products (+ Excel/CSV import), categories, custom solutions, projects, news & articles, safety guides, documents & catalogues (PDF upload), content lists (stats, steps, comparison table…), client logos, departments, page copy (translations), settings (WhatsApp, address, map, RFQ response time, notification emails), users.
+
+## Leads, notifications
 
 - Every form POSTs to `/leads`; attachments go to Active Storage (`storage/`, or set `ACTIVE_STORAGE_SERVICE`).
 - `LeadMailer` emails each new lead to `LEADS_NOTIFY_TO` (comma-separated) via SMTP settings in `.env.example`. Unset = no email, lead still saved.

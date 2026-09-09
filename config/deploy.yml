@@ -19,6 +19,7 @@ env:
     APP_HOST: REPLACE_WITH_DOMAIN
     ACTIVE_STORAGE_SERVICE: local
     RAILS_MAX_THREADS: 5
+    SOLID_QUEUE_IN_PUMA: true   # runs the job supervisor (lead emails) inside the web process
   secret:
     - SECRET_KEY_BASE
     - DATABASE_URL

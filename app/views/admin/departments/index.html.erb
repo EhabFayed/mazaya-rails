@@ -1,0 +1,25 @@
+<% content_for :title, "الأقسام" %>
+<div class="page-head">
+  <div><h1>الأقسام</h1><p><%= @departments.size %> قسم · تظهر في صفحة تواصل معنا مع أرقام التواصل.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_department_path %>" class="btn-navy sm">+ قسم جديد</a></div>
+</div>
+
+<% if @departments.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد أقسام بعد. <a href="<%= new_admin_department_path %>">أضف أول قسم</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th>القسم</th><th>المفتاح</th><th>الهاتف</th><th>البريد</th><th>الترتيب</th><th></th></tr></thead>
+  <tbody>
+    <% @departments.each do |d| %>
+    <tr>
+      <td><a href="<%= edit_admin_department_path(d) %>"><%= d.name_ar %></a><% if d.desc_ar.present? %><div style="color:#686B70;font-size:12.5px"><%= truncate(d.desc_ar, length: 70) %></div><% end %></td>
+      <td><span class="tr-key"><%= d.key %></span></td>
+      <td dir="ltr" style="text-align:end"><%= d.phone.presence || "—" %></td>
+      <td dir="ltr" style="text-align:end"><%= d.email.presence || "—" %></td>
+      <td><%= d.position %></td>
+      <td><a href="<%= edit_admin_department_path(d) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

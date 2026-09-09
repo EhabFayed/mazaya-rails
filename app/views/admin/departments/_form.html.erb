@@ -1,0 +1,45 @@
+<%= errors_for(department) %>
+<%= form_with model: [ :admin, department ], local: true, id: "department-form" do |f| %>
+  <div class="section">
+    <h2>القسم</h2>
+    <div class="stack">
+      <%= bi_field(f, :name, "اسم القسم", required: true) %>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">المفتاح (key)</label>
+          <%= f.text_field :key, class: "field sm", dir: "ltr", placeholder: "export" %>
+          <div class="hint">يُستخدم في رابط صفحة التواصل (?dept=export). يُولّد من الاسم الإنجليزي لو تركته فارغًا.</div>
+        </div>
+        <div>
+          <label class="field-label">الترتيب</label>
+          <%= f.number_field :position, class: "field sm", dir: "ltr" %>
+          <div class="hint">الأصغر يظهر أولًا.</div>
+        </div>
+      </div>
+      <%= bi_field(f, :desc, "وصف القسم", type: :text_area, rows: 2, hint: "مثال: عروض الأسعار وطلبات المشاريع.") %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>بيانات التواصل</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">الهاتف</label>
+        <%= f.text_field :phone, class: "field sm", dir: "ltr", placeholder: "+966 5x xxx xxxx" %>
+      </div>
+      <div>
+        <label class="field-label">البريد الإلكتروني</label>
+        <%= f.email_field :email, class: "field sm", dir: "ltr", placeholder: "sales@mazaya.sa" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="sticky-actions">
+  <button type="submit" form="department-form" class="btn-navy sm">حفظ</button>
+  <a href="<%= admin_departments_path %>" class="btn-outline sm">إلغاء</a>
+  <% if department.persisted? %>
+    <span style="flex:1"></span>
+    <%= button_to "حذف القسم", admin_department_path(department), method: :delete, class: "btn-danger", form: { data: { turbo: false }, style: "margin:0" }, data: { confirm: "حذف القسم \"#{department.name_ar}\" نهائيًا؟" } %>
+  <% end %>
+</div>

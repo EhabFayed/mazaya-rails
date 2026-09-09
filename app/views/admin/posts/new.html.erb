@@ -1,0 +1,6 @@
+<% content_for :title, @post.post_type == "article" ? "مقال جديد" : "خبر جديد" %>
+<div class="page-head">
+  <div><h1><%= @post.post_type == "article" ? "مقال جديد" : "خبر جديد" %></h1><p>افصل فقرات النص بسطر فارغ؛ النقاط وقائمة الفحص اختيارية.</p></div>
+  <div class="head-actions"><a href="<%= admin_posts_path %>" class="btn-outline sm">← كل المنشورات</a></div>
+</div>
+<%= render "form", post: @post %>

@@ -8,6 +8,12 @@ module I18n
       @loaded_version = nil
     end
 
+    # This backend must never fall back en -> ar (the YAML backend does that);
+    # config.i18n.fallbacks mixes Fallbacks into Simple, so disable it here.
+    def translate(locale, key, options = EMPTY_HASH)
+      super(locale, key, options.merge(fallback: false))
+    end
+
     # Lazily (re)load when the translations table changes.
     def lookup(locale, key, scope = [], options = {})
       ensure_loaded
@@ -21,7 +27,12 @@ module I18n
       self
     end
 
-    def self.reload! = I18n.backend.backends.first.reload! if I18n.backend.respond_to?(:backends)
+    # Called by Translation after_commit; finds this backend inside the chain.
+    def self.reload!
+      chain = I18n.backend
+      return unless chain.respond_to?(:backends)
+      chain.backends.grep(I18n::DbOverrides).each(&:reload!)
+    end
 
     private
 

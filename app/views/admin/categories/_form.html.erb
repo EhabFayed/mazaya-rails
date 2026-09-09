@@ -1,0 +1,78 @@
+<%= form_with model: [ :admin, @category ], local: true, id: "categoryForm" do |f| %>
+  <%= errors_for(@category) %>
+
+  <div class="section">
+    <h2>بيانات أساسية</h2>
+    <div class="form-grid">
+      <div class="full"><%= bi_field f, :name, "الاسم", required: true %></div>
+      <div><label class="field-label" for="category_slug">الرابط (slug)</label><%= f.text_field :slug, class: "field sm", dir: "ltr", placeholder: "ladders", data: { slug_target: "" } %><div class="hint">يُولَّد من الاسم الإنجليزي إن تُرك فارغًا. يظهر في عنوان الصفحة /products/…</div></div>
+      <div><label class="field-label" for="category_catalog_key">الكتالوج المرتبط</label><%= f.select :catalog_key, options_from_collection_for_select(@catalog_docs, :key, :title_ar, @category.catalog_key), { include_blank: "— الافتراضي —" }, class: "field sm" %><div class="hint">من صفحة الوثائق (كتالوج أو كتالوج فني).</div></div>
+      <div><label class="field-label" for="category_position">الترتيب</label><%= f.number_field :position, class: "field sm", dir: "ltr", step: 1 %></div>
+      <div style="display:flex;align-items:end"><label style="display:flex;align-items:center;gap:8px;font-weight:700;color:#192C7B;padding-bottom:10px"><%= f.check_box :published %> منشورة على الموقع</label></div>
+      <div class="full"><%= bi_field f, :finder, "سؤال «مساعد الاختيار»", hint: "سطر قصير يظهر في بطاقة الفئة بالصفحة الرئيسية." %></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>النصوص التعريفية</h2>
+    <p class="sub">تظهر في صفحة الفئة وصفحات المنتجات والحلول.</p>
+    <div class="stack">
+      <%= bi_field f, :desc, "وصف مختصر", type: :text_area, rows: 2 %>
+      <%= bi_field f, :b2c, "نص للعملاء الأفراد (المنتجات الجاهزة)", type: :text_area, rows: 3 %>
+      <%= bi_field f, :b2b, "نص للشركات (الحلول المخصصة)", type: :text_area, rows: 3 %>
+      <%= bi_field f, :about, "عن الفئة (نبذة مطوّلة)", type: :text_area, rows: 4 %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>الصورة</h2>
+    <div style="display:flex;gap:18px;align-items:start;flex-wrap:wrap">
+      <% if @category.image.attached? %>
+        <div class="img-card" style="width:220px">
+          <% if @category.image.representable? %><%= image_tag rails_representation_path(@category.image.representation(resize_to_fill: [ 440, 300 ]), only_path: true), alt: "", style: "height:150px" %><% end %>
+          <div class="body" style="color:#686B70" dir="ltr"><%= @category.image.filename %></div>
+        </div>
+      <% end %>
+      <div style="flex:1;min-width:260px">
+        <label class="field-label" for="category_image"><%= @category.image.attached? ? "استبدال الصورة" : "رفع صورة" %></label>
+        <%= f.file_field :image, accept: "image/*", class: "field sm", data: { preview: "#catImgPreview" } %>
+        <div id="catImgPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>الفئات الفرعية</h2>
+    <p class="sub">الصفوف الفارغة تُهمَل. لحذف فئة فرعية علّم «حذف». المنتجات المرتبطة بها تبقى بلا فئة فرعية.</p>
+    <div class="rows">
+      <%= f.fields_for :subcategories do |sf| %>
+        <div class="row">
+          <div class="cells">
+            <div><div class="lang">الاسم (عربي)</div><%= sf.text_field :name_ar, class: "field sm", placeholder: "الاسم (عربي)" %></div>
+            <div><div class="lang">Name (EN)</div><%= sf.text_field :name_en, class: "field sm", placeholder: "Name (EN)", dir: "ltr" %></div>
+            <div><div class="lang">الرابط</div><%= sf.text_field :slug, class: "field sm", placeholder: "slug", dir: "ltr" %></div>
+            <div><div class="lang">الترتيب</div><%= sf.number_field :position, class: "field sm", placeholder: "0", step: 1 %></div>
+          </div>
+          <div class="tools" style="justify-content:center">
+            <% if sf.object.persisted? %><label title="حذف" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:#B3261E"><%= sf.check_box :_destroy %>حذف</label><% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= rows_editor "category", :spec_labels, @category.spec_labels, [ [ "label_ar", "المواصفة (عربي)", :text ], [ "label_en", "Spec (EN)", :text ] ], title: "عناوين المواصفات الافتراضية", hint: "تظهر في جدول المواصفات لأي منتج بالفئة لم تُدخل مواصفاته." %>
+
+  <div class="sticky-actions">
+    <%= f.submit "حفظ", class: "btn-navy sm", data: { disable_with: "جارٍ الحفظ…" } %>
+    <a href="<%= admin_categories_path %>" class="btn-outline sm">إلغاء</a>
+    <% if @category.persisted? %>
+      <span style="flex:1"></span>
+      <%= button_tag "حذف الفئة", type: "submit", form: "deleteCategory", class: "btn-danger", data: { confirm: "حذف الفئة «#{@category.name_ar}» وفئاتها الفرعية؟ لن يتم الحذف إذا كانت تحتوي منتجات." } %>
+    <% end %>
+  </div>
+<% end %>
+<% if @category.persisted? %>
+  <%= form_with url: admin_category_path(@category), method: :delete, local: true, id: "deleteCategory", html: { hidden: true } do %><% end %>
+<% end %>
+<script>(function(){var n=document.getElementById('category_name_en');if(n)n.setAttribute('data-slug-source','');})();</script>

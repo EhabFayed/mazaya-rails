@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@article.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @article.name_ar %></h1><p dir="ltr" style="text-align:end">/safety/<%= @article.slug %></p></div>
+  <div class="head-actions">
+    <a href="<%= safety_article_path(slug: @article.slug) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a>
+    <a href="<%= admin_safety_articles_path %>" class="btn-outline sm">← كل الأدلة</a>
+  </div>
+</div>
+<%= render "form", article: @article %>

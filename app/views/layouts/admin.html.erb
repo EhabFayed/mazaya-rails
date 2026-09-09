@@ -38,7 +38,7 @@
   </nav>
   <div class="adm-user">
     <div><strong><%= current_user.name %></strong><br><span><%= { "admin" => "مدير", "editor" => "محرر", "sales" => "مبيعات" }[current_user.role] %></span></div>
-    <div style="display:flex;gap:10px"><a href="<%= root_path %>" target="_blank" rel="noopener">الموقع ↗</a><%= button_to "خروج", admin_logout_path, method: :delete, class: "linkbtn" %></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a href="<%= edit_admin_user_path(current_user) %>">حسابي</a><a href="<%= root_path %>" target="_blank" rel="noopener">الموقع ↗</a><%= button_to "خروج", admin_logout_path, method: :delete, class: "linkbtn" %></div>
   </div>
 </aside>
 <main class="adm-main">

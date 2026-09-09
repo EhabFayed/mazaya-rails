@@ -1,0 +1,28 @@
+<% content_for :title, "أدلة السلامة" %>
+<div class="page-head">
+  <div><h1>أدلة السلامة</h1><p><%= @articles.size %> دليل · ترتيبها هنا هو ترتيب الخطوات في صفحة السلامة.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_safety_article_path %>" class="btn-navy sm">+ دليل جديد</a></div>
+</div>
+
+<% if @articles.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد أدلة بعد. <a href="<%= new_admin_safety_article_path %>">أضف أول دليل</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th>#</th><th>الاسم</th><th>الملخص</th><th>النقاط</th><th>قائمة الفحص</th><th>منتجات</th><th>الحالة</th><th>الترتيب</th><th></th></tr></thead>
+  <tbody>
+    <% @articles.each_with_index do |a, i| %>
+    <tr>
+      <td><%= i + 1 %></td>
+      <td><a href="<%= edit_admin_safety_article_path(a) %>"><%= a.name_ar %></a><div style="color:#686B70;font-size:12.5px" dir="ltr"><%= a.slug %></div></td>
+      <td style="color:#686B70;font-size:13px;max-width:320px"><%= truncate(a.summary_ar.to_s, length: 90) %></td>
+      <td><%= a.points.size %></td>
+      <td><%= a.checklist.size %></td>
+      <td><%= a.related_slugs.size %></td>
+      <td><%= yes_no(a.published) %></td>
+      <td><%= a.position %></td>
+      <td><a href="<%= edit_admin_safety_article_path(a) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

@@ -1,0 +1,6 @@
+<% content_for :title, "عميل جديد" %>
+<div class="page-head">
+  <div><h1>عميل جديد</h1><p>ارفع الشعار (PNG/SVG بخلفية شفافة أفضل) واختر لون الخلفية.</p></div>
+  <div class="head-actions"><a href="<%= admin_clients_path %>" class="btn-outline sm">← كل العملاء</a></div>
+</div>
+<%= render "form", client: @client %>

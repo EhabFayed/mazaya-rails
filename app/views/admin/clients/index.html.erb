@@ -1,0 +1,25 @@
+<% content_for :title, "شعارات العملاء" %>
+<div class="page-head">
+  <div><h1>شعارات العملاء</h1><p><%= @clients.size %> عميل · تظهر في شريط الثقة بالرئيسية وصفحة B2B.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_client_path %>" class="btn-navy sm">+ عميل جديد</a></div>
+</div>
+
+<% if @clients.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد شعارات بعد. <a href="<%= new_admin_client_path %>">أضف أول عميل</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th></th><th>الاسم</th><th>لون الخلفية</th><th>الحالة</th><th>الترتيب</th><th></th></tr></thead>
+  <tbody>
+    <% @clients.each do |c| %>
+    <tr>
+      <td><% if c.logo.attached? %><div style="background:<%= c.bg %>;border-radius:8px;padding:4px;display:inline-block"><%= image_tag rails_blob_path(c.logo, only_path: true), class: "thumb", alt: c.name_ar, style: "object-fit:contain;background:transparent" %></div><% else %><div class="thumb ph">—</div><% end %></td>
+      <td><a href="<%= edit_admin_client_path(c) %>"><%= c.name_ar %></a><div style="color:#686B70;font-size:12.5px" dir="ltr"><%= c.name_en %></div></td>
+      <td><span style="display:inline-block;width:16px;height:16px;border-radius:4px;border:1px solid var(--line);background:<%= c.bg %>;vertical-align:middle"></span> <span class="tr-key" style="display:inline"><%= c.bg %></span></td>
+      <td><%= yes_no(c.published) %></td>
+      <td><%= c.position %></td>
+      <td><a href="<%= edit_admin_client_path(c) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

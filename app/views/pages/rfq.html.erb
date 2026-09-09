@@ -107,7 +107,11 @@
     <div data-reveal class="pillar" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-inline-start:6px solid #192C7B">
       <div>
         <div style="color:#192C7B;font-size:17px;font-weight:800;margin-bottom:8px"><%= t("rfq.after.response") %></div>
-        <span class="pending" style="background:#fff"><%= t("rfq.after.response_pending") %></span>
+        <% if SiteData.setting&.rfq_response_ar.present? %>
+          <div style="color:#192C7B;font-size:24px;font-weight:900"><%= SiteData.setting.rfq_response %></div>
+        <% else %>
+          <span class="pending" style="background:#fff"><%= t("rfq.after.response_pending") %></span>
+        <% end %>
       </div>
     </div>
   </div>

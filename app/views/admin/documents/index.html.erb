@@ -1,0 +1,29 @@
+<% content_for :title, "الوثائق والكتالوجات" %>
+<div class="page-head">
+  <div><h1>الوثائق والكتالوجات</h1><p><%= @documents.size %> وثيقة · <%= @documents.count { |d| d.file.attached? } %> بملف مرفوع. المفتاح (key) يُستخدم في روابط التحميل.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_document_path %>" class="btn-navy sm">+ وثيقة جديدة</a></div>
+</div>
+
+<% if @documents.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد وثائق بعد. <a href="<%= new_admin_document_path %>">أضف أول وثيقة</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th>العنوان</th><th>المفتاح</th><th>النوع</th><th>نموذج</th><th>الإصدار</th><th>التاريخ</th><th>الملف</th><th>الحالة</th><th>الترتيب</th><th></th></tr></thead>
+  <tbody>
+    <% @documents.each do |d| %>
+    <tr>
+      <td><a href="<%= edit_admin_document_path(d) %>"><%= d.title_ar %></a></td>
+      <td><span class="tr-key"><%= d.key %></span></td>
+      <td><%= AdminHelper::DOC_TYPES[d.doc_type] || d.doc_type %></td>
+      <td><%= d.gated ? "مطلوب" : "—" %></td>
+      <td dir="ltr" style="text-align:end"><%= d.version.presence || "—" %></td>
+      <td dir="ltr" style="text-align:end;white-space:nowrap"><%= d.version_date&.strftime("%Y-%m-%d") || "—" %></td>
+      <td><% if d.file.attached? %><a href="<%= rails_blob_path(d.file, disposition: "inline") %>" target="_blank" rel="noopener">PDF</a> <span style="color:#9AA0A8;font-size:12.5px">(<%= number_to_human_size(d.file.byte_size) %>)</span><% else %><span class="status status-new">بدون ملف</span><% end %></td>
+      <td><%= yes_no(d.published) %></td>
+      <td><%= d.position %></td>
+      <td><a href="<%= edit_admin_document_path(d) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

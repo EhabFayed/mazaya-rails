@@ -1,0 +1,19 @@
+<% content_for :title, "القوائم والبلوكات" %>
+<div class="page-head">
+  <div><h1>القوائم والبلوكات</h1><p>الأرقام، الروابط، الخطوات، الجداول، والقوائم الثابتة في الصفحات. القائمة الفارغة تعرض المحتوى الافتراضي.</p></div>
+</div>
+
+<table class="adm-table">
+  <thead><tr><th>القائمة</th><th>المفتاح</th><th>الحقول</th><th>العناصر</th><th></th></tr></thead>
+  <tbody>
+    <% @lists.each do |l| %>
+    <tr>
+      <td><a href="<%= edit_admin_content_list_path(l.key) %>"><%= l.label %></a></td>
+      <td><span class="tr-key"><%= l.key %></span></td>
+      <td style="color:#686B70;font-size:12.5px" dir="ltr"><%= l.fields.join(", ") %></td>
+      <td><% if l.items.any? %><%= l.items.size %><% else %><span style="color:#9AA0A8">افتراضي</span><% end %></td>
+      <td><a href="<%= edit_admin_content_list_path(l.key) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

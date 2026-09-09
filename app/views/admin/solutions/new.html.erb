@@ -1,0 +1,6 @@
+<% content_for :title, "حل جديد" %>
+<div class="page-head">
+  <div><h1>حل مخصص جديد</h1><p>يظهر في صفحة الحلول بعد الحفظ والنشر.</p></div>
+  <div class="head-actions"><a href="<%= admin_solutions_path %>" class="btn-outline sm">← كل الحلول</a></div>
+</div>
+<%= render "form", solution: @solution %>

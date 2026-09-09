@@ -1,43 +1,105 @@
 <% content_for :title, "طلب ##{@lead.id}" %>
-<a href="<%= admin_leads_path %>" style="font-weight:700">← كل الطلبات</a>
-<div style="display:flex;align-items:center;gap:14px;margin:14px 0 22px;flex-wrap:wrap">
-  <h1 style="margin:0;color:#192C7B;font-size:28px;font-weight:900">#<%= @lead.id %> · <%= @lead.name %></h1>
-  <span class="kind kind-<%= @lead.kind %>"><%= LeadMailer::KIND_LABELS[@lead.kind] %></span>
-  <span style="color:#686B70;font-size:14px" dir="ltr"><%= @lead.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+<% prev_lead = Lead.where("id < ?", @lead.id).order(id: :desc).first
+   next_lead = Lead.where("id > ?", @lead.id).order(id: :asc).first %>
+<div class="page-head">
+  <div>
+    <a href="<%= admin_leads_path %>" style="font-weight:700">← كل الطلبات</a>
+    <h1 style="margin-top:8px">#<%= @lead.id %> · <%= @lead.name %>
+      <span class="kind kind-<%= @lead.kind %>"><%= LeadMailer::KIND_LABELS.fetch(@lead.kind, @lead.kind) %></span>
+      <span class="status status-<%= @lead.status %>"><%= AdminHelper::LEAD_STATUS.fetch(@lead.status, @lead.status) %></span>
+    </h1>
+    <p><span dir="ltr" style="unicode-bidi:isolate"><%= @lead.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+      <% if @lead.contacted_at %> · تم التواصل <span dir="ltr" style="unicode-bidi:isolate"><%= @lead.contacted_at.strftime("%Y-%m-%d %H:%M") %></span><% end %>
+      <% if @lead.assigned_to %> · المسؤول: <strong><%= @lead.assigned_to.name %></strong><% end %>
+    </p>
+  </div>
+  <div class="head-actions">
+    <% if next_lead %><a href="<%= admin_lead_path(next_lead) %>" class="btn-outline sm">→ الأحدث #<%= next_lead.id %></a><% end %>
+    <% if prev_lead %><a href="<%= admin_lead_path(prev_lead) %>" class="btn-outline sm">الأقدم #<%= prev_lead.id %> ←</a><% end %>
+  </div>
 </div>
 
-<div class="grid-2" style="align-items:start">
-  <div class="adm-card">
-    <h2>بيانات التواصل</h2>
-    <dl class="kv">
-      <dt>الاسم</dt><dd><%= @lead.name %></dd>
-      <dt>الجوال</dt><dd dir="ltr" style="text-align:end"><%= @lead.phone.presence || "—" %></dd>
-      <dt>البريد</dt><dd dir="ltr" style="text-align:end"><%= @lead.email.presence || "—" %></dd>
-      <dt>نوع الجهة</dt><dd><%= SiteData::ORG_TYPES[@lead.org_type] || @lead.org_type.presence || "—" %></dd>
-      <dt>الاهتمام</dt><dd><%= @lead.interest.presence || "—" %></dd>
-      <dt>الملف المطلوب</dt><dd><%= @lead.download_key.presence || "—" %></dd>
-      <dt>المصدر</dt><dd><%= @lead.source %></dd>
-    </dl>
-    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-      <% if @lead.phone.present? %><a href="https://wa.me/<%= @lead.phone.delete('^0-9') %>" target="_blank" rel="noopener" class="btn-wa" style="padding:10px 18px;font-size:14px">واتساب</a><a href="tel:<%= @lead.phone %>" class="btn-outline" style="padding:9px 18px;font-size:14px">اتصال</a><% end %>
-      <% if @lead.email.present? %><a href="mailto:<%= @lead.email %>" class="btn-outline" style="padding:9px 18px;font-size:14px">إيميل</a><% end %>
-    </div>
-  </div>
+<div class="grid-2" style="gap:22px;align-items:start">
+  <%# Right column (first in RTL): contact + details %>
   <div style="display:grid;gap:18px">
-    <% if @lead.message.present? %><div class="adm-card"><h2>الرسالة</h2><p style="margin:0;white-space:pre-wrap;line-height:1.8"><%= @lead.message %></p></div><% end %>
-    <% if @lead.payload.present? %>
-    <div class="adm-card">
-      <h2>تفاصيل النموذج</h2>
-      <dl class="kv"><% @lead.payload.each do |k, v| %><% next if v.blank? %><dt><%= k %></dt><dd><%= v %></dd><% end %></dl>
+    <div class="card">
+      <div class="card-head"><h2>بيانات التواصل</h2></div>
+      <table class="adm-table">
+        <tbody>
+          <tr><th>الاسم</th><td><%= @lead.name %></td></tr>
+          <% if @lead.payload["company"].present? %><tr><th>الشركة</th><td><%= @lead.payload["company"] %></td></tr><% end %>
+          <tr><th>الجوال</th><td dir="ltr" style="text-align:end"><%= @lead.phone.presence || "—" %></td></tr>
+          <tr><th>البريد</th><td dir="ltr" style="text-align:end"><%= @lead.email.presence || "—" %></td></tr>
+          <tr><th>نوع الجهة</th><td><%= (@lead.org_type.present? && SiteData::ORG_TYPES[@lead.org_type]) || @lead.org_type.presence || "—" %></td></tr>
+          <tr><th>الاهتمام</th><td><%= @lead.interest.presence || "—" %></td></tr>
+          <% if @lead.download_key.present? %><tr><th>الملف المطلوب</th><td dir="ltr" style="text-align:end"><%= @lead.download_key %></td></tr><% end %>
+          <tr><th>المصدر</th><td dir="ltr" style="text-align:end"><%= @lead.source.presence || "—" %></td></tr>
+        </tbody>
+      </table>
+      <div class="head-actions" style="margin-top:16px">
+        <% if @lead.phone.present? %>
+          <a href="https://wa.me/<%= @lead.phone.delete('^0-9') %>" target="_blank" rel="noopener" class="btn-wa sm">واتساب</a>
+          <a href="tel:<%= @lead.phone.delete('^0-9+') %>" class="btn-outline sm">اتصال</a>
+        <% end %>
+        <% if @lead.email.present? %><a href="mailto:<%= @lead.email %>" class="btn-outline sm">إيميل</a><% end %>
+      </div>
+    </div>
+
+    <% if @lead.message.present? %>
+    <div class="card">
+      <div class="card-head"><h2>الرسالة</h2></div>
+      <p style="margin:0;white-space:pre-wrap;line-height:1.8"><%= @lead.message %></p>
     </div>
     <% end %>
-    <div class="adm-card">
-      <h2>المرفقات</h2>
-      <% if @lead.files.attached? %>
-        <ul style="margin:0;padding:0;list-style:none;display:grid;gap:8px">
-          <% @lead.files.each do |f| %><li><a href="<%= rails_blob_path(f, disposition: "attachment") %>"><%= f.filename %></a> <span style="color:#9AA0A8;font-size:13px">(<%= number_to_human_size(f.byte_size) %>)</span></li><% end %>
-        </ul>
-      <% else %><p style="margin:0;color:#686B70">لا توجد مرفقات.</p><% end %>
+
+    <% details = @lead.payload.reject { |_, v| v.blank? } %>
+    <% if details.any? %>
+    <div class="card">
+      <div class="card-head"><h2>تفاصيل النموذج</h2></div>
+      <table class="adm-table">
+        <tbody>
+          <% details.each do |k, v| %>
+            <tr><th class="tr-key"><%= k %></th><td style="white-space:pre-wrap"><%= v.is_a?(Array) || v.is_a?(Hash) ? v.to_json : v %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
+    <% end %>
+
+    <div class="card">
+      <div class="card-head"><h2>المرفقات<% if @lead.files.attached? %> (<%= @lead.files.size %>)<% end %></h2></div>
+      <% if @lead.files.attached? %>
+        <ul class="stack" style="margin:0;padding:0;list-style:none">
+          <% @lead.files.each do |f| %>
+            <li><a href="<%= rails_blob_path(f, disposition: "attachment") %>" dir="ltr" style="unicode-bidi:isolate"><%= f.filename %></a> <span class="hint" style="display:inline">(<%= number_to_human_size(f.byte_size) %>)</span></li>
+          <% end %>
+        </ul>
+      <% else %><p class="muted">لا توجد مرفقات.</p><% end %>
+    </div>
+  </div>
+
+  <%# Left column: manage %>
+  <div class="card">
+    <div class="card-head"><h2>إدارة الطلب</h2></div>
+    <%= errors_for(@lead) %>
+    <%= form_with model: [ :admin, @lead ], method: :patch, local: true, class: "stack" do |f| %>
+      <div>
+        <%= f.label :status, "الحالة", class: "field-label" %>
+        <%= f.select :status, AdminHelper::LEAD_STATUS.map { |k, v| [ v, k ] }, {}, class: "field sm" %>
+        <div class="hint">عند اختيار «تم التواصل» يُسجَّل وقت أول تواصل تلقائيًا.</div>
+      </div>
+      <div>
+        <%= f.label :assigned_to_id, "المسؤول", class: "field-label" %>
+        <%= f.select :assigned_to_id, @users.map { |u| [ u.name, u.id ] }, { include_blank: "— غير مُعيَّن —" }, class: "field sm" %>
+      </div>
+      <div>
+        <%= f.label :notes, "ملاحظات داخلية", class: "field-label" %>
+        <%= f.text_area :notes, class: "field sm", rows: 6, placeholder: "ملاحظات المتابعة، ما تم الاتفاق عليه، رقم العرض…" %>
+      </div>
+      <div class="sticky-actions">
+        <%= f.submit "حفظ", class: "btn-navy sm", name: nil %>
+        <a href="<%= admin_leads_path %>" class="btn-outline sm">رجوع</a>
+      </div>
+    <% end %>
   </div>
 </div>

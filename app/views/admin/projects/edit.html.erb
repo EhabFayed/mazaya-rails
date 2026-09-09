@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@project.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @project.name_ar %></h1><p dir="ltr" style="text-align:end">/projects/<%= @project.slug %></p></div>
+  <div class="head-actions">
+    <a href="<%= project_path(slug: @project.slug) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a>
+    <a href="<%= admin_projects_path %>" class="btn-outline sm">← كل المشاريع</a>
+  </div>
+</div>
+<%= render "form", project: @project %>

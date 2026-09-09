@@ -48,13 +48,13 @@ D::DOWNLOADS.each_with_index do |(key, d), i|
   Document.find_or_create_by!(key: key) do |doc|
     doc.title_ar = ar(d[:title]); doc.title_en = en(d[:title]); doc.gated = d[:gated]; doc.position = i
     doc.doc_type = case key
-                   when /\Acatalog-/ then "catalog"
-                   when "technical-catalog" then "technical"
-                   when "company-profile" then "profile"
-                   when "tds" then "tds"
-                   when "user-guide" then "guide"
-                   else "catalog"
-                   end
+    when /\Acatalog-/ then "catalog"
+    when "technical-catalog" then "technical"
+    when "company-profile" then "profile"
+    when "tds" then "tds"
+    when "user-guide" then "guide"
+    else "catalog"
+    end
   end
 end
 [ [ "cert-iso", "ISO", "ISO", "certificate", "عرض الشهادة", "View Certificate" ], [ "cert-saso", "SASO", "SASO", "certificate", "عرض الاعتماد", "View Approval" ],

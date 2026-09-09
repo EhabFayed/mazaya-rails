@@ -1,0 +1,6 @@
+<% content_for :title, "تعديل: #{@client.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @client.name_ar %></h1><p>شعار في شريط الثقة.</p></div>
+  <div class="head-actions"><a href="<%= admin_clients_path %>" class="btn-outline sm">← كل العملاء</a></div>
+</div>
+<%= render "form", client: @client %>

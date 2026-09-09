@@ -1,11 +1,12 @@
 <% content_for :title, "#{@solution[:name]} — #{t("nav.custom_solutions")} — #{t("brand")}" %>
-<% content_for :description, t("solutions.show.desc", name: @solution[:name]) %>
+<% solution_desc = @solution[:desc].presence || t("solutions.show.desc", name: @solution[:name]) %>
+<% content_for :description, solution_desc %>
 <% content_for :nav_active, "b2b" %>
 
 <%# 01 — Hero %>
 <%= render "shared/page_hero",
       crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.custom_solutions"), solutions_path ], [ @solution[:name], nil ] ],
-      label: t("solutions.show.label"), h1: @solution[:name], desc: t("solutions.show.desc", name: @solution[:name]),
+      label: t("solutions.show.label"), h1: @solution[:name], desc: solution_desc,
       image: @solution[:image],
       primary: [ t("solutions.hero.primary"), rfq_path ],
       secondary: :whatsapp %>

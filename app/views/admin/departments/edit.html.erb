@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@department.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @department.name_ar %></h1><p dir="ltr" style="text-align:end">/contact?dept=<%= @department.key %></p></div>
+  <div class="head-actions">
+    <a href="<%= contact_path(dept: @department.key) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a>
+    <a href="<%= admin_departments_path %>" class="btn-outline sm">← كل الأقسام</a>
+  </div>
+</div>
+<%= render "form", department: @department %>
