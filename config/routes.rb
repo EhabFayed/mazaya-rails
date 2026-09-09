@@ -5,7 +5,29 @@ Rails.application.routes.draw do
   resources :leads, only: [ :create ]
   get "/sitemap.xml", to: "sitemaps#show", as: :sitemap, defaults: { format: :xml }
   namespace :admin do
-    resources :leads, only: [ :index, :show ]
+    root "dashboard#show"
+    get  "login",  to: "sessions#new"
+    post "login",  to: "sessions#create"
+    delete "logout", to: "sessions#destroy"
+    resources :leads, only: [ :index, :show, :update ]
+    resources :products do
+      collection { get :import; post :import, action: :run_import }
+      member { delete :purge_image; patch :reorder }
+    end
+    resources :categories
+    resources :solutions
+    resources :projects do
+      member { delete :purge_gallery_image }
+    end
+    resources :posts
+    resources :safety_articles
+    resources :documents
+    resources :content_lists, only: [ :index, :edit, :update ], param: :key
+    resources :clients
+    resources :departments
+    resources :translations, only: [ :index, :update ]
+    resource  :settings, only: [ :show, :update ]
+    resources :users
   end
 
   # /ar is the default (no prefix); English lives under /en

@@ -17,6 +17,7 @@ gem "sidekiq", "~> 8.0", ">= 8.0.1"
 gem "jwt"
 gem "ruby-vips"
 gem "image_processing", "~> 1.2"
+gem "roo", "~> 2.10" # Excel import for the product catalog
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]

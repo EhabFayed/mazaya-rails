@@ -1,6 +1,32 @@
 # Arabic copy — transcribed from "Mazaya website content" (Canva deck, Sept 2026).
 # Text in [square brackets] is a placeholder the client still has to supply.
 ar:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %B"
+      long: "%d %B %Y"
+      month: "%B %Y"
+    day_names: ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
+    abbr_day_names: ["أحد", "إثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"]
+    month_names: [~, "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
+    abbr_month_names: [~, "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
+    order: [":day", ":month", ":year"]
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %B %H:%M"
+      long: "%d %B %Y %H:%M"
+    am: "ص"
+    pm: "م"
+  admin:
+    lead_status:
+      new: "جديد"
+      contacted: "تم التواصل"
+      quoted: "أُرسل عرض"
+      won: "تم الإغلاق"
+      lost: "لم يتم"
+      spam: "سبام"
   brand: "ألومنيوم مزايا"
   tagline: "الأصل له اسم واحد: مزايا"
   common:

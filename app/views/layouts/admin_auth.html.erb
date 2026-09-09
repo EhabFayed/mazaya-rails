@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>تسجيل الدخول — لوحة تحكم مزايا</title>
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/admin.css">
+<%= csrf_meta_tags %>
+</head>
+<body class="adm-auth">
+  <div class="auth-card">
+    <img src="/assets/logo.png" alt="مزايا" style="height:64px;margin:0 auto 22px">
+    <% if alert %><div class="flash err"><%= alert %></div><% end %>
+    <% if notice %><div class="flash ok"><%= notice %></div><% end %>
+    <%= yield %>
+  </div>
+</body>
+</html>

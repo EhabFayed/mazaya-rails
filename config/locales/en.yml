@@ -1,6 +1,9 @@
 # English copy — transcribed from "Mazaya website content" (Canva deck, English versions).
 # Text in [square brackets] is a placeholder the client still has to supply.
 en:
+  date:
+    formats:
+      month: "%B %Y"
   brand: "Mazaya Aluminum"
   tagline: "The Original. The Trusted Name."
   common:

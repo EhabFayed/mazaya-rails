@@ -4,33 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title><%= content_for(:title) || "لوحة الطلبات" %> — مزايا</title>
+<title><%= content_for(:title) || "لوحة التحكم" %> — مزايا</title>
 <link rel="icon" type="image/png" href="/assets/logo.png">
 <link rel="stylesheet" href="/site.css">
-<style>
-  body{background:#F4F5F7}
-  .adm-bar{background:#0D1744;color:#fff;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  .adm-bar img{height:40px}
-  .adm-wrap{max-width:1280px;margin:0 auto;padding:32px}
-  .adm-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);font-size:14.5px}
-  .adm-table th,.adm-table td{padding:12px 14px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
-  .adm-table th{background:var(--soft);color:var(--navy);font-weight:800}
-  .adm-table tr:last-child td{border-bottom:none}
-  .adm-table a{font-weight:700}
-  .kind{display:inline-block;border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:700;background:var(--soft-2);color:var(--navy)}
-  .kind-rfq{background:var(--navy);color:#fff}.kind-partner{background:#1B7F4B;color:#fff}.kind-download{background:#E6E8EC;color:var(--gray)}
-  .adm-card{background:#fff;border-radius:16px;border:1px solid var(--line);padding:24px}
-  .adm-card h2{margin:0 0 14px;color:var(--navy);font-size:20px;font-weight:900}
-  dl.kv{display:grid;grid-template-columns:200px 1fr;gap:10px 18px;margin:0;font-size:15px}
-  dl.kv dt{color:var(--gray);font-weight:700}
-  dl.kv dd{margin:0;white-space:pre-wrap}
-</style>
+<link rel="stylesheet" href="/admin.css">
+<%= csrf_meta_tags %>
 </head>
-<body>
-<div class="adm-bar">
-  <div style="display:flex;align-items:center;gap:14px"><img src="/assets/logo-white.png" alt="مزايا"><strong>لوحة الطلبات</strong></div>
-  <div style="display:flex;gap:16px;font-size:14px"><a href="<%= admin_leads_path %>" style="color:#B9C6F2">كل الطلبات</a><a href="<%= root_path %>" style="color:rgba(255,255,255,.7)">الموقع</a></div>
-</div>
-<main class="adm-wrap"><%= yield %></main>
+<body class="adm">
+<aside class="adm-side">
+  <a href="<%= admin_root_path %>" class="adm-brand"><img src="/assets/logo-white.png" alt="مزايا"><span>لوحة التحكم</span></a>
+  <% nav = [
+       [ "dashboard", "الرئيسية", admin_root_path, nil ],
+       [ "leads", "الطلبات", admin_leads_path, :leads, Lead.where(status: "new").count ],
+       [ "products", "المنتجات", admin_products_path, :content ],
+       [ "categories", "الفئات", admin_categories_path, :content ],
+       [ "solutions", "الحلول المخصصة", admin_solutions_path, :content ],
+       [ "projects", "المشاريع", admin_projects_path, :content ],
+       [ "posts", "الأخبار والمقالات", admin_posts_path, :content ],
+       [ "safety_articles", "أدلة السلامة", admin_safety_articles_path, :content ],
+       [ "documents", "الوثائق والكتالوجات", admin_documents_path, :content ],
+       [ "content_lists", "القوائم والبلوكات", admin_content_lists_path, :content ],
+       [ "clients", "شعارات العملاء", admin_clients_path, :content ],
+       [ "departments", "الأقسام", admin_departments_path, :content ],
+       [ "translations", "نصوص الصفحات", admin_translations_path, :content ],
+       [ "settings", "الإعدادات", admin_settings_path, :settings ],
+       [ "users", "المستخدمون", admin_users_path, :users ]
+     ] %>
+  <nav class="adm-nav">
+    <% nav.each do |key, label, href, area, badge| %>
+      <% next if area && !can?(area) %>
+      <a href="<%= href %>" class="<%= 'active' if admin_section == key %>"><%= label %><% if badge.to_i.positive? %><span class="badge"><%= badge %></span><% end %></a>
+    <% end %>
+  </nav>
+  <div class="adm-user">
+    <div><strong><%= current_user.name %></strong><br><span><%= { "admin" => "مدير", "editor" => "محرر", "sales" => "مبيعات" }[current_user.role] %></span></div>
+    <div style="display:flex;gap:10px"><a href="<%= root_path %>" target="_blank" rel="noopener">الموقع ↗</a><%= button_to "خروج", admin_logout_path, method: :delete, class: "linkbtn" %></div>
+  </div>
+</aside>
+<main class="adm-main">
+  <% if notice %><div class="flash ok"><%= notice %></div><% end %>
+  <% if alert %><div class="flash err"><%= alert %></div><% end %>
+  <%= yield %>
+</main>
+<script src="/admin.js"></script>
 </body>
 </html>

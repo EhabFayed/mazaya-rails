@@ -8,6 +8,11 @@ class Lead < ApplicationRecord
                      application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
                      application/acad image/vnd.dwg application/dxf].freeze
 
+  belongs_to :assigned_to, class_name: "User", optional: true, inverse_of: :leads
+  STATUSES = %w[new contacted quoted won lost spam].freeze
+  validates :status, inclusion: { in: STATUSES }
+  scope :with_status, ->(s) { s.present? ? where(status: s) : all }
+
   has_many_attached :files
 
   validates :name, presence: true
