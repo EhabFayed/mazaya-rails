@@ -134,6 +134,13 @@ end
   end
 end
 
+puts "== Client product sheet"
+if File.exist?(MazayaSheetImport::DEFAULT_PATH)
+  MazayaSheetImport.run # idempotent; replaces the prototype placeholders above with the real catalog
+else
+  puts "   db/data/mazaya_products.xlsx not found — keeping prototype products"
+end
+
 puts "== Admin user"
 if User.none?
   email = ENV.fetch("ADMIN_EMAIL", "admin@mazaya.local")
