@@ -1,0 +1,24 @@
+<% content_for :title, "المستخدمون" %>
+<div class="page-head">
+  <div><h1>المستخدمون</h1><p>حسابات الدخول للوحة التحكم وصلاحياتها: مدير (كل شيء) · محرر (المحتوى) · مبيعات (الطلبات).</p></div>
+  <div class="head-actions"><a href="<%= new_admin_user_path %>" class="btn-navy sm">+ مستخدم جديد</a></div>
+</div>
+
+<table class="adm-table">
+  <thead><tr><th>الاسم</th><th>البريد</th><th>الصلاحية</th><th>الحالة</th><th>آخر دخول</th><th></th></tr></thead>
+  <tbody>
+    <% @users.each do |u| %>
+    <tr>
+      <td><a href="<%= edit_admin_user_path(u) %>"><%= u.name %></a><% if u == current_user %> <span class="chip">أنت</span><% end %></td>
+      <td dir="ltr" style="text-align:end"><%= u.email %></td>
+      <td><span class="kind"><%= Admin::UsersController::ROLE_LABELS.fetch(u.role, u.role) %></span></td>
+      <td><%= u.active ? content_tag(:span, "نشط", class: "pill-on") : content_tag(:span, "موقوف", class: "pill-off") %></td>
+      <td dir="ltr" style="text-align:end"><%= u.last_login_at ? u.last_login_at.strftime("%Y-%m-%d %H:%M") : "—" %></td>
+      <td style="text-align:end">
+        <a href="<%= edit_admin_user_path(u) %>" class="btn-outline sm">تعديل</a>
+        <% if u != current_user %><%= button_to "حذف", admin_user_path(u), method: :delete, class: "btn-danger", form: { style: "display:inline", data: { confirm: "حذف المستخدم #{u.name}؟" } } %><% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

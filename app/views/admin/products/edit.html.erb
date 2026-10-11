@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@product.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @product.name_ar %><% if @product.code.present? %> <span dir="ltr" style="color:#9AA0A8;font-size:18px"><%= @product.code %></span><% end %></h1><p><%= @product.category.name_ar %><% if @product.subcategory %> › <%= @product.subcategory.name_ar %><% end %> · <%= yes_no(@product.published) %></p></div>
+  <div class="head-actions">
+    <% if @product.published %><a href="<%= product_path(category: @product.category.slug, slug: @product.slug) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a><% end %>
+    <a href="<%= admin_products_path %>" class="btn-outline sm">← كل المنتجات</a>
+  </div>
+</div>
+<%= render "form" %>

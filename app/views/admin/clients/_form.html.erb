@@ -1,0 +1,62 @@
+<%= errors_for(client) %>
+<%= form_with model: [ :admin, client ], local: true, multipart: true, id: "client-form" do |f| %>
+  <div class="section">
+    <h2>العميل</h2>
+    <div class="stack">
+      <%= bi_field(f, :name, "اسم العميل", required: true, hint: "يُستخدم كنص بديل للشعار.") %>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">لون خلفية الشعار</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <%= color_field_tag nil, (client.bg.presence || "#FFFFFF"), id: "client-bg-picker", style: "width:48px;height:42px;padding:2px;border:1px solid var(--line);border-radius:10px;background:#fff" %>
+            <%= f.text_field :bg, class: "field sm", dir: "ltr", placeholder: "#FFFFFF", id: "client-bg-hex", maxlength: 7, style: "max-width:160px" %>
+          </div>
+          <div class="hint">صيغة HEX مثل #FFFFFF. اختر من اللوحة أو اكتب الكود.</div>
+        </div>
+        <div>
+          <label class="field-label">الشعار</label>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+            <% if client.logo.attached? %>
+              <div style="background:<%= client.bg %>;border-radius:10px;padding:8px"><%= image_tag rails_blob_path(client.logo, only_path: true), alt: client.name_ar, style: "height:56px;display:block" %></div>
+            <% end %>
+            <div id="client-logo-preview" style="display:flex;gap:8px"></div>
+          </div>
+          <%= f.file_field :logo, accept: "image/*,.svg", class: "field sm", data: { preview: "#client-logo-preview" } %>
+          <div class="hint">اختيار ملف جديد يستبدل الشعار الحالي عند الحفظ.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>النشر</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">الترتيب</label>
+        <%= f.number_field :position, class: "field sm", dir: "ltr" %>
+        <div class="hint">الأصغر يظهر أولًا.</div>
+      </div>
+      <div>
+        <label class="field-label">الحالة</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :published %> منشور في الموقع</label>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="sticky-actions">
+  <button type="submit" form="client-form" class="btn-navy sm">حفظ</button>
+  <a href="<%= admin_clients_path %>" class="btn-outline sm">إلغاء</a>
+  <% if client.persisted? %>
+    <span style="flex:1"></span>
+    <%= button_to "حذف العميل", admin_client_path(client), method: :delete, class: "btn-danger", form: { data: { turbo: false }, style: "margin:0" }, data: { confirm: "حذف شعار \"#{client.name_ar}\" نهائيًا؟" } %>
+  <% end %>
+</div>
+<script>
+  (function () {
+    var picker = document.getElementById('client-bg-picker'), hex = document.getElementById('client-bg-hex');
+    if (!picker || !hex) return;
+    picker.addEventListener('input', function () { hex.value = picker.value.toUpperCase(); });
+    hex.addEventListener('input', function () { if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) picker.value = hex.value; });
+  })();
+</script>

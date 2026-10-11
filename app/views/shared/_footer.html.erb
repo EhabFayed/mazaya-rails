@@ -1,48 +1,78 @@
+<%# Extended footer (copy deck §10): full sitemap, catalog entry, contact by department, social. %>
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="trust-strip">
-      <span style="font-size:13px;letter-spacing:2px;color:rgba(255,255,255,.35)">يثقون بمنتجاتنا</span>
-      <span style="display:flex;align-items:center;gap:12px"><img src="/assets/logo-saco.png" alt="" style="height:30px">ساكو SACO</span>
-      <span style="display:flex;align-items:center;gap:12px"><span style="background:#fff;border-radius:8px;padding:4px 8px;display:flex"><img src="/assets/logo-roshn.svg" alt="" style="height:26px"></span>روشن ROSHN</span>
-      <span style="display:flex;align-items:center;gap:12px"><img src="/assets/logo-diriyah.png" alt="" style="height:36px;border-radius:6px">الدرعية DIRIYAH</span>
+      <span class="trust-label"><%= t("footer.trust") %></span>
+      <% SiteData::CLIENTS.each do |c| %>
+      <span class="trust-item"><span class="trust-logo" style="background:<%= c[:bg] %>"><img src="<%= c[:logo] %>" alt="<%= c[:name] %>"></span><%= c[:name] %></span>
+      <% end %>
     </div>
-    <div class="footer-grid">
-      <div>
-        <img src="/assets/logo-white.png" alt="ألمنيوم مزايا" style="height:74px;margin-bottom:18px">
-        <p style="margin:0;font-size:15px;line-height:1.8;max-width:320px">مصنع سعودي لمنتجات الألمنيوم منذ ١٩٨٩. سلالم، عربات صناعية، وحلول مخصصة للمشاريع الكبرى.</p>
-      </div>
-      <div>
-        <div style="color:#fff;font-weight:700;font-size:16px;margin-bottom:18px">المنتجات</div>
-        <div style="display:grid;gap:12px;font-size:15px">
-          <a href="/ladders" class="footer-link">السلالم</a>
-          <a href="/carts" class="footer-link">العربات الصناعية</a>
-          <a href="/custom" class="footer-link">حلول مخصصة</a>
-          <a href="/original" class="footer-link">الأصلي مقابل المقلد</a>
+
+    <div class="footer-grid footer-grid-6">
+      <div class="footer-brand">
+        <img src="/assets/logo-white.png" alt="<%= t("brand") %>">
+        <p><%= t("footer.about_blurb") %></p>
+        <div class="social-row">
+          <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" title="<%= s[:label] %>" aria-label="<%= s[:label] %>" target="_blank" rel="noopener"><%= s[:abbr] %></a><% end %>
         </div>
       </div>
+
       <div>
-        <div style="color:#fff;font-weight:700;font-size:16px;margin-bottom:18px">الشركة</div>
-        <div style="display:grid;gap:12px;font-size:15px">
-          <a href="/about" class="footer-link">من نحن</a>
-          <a href="/projects" class="footer-link">المشاريع</a>
-          <a href="/quality" class="footer-link">الجودة والسلامة</a>
-          <a href="/partners" class="footer-link">شراكة معنا</a>
+        <div class="footer-head"><%= t("footer.company_title") %></div>
+        <div class="footer-links">
+          <a href="<%= about_path %>" class="footer-link"><%= t("nav.about") %></a>
+          <a href="<%= quality_path %>" class="footer-link"><%= t("nav.quality_page") %></a>
+          <a href="<%= safety_path %>" class="footer-link"><%= t("nav.safety_page") %></a>
+          <a href="<%= original_path %>" class="footer-link"><%= t("nav.original") %></a>
+          <a href="<%= news_path %>" class="footer-link"><%= t("nav.news") %></a>
         </div>
       </div>
+
       <div>
-        <div style="color:#fff;font-weight:700;font-size:16px;margin-bottom:18px">تواصل</div>
-        <div style="display:grid;gap:12px;font-size:15px">
-          <a data-wa dir="ltr" class="footer-link" href="#" style="unicode-bidi:isolate;text-align:end"><span data-wa-display></span></a>
-          <span>المنطقة الصناعية، الرياض</span>
-          <span>السبت – الخميس، ٨ص – ٥م</span>
-          <a href="/contact" class="footer-cta">اطلب عرض سعر ←</a>
+        <div class="footer-head"><%= t("footer.business_title") %></div>
+        <div class="footer-links">
+          <a href="<%= solutions_path %>" class="footer-link"><%= t("nav.custom_solutions") %></a>
+          <a href="<%= projects_path %>" class="footer-link"><%= t("nav.projects") %></a>
+          <a href="<%= catalog_path %>" class="footer-link"><%= t("nav.ecatalog") %></a>
+          <a href="<%= rfq_path %>" class="footer-link"><%= t("nav.rfq") %></a>
+          <a href="<%= partners_path %>" class="footer-link"><%= t("nav.partner") %></a>
         </div>
+      </div>
+
+      <div>
+        <div class="footer-head"><%= t("footer.products_title") %></div>
+        <div class="footer-links">
+          <% SiteData::CATEGORIES.each do |c| %><a href="<%= product_category_path(c[:slug]) %>" class="footer-link"><%= c[:name] %></a><% end %>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-head"><%= t("footer.contact_title") %></div>
+        <div class="footer-links">
+          <a href="<%= contact_path(dept: 'sales') %>#form" class="footer-link"><%= t("footer.sales") %></a>
+          <a href="<%= contact_path(dept: 'export') %>#form" class="footer-link"><%= t("footer.export") %></a>
+          <a href="<%= contact_path(dept: 'technical') %>#form" class="footer-link"><%= t("footer.technical") %></a>
+          <a data-wa href="#" class="footer-link"><%= t("footer.whatsapp") %> <span dir="ltr" style="unicode-bidi:isolate" data-wa-display></span></a>
+          <a href="#social" class="footer-link"><%= t("footer.social") %></a>
+        </div>
+      </div>
+
+      <div class="footer-catalog">
+        <div class="footer-head"><%= t("footer.catalog_title") %></div>
+        <a data-gate="catalog-full" href="<%= download_path("catalog-full") %>" class="catalog-cover" aria-label="<%= t("footer.catalog_headline") %>">
+          <img src="/assets/logo-white.png" alt="">
+          <span><%= SiteData::DOWNLOADS["catalog-full"][:title] %></span>
+        </a>
+        <p class="catalog-blurb"><%= t("footer.catalog_headline") %> <%= t("footer.catalog_desc") %></p>
+        <a data-gate="catalog-full" href="<%= download_path("catalog-full") %>" class="footer-cta"><%= t("common.download_catalog") %> ←</a>
       </div>
     </div>
-    <div style="display:flex;justify-content:space-between;gap:16px;padding-top:28px;font-size:13.5px;flex-wrap:wrap">
-      <span>© ٢٠٢٦ ألمنيوم مزايا. جميع الحقوق محفوظة.</span>
-      <span>الأصل له اسم واحد.</span>
+
+    <div class="footer-bottom">
+      <span><%= t("footer.rights", year: (I18n.locale == :en ? "2026" : "٢٠٢٦")) %></span>
+      <span><%= SiteData::ADDRESS || t("contact.location.address_pending") %> · <%= SiteData::HOURS || t("contact.location.hours_pending") %></span>
+      <span><%= t("tagline") %></span>
     </div>
   </div>
 </footer>
-<a data-wa href="#" aria-label="واتساب" class="wa-fab"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+<a data-wa href="#" aria-label="<%= t('footer.whatsapp') %>" class="wa-fab"><%= render "shared/wa_icon", size: 30 %></a>

@@ -1,0 +1,105 @@
+<%= errors_for(project) %>
+<% if project.persisted? && project.gallery.attached? %>
+<div class="section">
+  <h2>صور المعرض الحالية (<%= project.gallery.size %>)</h2>
+  <p class="sub">الحذف فوري ولا يحتاج حفظ النموذج.</p>
+  <div class="images">
+    <% project.gallery.each do |img| %>
+      <div class="img-card">
+        <%= image_tag rails_representation_path(img.variant(resize_to_fill: [ 300, 220 ]), only_path: true), alt: project.name_ar %>
+        <div class="body">
+          <span style="color:#686B70;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%= img.filename %></span>
+          <%= button_to "حذف الصورة", purge_gallery_image_admin_project_path(project, blob_id: img.blob_id), method: :delete, class: "btn-danger", style: "padding:6px 10px;font-size:12.5px", form: { data: { turbo: false }, style: "margin:0" }, data: { confirm: "حذف هذه الصورة من المعرض؟" } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+<%= form_with model: [ :admin, project ], local: true, multipart: true, id: "project-form" do |f| %>
+  <div class="section">
+    <h2>البيانات الأساسية</h2>
+    <div class="stack">
+      <%= bi_field(f, :name, "اسم المشروع", required: true) %>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">الرابط (slug)</label>
+          <%= f.text_field :slug, class: "field sm", dir: "ltr", placeholder: "qiddiya", data: { slug_target: true } %>
+          <div class="hint">أحرف لاتينية صغيرة وأرقام وشرطات. يُولّد تلقائيًا من الاسم لو تركته فارغًا.</div>
+        </div>
+        <div>
+          <label class="field-label">السنة</label>
+          <%= f.text_field :year, class: "field sm", dir: "ltr", placeholder: "2024" %>
+          <div class="hint">تظهر كخانة رابعة في نظرة عامة على المشروع.</div>
+        </div>
+      </div>
+      <%= bi_field(f, :type, "نوع المشروع", hint: "مثال: مشروع سكني، بنية تحتية، تجاري.") %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>تفاصيل المشروع</h2>
+    <p class="sub">هذه الحقول تظهر في صفحة المشروع بدل "قيد الاعتماد". اتركها فارغة لو البيانات غير معتمدة بعد.</p>
+    <div class="stack">
+      <%= bi_field(f, :product_supplied, "المنتج المورّد") %>
+      <%= bi_field(f, :scope, "نطاق التوريد") %>
+      <%= bi_field(f, :quantity, "الكمية") %>
+      <%= bi_field(f, :requirements, "متطلبات العميل", type: :text_area, rows: 4) %>
+      <%= bi_field(f, :solution, "الحل المقدَّم", type: :text_area, rows: 4) %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>الصورة الرئيسية</h2>
+    <div class="form-grid">
+      <div>
+        <div class="images" style="margin-bottom:10px">
+          <% if project.image.attached? %>
+            <div class="img-card"><%= image_tag rails_representation_path(project.image.variant(resize_to_fill: [ 300, 220 ]), only_path: true), alt: project.name_ar %><div class="body"><span style="color:#686B70"><%= project.image.filename %></span></div></div>
+          <% end %>
+          <div id="project-image-preview" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+        <%= f.file_field :image, accept: "image/*", class: "field sm", data: { preview: "#project-image-preview" } %>
+        <div class="hint">تظهر في كارت المشروع وهيرو الصفحة. اختيار صورة جديدة يستبدل الحالية.</div>
+      </div>
+      <div>
+        <label class="field-label">الحلول المستخدمة في المشروع</label>
+        <%= f.collection_select :solution_ids, @solutions, :id, :name_ar, {}, multiple: true, class: "field sm", size: [ @solutions.size, 8 ].min.clamp(3, 8) %>
+        <div class="hint">اضغط Ctrl/⌘ لاختيار أكثر من حل.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>معرض الصور</h2>
+    <p class="sub">الصور الجديدة تُضاف إلى المعرض الحالي عند الحفظ.</p>
+    <div id="project-gallery-preview" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px"></div>
+    <%= f.file_field :gallery, multiple: true, accept: "image/*", class: "field sm", data: { preview: "#project-gallery-preview" } %>
+  </div>
+
+  <div class="section">
+    <h2>النشر</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">الترتيب</label>
+        <%= f.number_field :position, class: "field sm", dir: "ltr" %>
+        <div class="hint">الأصغر يظهر أولًا.</div>
+      </div>
+      <div class="stack">
+        <label class="field-label">الحالة</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :published %> منشور في الموقع</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :featured %> مميّز (يظهر في الرئيسية وصفحة B2B)</label>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+
+<div class="sticky-actions">
+  <button type="submit" form="project-form" class="btn-navy sm">حفظ</button>
+  <a href="<%= admin_projects_path %>" class="btn-outline sm">إلغاء</a>
+  <% if project.persisted? %>
+    <span style="flex:1"></span>
+    <%= button_to "حذف المشروع", admin_project_path(project), method: :delete, class: "btn-danger", form: { data: { turbo: false }, style: "margin:0" }, data: { confirm: "حذف المشروع \"#{project.name_ar}\" وصوره نهائيًا؟" } %>
+  <% end %>
+</div>

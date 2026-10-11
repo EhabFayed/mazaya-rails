@@ -1,892 +1,162 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ألمنيوم مزايا — الأصل له اسم واحد</title>
-<meta name="description" content="مصنع سعودي لمنتجات الألمنيوم منذ ١٩٨٩. سلالم، عربات صناعية، وحلول مخصصة للمشاريع الكبرى.">
-<link rel="icon" type="image/png" href="/assets/logo.png">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ألمنيوم مزايا — الأصل له اسم واحد">
-<meta property="og:description" content="مصنع سعودي لمنتجات الألمنيوم منذ ١٩٨٩. سلالم، عربات صناعية، وحلول مخصصة للمشاريع الكبرى.">
-<meta property="og:image" content="https://mazaya-swart.vercel.app/assets/hero.jpg">
-<meta property="og:locale" content="ar_SA">
-<style>
-@font-face{font-family:'GE SS Two';src:url('/fonts/GESSTwo-Light.otf') format('opentype');font-weight:400;font-display:swap}
-@font-face{font-family:'GE SS Two';src:url('/fonts/GESSTwo-Medium.otf') format('opentype');font-weight:500;font-display:swap}
-@font-face{font-family:'GE SS Two';src:url('/fonts/GESSTwo-Medium.otf') format('opentype');font-weight:600;font-display:swap}
-@font-face{font-family:'GE SS Two';src:url('/fonts/GESSTwo-Bold.otf') format('opentype');font-weight:700;font-display:swap}
-@font-face{font-family:'GE SS Two';src:url('/fonts/GESSTwo-Bold.otf') format('opentype');font-weight:900;font-display:swap}
-html{scroll-behavior:smooth}
-body{margin:0;background:#FFFFFF;font-family:'GE SS Two','Segoe UI',Tahoma,sans-serif;color:#1A1C20}
-a{color:#192C7B;text-decoration:none}
-a:hover{color:#2A44B8}
-::selection{background:#192C7B;color:#fff}
-@keyframes heroZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(50%)}}
-@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}50%{box-shadow:0 0 0 12px rgba(37,211,102,0)}}
-@keyframes scrollCue{0%{opacity:0;transform:translateY(-6px)}30%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
-@keyframes splashLogoIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+<% content_for :title, t("home.title") %>
+<% content_for :description, t("home.description") %>
+<% content_for :nav_active, "home" %>
 
-.page{overflow-x:clip}
-
-/* header */
-.site-header{position:fixed;inset-inline:0;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:10px 48px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #E6E8EC;box-shadow:0 2px 18px rgba(25,44,123,.06)}
-.logo-chip{display:flex;align-items:center}
-.logo-chip img{height:58px;display:block}
-.main-nav{display:flex;align-items:center;gap:28px;font-size:15px;font-weight:500}
-.main-nav a{color:rgba(25,44,123,.72)}
-.main-nav a:hover{color:#192C7B}
-.main-nav a.current{color:#192C7B;font-weight:800}
-.wa-pill{display:flex;align-items:center;gap:8px;color:#192C7B;font-size:14px;font-weight:600;background:#F0F2F8;border:1px solid #D9DEEA;border-radius:999px;padding:9px 16px}
-.wa-pill:hover{background:#E4E8F4;color:#192C7B}
-.btn-quote{background:#fff;color:#192C7B;border:1.5px solid #192C7B;font-weight:700;font-size:14px;border-radius:999px;padding:9px 22px}
-.btn-quote:hover{background:#192C7B;color:#fff}
-.wa-dot{width:8px;height:8px;border-radius:50%;background:#25D366;animation:pulseDot 2s infinite}
-
-/* hero */
-.hero-cta{background:#fff;color:#192C7B;font-weight:700;font-size:17px;border-radius:12px;padding:16px 34px;box-shadow:0 8px 30px rgba(0,0,0,.35);transition:transform .3s;display:inline-block}
-.hero-cta:hover{transform:translateY(-2px);color:#192C7B}
-.hero-ghost{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:17px;border:1.5px solid rgba(255,255,255,.5);border-radius:12px;padding:16px 30px;transition:background .3s}
-.hero-ghost:hover{background:rgba(255,255,255,.12);color:#fff}
-
-/* categories */
-.cat-bg{position:absolute;inset:0;opacity:0;transform:scale(1);transition:opacity .7s ease,transform 6s ease}
-.cat-bg.active{opacity:1;transform:scale(1.06)}
-.cat-bg img{width:100%;height:100%;object-fit:cover;display:block}
-.cat-item{cursor:pointer;border-top:1px solid rgba(255,255,255,.18);padding:30px 0}
-.cat-num{font-size:17px;font-weight:700;min-width:34px;color:rgba(255,255,255,.4);transition:color .4s}
-.cat-title{margin:0;font-size:32px;font-weight:900;color:rgba(255,255,255,.45);transition:color .4s,font-size .4s;line-height:1.2}
-.cat-arrow{margin-inline-start:auto;color:#B9C6F2;font-size:24px;opacity:0;transform:translateX(14px);transition:opacity .4s,transform .4s}
-.cat-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .55s ease,opacity .5s ease}
-.cat-item.active .cat-num{color:#B9C6F2}
-.cat-item.active .cat-title{color:#fff;font-size:42px}
-.cat-item.active .cat-arrow{opacity:1;transform:translateX(0)}
-.cat-item.active .cat-desc{max-height:160px;opacity:1}
-.cat-more{display:inline-flex;align-items:center;gap:8px;margin:10px 58px 0 0;color:#B9C6F2;font-weight:700;font-size:15px}
-.cat-more:hover{color:#fff}
-
-/* 3d specs */
-.spec-card{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 18px;opacity:0;transform:translateX(30px);transition:opacity .6s,transform .6s}
-.spec-badge{width:44px;height:44px;border-radius:12px;background:rgba(185,198,242,.18);display:flex;align-items:center;justify-content:center;color:#B9C6F2;font-size:17px;font-weight:900;flex-shrink:0}
-
-/* pillars */
-.pillar{background:#F4F5F7;border-radius:20px;padding:38px 32px;transition:transform .35s}
-.pillar:hover{transform:translateY(-6px)}
-.btn-outline{display:inline-flex;align-items:center;gap:10px;border:2px solid #192C7B;border-radius:12px;padding:14px 30px;font-weight:700;font-size:16px;transition:background .3s,color .3s}
-.btn-outline:hover{background:#192C7B;color:#fff}
-
-/* partners */
-.btn-partner{display:inline-block;background:#fff;color:#192C7B;font-weight:700;font-size:17px;border-radius:12px;padding:16px 36px;transition:transform .3s}
-.btn-partner:hover{transform:translateY(-2px);color:#192C7B}
-
-/* contact */
-.field{font-family:inherit;font-size:16px;padding:15px 18px;border:1.5px solid #E0E3E9;border-radius:12px;outline:none;background:#FAFBFC;box-sizing:border-box;width:100%}
-.field:focus{border-color:#192C7B}
-select.field{padding:15px 14px;color:#686B70}
-.form-btn{font-family:inherit;background:#192C7B;color:#fff;font-weight:700;font-size:17px;border:none;border-radius:12px;padding:16px;cursor:pointer;transition:background .3s}
-.form-btn:hover{background:#12205C}
-.wa-green{display:inline-flex;align-items:center;gap:12px;background:#25D366;color:#fff;font-weight:700;font-size:16px;border-radius:12px;padding:15px 28px;transition:transform .3s}
-.wa-green:hover{transform:translateY(-2px);color:#fff}
-
-/* footer */
-.footer-link{color:rgba(255,255,255,.65)}
-.footer-link:hover{color:#fff}
-.social{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;transition:background .3s}
-.social:hover{background:rgba(255,255,255,.2);color:#fff}
-
-/* floating whatsapp */
-.wa-fab{position:fixed;bottom:26px;left:26px;z-index:70;width:62px;height:62px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(37,211,102,.45);animation:floatY 3.5s ease-in-out infinite;color:#fff;font-size:28px}
-.wa-fab:hover{transform:scale(1.08);color:#fff}
-
-@media (max-height:720px){
-  #phaseA h2,#phaseB h2{font-size:30px !important;margin-bottom:10px !important}
-  #phaseA p,#phaseB p{font-size:14.5px !important;margin-bottom:14px !important;line-height:1.6 !important}
-  #phaseA>div:first-child,#phaseB>div:first-child{margin-bottom:8px !important}
-  .spec-card{padding:8px 14px !important}
-  .spec-badge{width:36px !important;height:36px !important;font-size:14px !important}
-}
-
-/* mobile */
-.menu-btn{display:none;background:#F0F2F8;border:1px solid #D9DEEA;border-radius:10px;color:#192C7B;font-size:20px;padding:7px 13px;cursor:pointer;font-family:inherit}
-.mobile-nav{display:none;position:fixed;top:66px;inset-inline:0;z-index:59;background:rgba(255,255,255,.98);backdrop-filter:blur(14px);border-bottom:1px solid #E6E8EC;box-shadow:0 14px 30px rgba(25,44,123,.1);padding:10px 20px 18px;flex-direction:column;gap:2px}
-.mobile-nav a{color:rgba(25,44,123,.8);font-size:16px;font-weight:600;padding:12px 6px;border-bottom:1px solid #EEF0F4}
-.mobile-nav a.current{color:#192C7B;font-weight:800}
-.mobile-nav.open{display:flex}
-@media (max-width:960px){
-  .site-header{padding:10px 18px;gap:12px}
-  .logo-chip img{height:44px}
-  .main-nav{display:none}
-  .menu-btn{display:block}
-  .wa-pill span[dir=ltr]{display:none}
-  .hero-grid{grid-template-columns:1fr !important;padding:130px 20px 90px !important}
-  .hero-grid h1{font-size:44px !important}
-  .stats-grid{grid-template-columns:repeat(2,1fr) !important;text-align:center}
-  .stats-grid>div{border-inline-start:none !important;padding-inline-start:0 !important}
-  section{padding-left:20px;padding-right:20px}
-  .cats-wrap{padding:90px 20px !important}
-  .cat-item.active .cat-title{font-size:32px}
-  h2{font-size:34px !important}
-  .stage-grid{grid-template-columns:1fr !important}
-  .stage-copy{padding:80px 20px 0 !important}
-  #ladder3d{height:52vh !important}
-  .pillars-grid{grid-template-columns:1fr !important}
-  .partners-grid{grid-template-columns:1fr !important;gap:36px !important}
-  .contact-grid{grid-template-columns:1fr !important;gap:36px !important}
-  .footer-grid{grid-template-columns:1fr 1fr !important;gap:32px !important}
-  .proj-card{width:82vw !important}
-}
-@media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
-  html{scroll-behavior:auto}
-}
-</style>
-</head>
-<body>
-<div class="page">
-
-<!-- splash -->
-<div id="splash" style="position:fixed;inset:0;z-index:200;background:radial-gradient(ellipse 70% 60% at 50% 45%,#1B2F86 0%,#0D1744 70%);overflow:hidden;will-change:transform">
+<%# splash (once per session — handled in site.js) %>
+<div id="splash">
   <div id="splashRig" style="position:absolute;inset:0;display:flex;justify-content:center;pointer-events:none"></div>
   <div id="splashCarrier" style="position:absolute;left:50%;top:0;transform:translate(-50%,-140%);will-change:transform;display:flex;flex-direction:column;align-items:center;gap:18px">
-    <div id="splashLogo" style="background:#fff;border-radius:18px;padding:16px 30px;box-shadow:0 24px 70px rgba(0,0,0,.55)"><img src="/assets/logo.png" alt="ألمنيوم مزايا" style="height:74px;display:block"></div>
-    <div id="splashTag" style="color:rgba(255,255,255,.75);font-size:16px;font-weight:600;letter-spacing:1px;opacity:0;transition:opacity .6s">الأصل له اسم واحد</div>
+    <div style="background:#fff;border-radius:18px;padding:16px 30px;box-shadow:0 24px 70px rgba(0,0,0,.55)"><img src="/assets/logo.png" alt="<%= t("brand") %>" style="height:74px;display:block"></div>
+    <div id="splashTag" style="color:rgba(255,255,255,.75);font-size:16px;font-weight:600;letter-spacing:1px;opacity:0;transition:opacity .6s"><%= t("tagline") %></div>
   </div>
 </div>
 
-<!-- header -->
-<header class="site-header">
-  <div style="display:flex;align-items:center;gap:14px">
-    <a href="#hero" class="logo-chip"><img src="/assets/logo.png" alt="ألمنيوم مزايا"></a>
-  </div>
-  <nav class="main-nav">
-    <a href="#hero" class="current">الرئيسية</a>
-    <a href="/about">من نحن</a>
-    <a href="/products">المنتجات</a>
-    <a href="/projects">المشاريع</a>
-    <a href="/quality">الجودة والسلامة</a>
-    <a href="/partners">شراكة معنا</a>
-  </nav>
-  <div style="display:flex;align-items:center;gap:14px">
-    <a data-wa class="wa-pill" href="#">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span dir="ltr" style="unicode-bidi:isolate" data-wa-display></span>
-    </a>
-    <a href="#contact" class="btn-quote">اطلب عرض سعر</a>
-    <button class="menu-btn" aria-label="القائمة">☰</button>
-  </div>
-</header>
-<nav class="mobile-nav">
-  <a href="#hero" class="current">الرئيسية</a>
-  <a href="/about">من نحن</a>
-  <a href="/products">المنتجات</a>
-  <a href="/projects">المشاريع</a>
-  <a href="/quality">الجودة والسلامة</a>
-  <a href="/partners">شراكة معنا</a>
-  <a href="#contact">اطلب عرض سعر</a>
-</nav>
-
-<!-- hero -->
-<section id="hero" style="position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:#0D1744">
-  <img src="/assets/hero.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:heroZoom 2.4s ease-out both">
+<%# 01 — Hero %>
+<section id="hero" class="hero">
+  <img src="/assets/hero.jpg" alt="" class="hero-bg">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,23,68,.94) 0%,rgba(25,44,123,.78) 45%,rgba(13,23,68,.35) 100%)"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,23,68,.9) 0%,transparent 35%)"></div>
-  <div class="hero-grid" style="position:relative;z-index:2;padding:140px 48px 100px;max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;box-sizing:border-box">
+  <div class="hero-grid">
     <div>
-      <div data-reveal style="display:inline-flex;align-items:center;gap:10px;color:#C9CDD4;font-size:14px;font-weight:600;letter-spacing:.5px;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 18px;margin-bottom:28px">
-        صناعة سعودية · منذ ١٩٨٩
-      </div>
-      <h1 data-reveal style="margin:0 0 22px;color:#fff;font-size:clamp(44px,5.5vw,76px);font-weight:900;line-height:1.15;text-wrap:pretty">الأصل له اسم واحد<br><span style="color:#B9C6F2">مزايا</span></h1>
-      <p data-reveal style="margin:0 0 38px;color:rgba(255,255,255,.82);font-size:20px;font-weight:400;line-height:1.8;max-width:560px">سلالم وعربات ألمنيوم تُصنع في مصنعنا وتُختبر قبل أن تصل إليك. جودة يعرفها المقاول من أول استخدام.</p>
+      <div data-reveal class="hero-badge"><%= t("home.hero.badge") %></div>
+      <% if rtl? %><h1 data-reveal>الأصل له اسم واحد:<br><span>مزايا</span></h1><% else %><h1 data-reveal>The Original.<br><span>The Trusted Name.</span></h1><% end %>
+      <p data-reveal><%= t("home.hero.desc") %></p>
       <div data-reveal style="display:flex;gap:16px;flex-wrap:wrap">
-        <a href="#contact" class="hero-cta">اطلب عرض سعر</a>
-        <a data-wa class="hero-ghost" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>واتساب مباشر</a>
+        <a href="<%= rfq_path %>" class="hero-cta"><%= t("home.hero.primary") %></a>
+        <a href="<%= products_path %>" class="hero-ghost"><%= t("home.hero.secondary") %> ←</a>
       </div>
     </div>
-    <div style="display:flex;justify-content:center"></div>
+    <div></div>
   </div>
-  <div style="position:absolute;bottom:26px;inset-inline:0;display:flex;justify-content:center;z-index:2">
-    <div style="width:26px;height:44px;border:2px solid rgba(255,255,255,.5);border-radius:14px;display:flex;justify-content:center;padding-top:8px"><div style="width:4px;height:9px;border-radius:3px;background:#fff;animation:scrollCue 1.8s infinite"></div></div>
-  </div>
+  <div class="scroll-cue"><div><div></div></div></div>
 </section>
 
-<!-- stats -->
-<section style="background:#192C7B;padding:56px 48px">
-  <div class="stats-grid" style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center">
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.14);padding-inline-start:24px">
-      <div style="color:#fff;font-size:36px;font-weight:900;line-height:1"><span data-count="35">0</span><span style="color:#B9C6F2">+</span></div>
-      <div style="color:rgba(255,255,255,.7);font-size:15px;font-weight:500;margin-top:8px">سنة من الصناعة</div>
-    </div>
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.14);padding-inline-start:24px">
-      <div style="color:#fff;font-size:36px;font-weight:900;line-height:1"><span data-count="88">0</span><span style="color:#B9C6F2">%</span></div>
-      <div style="color:rgba(255,255,255,.7);font-size:15px;font-weight:500;margin-top:8px">حصة السوق المحلي</div>
-    </div>
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.14);padding-inline-start:24px">
-      <div style="color:#fff;font-size:36px;font-weight:900;line-height:1"><span data-count="350">0</span><span style="color:#B9C6F2">+</span></div>
-      <div style="color:rgba(255,255,255,.7);font-size:15px;font-weight:500;margin-top:8px">موزّع معتمد</div>
-    </div>
-    <div data-reveal style="border-inline-start:1px solid rgba(255,255,255,.14);padding-inline-start:24px">
-      <div style="color:#fff;font-size:36px;font-weight:900;line-height:1"><span data-count="7">0</span><span style="color:#B9C6F2"></span></div>
-      <div style="color:rgba(255,255,255,.7);font-size:15px;font-weight:500;margin-top:8px">أسواق تصدير</div>
-    </div>
-  </div>
-</section>
-
-<!-- categories -->
-<section id="categories" style="position:relative;min-height:92vh;background:#0D1744;overflow:hidden;display:flex;align-items:center">
-  <div class="cat-bg active"><img src="/assets/cat-ladders.jpg" alt="صورة السلالم" loading="lazy"></div>
-  <div class="cat-bg"><img src="/assets/cat-carts.jpg" alt="صورة العربات" loading="lazy"></div>
-  <div class="cat-bg"><img src="/assets/cat-custom.jpg" alt="صورة الحلول المخصصة" loading="lazy"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(270deg,rgba(13,23,68,.92) 0%,rgba(13,23,68,.68) 50%,rgba(13,23,68,.3) 100%);pointer-events:none"></div>
-  <div class="cats-wrap" style="position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;padding:110px 48px;box-sizing:border-box">
-    <div data-reveal style="margin-bottom:56px">
-      <div style="color:#B9C6F2;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:12px">المنتجات</div>
-      <h2 style="margin:0;color:#fff;font-size:44px;font-weight:900">ثلاث فئات، معيار واحد</h2>
-    </div>
-    <div id="catList" style="display:grid;max-width:760px">
-      <div class="cat-item active" data-cat="0">
-        <div style="display:flex;align-items:center;gap:24px">
-          <div class="cat-num">٠١</div>
-          <h3 class="cat-title">السلالم</h3>
-          <div class="cat-arrow">←</div>
+<%# 02 — Path selection (B2B / B2C) — visual, B2B weighted %>
+<section id="paths" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("home.paths.label"), h2: t("home.paths.h2"), center: true %>
+    <div class="doors">
+      <a href="<%= b2b_path %>" data-reveal class="door b2b card-hover-lg">
+        <img src="/assets/proj-tower.jpg" alt="">
+        <div class="door-shade"></div>
+        <div class="door-body">
+          <div class="door-label"><%= t("home.paths.b2b_label") %></div>
+          <h3><%= t("home.paths.b2b_title") %></h3>
+          <p><%= t("home.paths.b2b_desc") %></p>
+          <span class="btn-white"><%= t("home.paths.b2b_cta") %> ←</span>
         </div>
-        <div class="cat-desc">
-          <p style="margin:14px 58px 4px 0;color:rgba(255,255,255,.8);font-size:16.5px;line-height:1.8;max-width:560px">الأكثر مبيعًا وتصديرًا. تشكيلة كاملة للاستخدام المنزلي والمهني والصناعي.</p>
-          <a href="/ladders" class="cat-more">استكشف الفئة ←</a>
+      </a>
+      <a href="<%= products_path %>" data-reveal class="door b2c card-hover-lg">
+        <img src="/assets/cat-ladders.jpg" alt="">
+        <div class="door-shade"></div>
+        <div class="door-body">
+          <div class="door-label"><%= t("home.paths.b2c_label") %></div>
+          <h3><%= t("home.paths.b2c_title") %></h3>
+          <p><%= t("home.paths.b2c_desc") %></p>
+          <span class="btn-ghost"><%= t("home.paths.b2c_cta") %> ←</span>
         </div>
-      </div>
-      <div class="cat-item" data-cat="1">
-        <div style="display:flex;align-items:center;gap:24px">
-          <div class="cat-num">٠٢</div>
-          <h3 class="cat-title">العربات الصناعية</h3>
-          <div class="cat-arrow">←</div>
-        </div>
-        <div class="cat-desc">
-          <p style="margin:14px 58px 4px 0;color:rgba(255,255,255,.8);font-size:16.5px;line-height:1.8;max-width:560px">عربات نقل بأحمال مختبرة، مصممة لبيئات العمل الشاقة والمستودعات.</p>
-          <a href="/carts" class="cat-more">استكشف الفئة ←</a>
-        </div>
-      </div>
-      <div class="cat-item" data-cat="2">
-        <div style="display:flex;align-items:center;gap:24px">
-          <div class="cat-num">٠٣</div>
-          <h3 class="cat-title">حلول مخصصة</h3>
-          <div class="cat-arrow">←</div>
-        </div>
-        <div class="cat-desc">
-          <p style="margin:14px 58px 4px 0;color:rgba(255,255,255,.8);font-size:16.5px;line-height:1.8;max-width:560px">تصنيع حسب الطلب للمشاريع الكبرى: استشارة، تصميم هندسي، ثم تنفيذ.</p>
-          <a href="/custom" class="cat-more">استكشف الفئة ←</a>
-        </div>
-      </div>
-      <div style="border-top:1px solid rgba(255,255,255,.18)"></div>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- 3d stage -->
-<section id="stage3d" style="position:relative;height:420vh;background:linear-gradient(180deg,#0D1744 0%,#192C7B 55%,#0D1744 100%)">
-  <div class="stage-grid" style="position:sticky;top:0;height:100vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;align-items:center">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 50%,rgba(185,198,242,.14),transparent 70%)"></div>
-    <div class="stage-copy" style="position:relative;z-index:2;display:grid;align-items:center;padding:0 72px">
-      <div id="phaseA" style="grid-area:1/1;transition:opacity .5s ease,transform .5s ease">
-        <div style="color:#B9C6F2;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:14px">نظام السقالات</div>
-        <h2 style="margin:0 0 18px;color:#fff;font-size:46px;font-weight:900;line-height:1.25">سقالات ألمنيوم تُبنى أمامك، قطعة قطعة.</h2>
-        <p style="margin:0 0 30px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8">قوائم وعوارض ومنصات من الألمنيوم المبثوق تتعاشق بدون لحام. مرر للأسفل وشاهد البرج يكتمل.</p>
-        <div style="display:grid;gap:12px">
-          <div data-spec-a class="spec-card">
-            <div class="spec-badge">١٠×</div>
-            <div>
-              <div style="color:#fff;font-size:16px;font-weight:700">تركيب أسرع من الحديد</div>
-              <div style="color:rgba(255,255,255,.6);font-size:14px;margin-top:2px">وصلات قفل سريعة بدون أدوات ثقيلة</div>
-            </div>
-          </div>
-          <div data-spec-a class="spec-card">
-            <div class="spec-badge">٧٥٠</div>
-            <div>
-              <div style="color:#fff;font-size:16px;font-weight:700">كجم تحمّل للمنصة</div>
-              <div style="color:rgba(255,255,255,.6);font-size:14px;margin-top:2px">مختبرة وفق معايير السلامة الصناعية</div>
-            </div>
-          </div>
-          <div data-spec-a class="spec-card">
-            <div class="spec-badge">٣×</div>
-            <div>
-              <div style="color:#fff;font-size:16px;font-weight:700">أخف وزنًا من الحديد</div>
-              <div style="color:rgba(255,255,255,.6);font-size:14px;margin-top:2px">ألمنيوم لا يصدأ في أقسى المواقع</div>
-            </div>
-          </div>
-        </div>
+<%# 03 — Numbers %>
+<section class="bg-navy" style="padding:64px 48px">
+  <div class="wrap">
+    <div data-reveal class="kicker" style="text-align:center;margin-bottom:36px"><%= t("home.numbers.h2") %></div>
+    <div class="stat-grid">
+      <% SiteData::STATS.each do |s| %>
+      <div data-reveal class="stat">
+        <div class="stat-num"><span data-count="<%= s[:value] %>">0</span><small><%= s[:suffix] %></small><% if s[:label].present? %> <small><%= s[:label] %></small><% end %></div>
+        <div class="stat-sub"><%= s[:sub] %></div>
       </div>
-      <div id="phaseB" style="grid-area:1/1;opacity:0;transform:translateY(28px);transition:opacity .5s ease,transform .5s ease;pointer-events:none">
-        <div style="color:#B9C6F2;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:14px">المنتج الأكثر مبيعًا</div>
-        <h2 style="margin:0 0 18px;color:#fff;font-size:46px;font-weight:900;line-height:1.25">ثم يأتي سلّم مزايا.<br>شاهده من كل زاوية.</h2>
-        <p style="margin:0 0 30px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8">نفس الألمنيوم، نفس المعيار. كل مفصل وكل درجة تمر باختبار تحمّل داخل مصنعنا قبل الشحن.</p>
-        <div style="display:grid;gap:12px">
-          <div data-spec-b class="spec-card">
-            <div class="spec-badge">٩٩</div>
-            <div>
-              <div style="color:#fff;font-size:16px;font-weight:700">ألمنيوم عالي النقاء</div>
-              <div style="color:rgba(255,255,255,.6);font-size:14px;margin-top:2px">خامة تقاوم الصدأ والانحناء مدى العمر</div>
-            </div>
-          </div>
-          <div data-spec-b class="spec-card">
-            <div class="spec-badge">١٥٠</div>
-            <div>
-              <div style="color:#fff;font-size:16px;font-weight:700">تحمّل حتى ١٥٠ كجم</div>
-              <div style="color:rgba(255,255,255,.6);font-size:14px;margin-top:2px">كل درجة تُختبر تحت حمل يفوق الاستخدام الفعلي</div>
-            </div>
-          </div>
-          <div data-spec-b class="spec-card">
-            <div class="spec-badge">١٠٠٪</div>
-            <div>
-              <div style="color:#fff;font-size:16px;font-weight:700">تصنيع محلي كامل</div>
-              <div style="color:rgba(255,255,255,.6);font-size:14px;margin-top:2px">بثق وتجميع واختبار داخل مصنعنا في السعودية</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <% end %>
     </div>
-    <div id="ladder3d" style="position:relative;height:100vh"></div>
-    <div style="position:absolute;bottom:28px;inset-inline:0;text-align:center;color:rgba(255,255,255,.45);font-size:13px;font-weight:600;letter-spacing:1px;z-index:2">↓ استمر بالتمرير — تُبنى السقالة ثم يظهر السلّم</div>
   </div>
 </section>
 
-<!-- why -->
-<section id="why" style="padding:110px 48px;background:#fff">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="text-align:center;max-width:720px;margin:0 auto 60px">
-      <div style="color:#686B70;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:12px">لماذا مزايا</div>
-      <h2 style="margin:0 0 18px;color:#192C7B;font-size:44px;font-weight:900">السوق مليء بالمقلد. نحن الأصل.</h2>
-      <p style="margin:0;color:#686B70;font-size:18px;line-height:1.8">منذ ١٩٨٩ ونحن نصنع في السعودية بنفس المعيار. تعرّف كيف تفرّق بين سلّم مزايا الأصلي وأي تقليد.</p>
-    </div>
-    <div class="pillars-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
+<%# 04 — Why Mazaya %>
+<section id="why" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("home.why.label"), h2: t("home.why.h2"), desc: t("home.why.intro"), center: true %>
+    <div class="grid-4">
+      <% t("home.why.cards").each_with_index do |(title, desc), i| %>
       <div data-reveal class="pillar">
-        <div style="width:58px;height:58px;border-radius:16px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;margin-bottom:22px">✓</div>
-        <h3 style="margin:0 0 12px;color:#192C7B;font-size:22px;font-weight:800">الأصالة</h3>
-        <p style="margin:0;color:#686B70;font-size:15.5px;line-height:1.8">اسم محفور وعلامات تمييز واضحة على كل منتج. إن لم تجدها، فهو ليس مزايا.</p>
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3 style="margin:0 0 12px;color:#192C7B;font-size:21px;font-weight:800"><%= title %></h3>
+        <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8"><%= desc %></p>
       </div>
-      <div data-reveal class="pillar">
-        <div style="width:58px;height:58px;border-radius:16px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;margin-bottom:22px">⛨</div>
-        <h3 style="margin:0 0 12px;color:#192C7B;font-size:22px;font-weight:800">السلامة</h3>
-        <p style="margin:0;color:#686B70;font-size:15.5px;line-height:1.8">اختبارات أحمال موثقة على كل دفعة إنتاج. سلامتك ليست بندًا اختياريًا.</p>
-      </div>
-      <div data-reveal class="pillar">
-        <div style="width:58px;height:58px;border-radius:16px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;margin-bottom:22px">∞</div>
-        <h3 style="margin:0 0 12px;color:#192C7B;font-size:22px;font-weight:800">الاعتمادية</h3>
-        <p style="margin:0;color:#686B70;font-size:15.5px;line-height:1.8">٣٥ عامًا في السوق السعودي، ومنتجات تعمل اليوم كما اشتُريت قبل عقد.</p>
-      </div>
+      <% end %>
     </div>
-    <div data-reveal style="text-align:center;margin-top:44px">
-      <a href="/original" class="btn-outline">الأصلي في مواجهة المقلد ←</a>
+    <div data-reveal style="text-align:center;margin-top:44px"><a href="<%= about_path %>" class="btn-outline"><%= t("home.why.cta") %> ←</a></div>
+  </div>
+</section>
+
+<%# 05 — Original vs counterfeit teaser %>
+<section id="original" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 15% 50%,rgba(185,198,242,.14),transparent 70%)"></div>
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker"><%= t("home.original.label") %></div>
+      <h2 style="margin:0 0 18px;color:#fff;font-size:42px;font-weight:900;line-height:1.25"><%= t("home.original.h2") %></h2>
+      <p style="margin:0 0 12px;color:rgba(255,255,255,.78);font-size:17.5px;line-height:1.8"><%= t("home.original.desc") %></p>
+      <p style="margin:0 0 32px;color:rgba(255,255,255,.65);font-size:16px;line-height:1.8"><%= t("home.original.desc2") %></p>
+      <a href="<%= original_path %>" class="btn-white"><%= t("home.original.cta") %></a>
+    </div>
+    <div data-reveal class="grid-2m" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <% SiteData::AUTHENTICITY_CHECKS.each_with_index do |(title, _), i| %>
+      <div class="feature-card dark" style="padding:24px 22px">
+        <div style="color:#B9C6F2;font-size:22px;font-weight:900;margin-bottom:8px"><%= num(i + 1) %></div>
+        <h3 style="font-size:17px"><%= title %></h3>
+      </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<!-- projects -->
-<section id="projects" style="position:relative;height:280vh;background:#F4F5F7">
-  <div style="position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center">
-    <div style="padding:0 48px;max-width:1280px;margin:0 auto;width:100%;box-sizing:border-box">
-      <div data-reveal style="display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:44px;flex-wrap:wrap">
-        <div>
-          <div style="color:#686B70;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:12px">إثبات بالمشاريع</div>
-          <h2 style="margin:0;color:#192C7B;font-size:44px;font-weight:900">في أكبر مشاريع المملكة</h2>
-        </div>
-        <a href="/projects" style="font-weight:700;font-size:16px">شاهد كل المشاريع ←</a>
-      </div>
+<%# 06 — Selected projects (image is the hero, not the text) %>
+<section id="projects" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("home.projects.label"), h2: t("home.projects.h2"), desc: t("home.projects.desc"), link: [ t("home.projects.cta"), projects_path ] %>
+    <div class="grid-3">
+      <% @featured_projects.each do |p| %><%= render "shared/project_card", project: p, tall: true %><% end %>
     </div>
-    <div style="overflow:hidden">
-      <div id="projTrack" style="display:flex;gap:28px;padding:0 48px;width:max-content;will-change:transform">
-        <div class="proj-card" style="position:relative;border-radius:20px;overflow:hidden;height:min(460px,54vh);width:min(620px,60vw);flex-shrink:0;background:#0D1744">
-          <img src="/assets/proj-roshn.jpg" alt="صورة مشروع روشن" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
-          <div style="position:absolute;inset-inline:0;bottom:0;padding:80px 30px 26px;background:linear-gradient(0deg,rgba(13,23,68,.92),transparent);pointer-events:none">
-            <div style="color:#B9C6F2;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:6px">مشروع سكني كبير</div>
-            <div style="color:#fff;font-size:26px;font-weight:800">روشن</div>
-          </div>
-        </div>
-        <div class="proj-card" style="position:relative;border-radius:20px;overflow:hidden;height:min(460px,54vh);width:min(620px,60vw);flex-shrink:0;background:#0D1744">
-          <img src="/assets/proj-diriyah.jpg" alt="صورة مشروع الدرعية" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
-          <div style="position:absolute;inset-inline:0;bottom:0;padding:80px 30px 26px;background:linear-gradient(0deg,rgba(13,23,68,.92),transparent);pointer-events:none">
-            <div style="color:#B9C6F2;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:6px">مشروع تراثي وطني</div>
-            <div style="color:#fff;font-size:26px;font-weight:800">الدرعية</div>
-          </div>
-        </div>
-        <div class="proj-card" style="position:relative;border-radius:20px;overflow:hidden;height:min(460px,54vh);width:min(620px,60vw);flex-shrink:0;background:#0D1744">
-          <img src="/assets/proj-saco.jpg" alt="صورة ساكو" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
-          <div style="position:absolute;inset-inline:0;bottom:0;padding:80px 30px 26px;background:linear-gradient(0deg,rgba(13,23,68,.92),transparent);pointer-events:none">
-            <div style="color:#B9C6F2;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:6px">شريك تجزئة رئيسي</div>
-            <div style="color:#fff;font-size:26px;font-weight:800">ساكو</div>
-          </div>
-        </div>
-        <div class="proj-card" style="position:relative;border-radius:20px;overflow:hidden;height:min(460px,54vh);width:min(620px,60vw);flex-shrink:0;background:#0D1744">
-          <img src="/assets/proj-tower.jpg" alt="صورة مشروع أبراج" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
-          <div style="position:absolute;inset-inline:0;bottom:0;padding:80px 30px 26px;background:linear-gradient(0deg,rgba(13,23,68,.92),transparent);pointer-events:none">
-            <div style="color:#B9C6F2;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:6px">أبراج ومنشآت تجارية</div>
-            <div style="color:#fff;font-size:26px;font-weight:800">أبراج الرياض</div>
-          </div>
-        </div>
-        <div class="proj-card" style="position:relative;border-radius:20px;overflow:hidden;height:min(460px,54vh);width:min(620px,60vw);flex-shrink:0;background:#0D1744">
-          <img src="/assets/proj-infra.jpg" alt="صورة بنية تحتية" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
-          <div style="position:absolute;inset-inline:0;bottom:0;padding:80px 30px 26px;background:linear-gradient(0deg,rgba(13,23,68,.92),transparent);pointer-events:none">
-            <div style="color:#B9C6F2;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:6px">بنية تحتية وطنية</div>
-            <div style="color:#fff;font-size:26px;font-weight:800">مشاريع البنية التحتية</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:center;color:#9AA0A8;font-size:13px;font-weight:600;letter-spacing:1px;margin-top:30px">↓ استمر بالتمرير لاستعراض المشاريع</div>
   </div>
 </section>
 
-<!-- partners -->
-<section id="partners" style="position:relative;padding:110px 48px;background:#192C7B;overflow:hidden">
+<%# 07 — Distributors & partners banner %>
+<section id="partners" class="section-pad bg-navy" style="position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(185,198,242,.16),transparent 70%)"></div>
-  <div class="partners-grid" style="position:relative;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center">
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
+    <div data-reveal style="height:380px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)"><img src="/assets/cat-carts.jpg" alt="" class="cover" loading="lazy"></div>
     <div data-reveal>
-      <div style="color:#B9C6F2;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:14px">شراكة معنا</div>
-      <h2 style="margin:0 0 20px;color:#fff;font-size:46px;font-weight:900;line-height:1.25">انضم إلى شبكة من ٣٥٠+ موزّعًا</h2>
-      <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:18px;line-height:1.8">هوامش واضحة، دعم تسويقي، ومنتج يبيع نفسه باسمه. قدّم الآن وسيتواصل معك فريقنا خلال يوم عمل.</p>
-      <a href="/partners" class="btn-partner">قدّم كموزّع</a>
-    </div>
-    <div data-reveal style="display:grid;gap:16px">
-      <div style="display:flex;gap:16px;align-items:start;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 22px">
-        <div style="color:#B9C6F2;font-size:22px;font-weight:900;line-height:1">١</div>
-        <div>
-          <div style="color:#fff;font-weight:700;font-size:17px">هامش ربح واضح</div>
-          <div style="color:rgba(255,255,255,.6);font-size:14.5px;margin-top:4px;line-height:1.7">تسعير ثابت وسياسة حماية مناطق للموزّعين المعتمدين.</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:16px;align-items:start;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 22px">
-        <div style="color:#B9C6F2;font-size:22px;font-weight:900;line-height:1">٢</div>
-        <div>
-          <div style="color:#fff;font-weight:700;font-size:17px">دعم تسويقي ٨٠/٢٠</div>
-          <div style="color:rgba(255,255,255,.6);font-size:14.5px;margin-top:4px;line-height:1.7">مواد جاهزة، حملات مشتركة، وأولوية في المعارض.</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:16px;align-items:start;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 22px">
-        <div style="color:#B9C6F2;font-size:22px;font-weight:900;line-height:1">٣</div>
-        <div>
-          <div style="color:#fff;font-weight:700;font-size:17px">توريد سريع</div>
-          <div style="color:rgba(255,255,255,.6);font-size:14.5px;margin-top:4px;line-height:1.7">مخزون محلي دائم لأن المصنع هنا، لا وراء البحر.</div>
-        </div>
-      </div>
+      <div class="kicker"><%= t("home.partners.label") %></div>
+      <h2 style="margin:0 0 20px;color:#fff;font-size:42px;font-weight:900;line-height:1.25"><%= t("home.partners.h2") %></h2>
+      <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= t("home.partners.desc") %></p>
+      <a href="<%= partners_path %>" class="btn-white"><%= t("home.partners.cta") %></a>
     </div>
   </div>
 </section>
 
-<!-- trust marquee -->
-<section style="background:#fff;padding:64px 0;border-bottom:1px solid #E6E8EC;overflow:hidden">
-  <div data-reveal style="text-align:center;color:#686B70;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:36px">يثقون بمنتجاتنا</div>
-  <div id="marqueeRow" style="display:flex;width:max-content;gap:0;animation:marquee 28s linear infinite"></div>
-</section>
-
-<!-- contact -->
-<section id="contact" style="padding:110px 48px;background:#F4F5F7">
-  <div class="contact-grid" style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
-    <div data-reveal>
-      <div style="color:#686B70;font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:12px">تواصل معنا</div>
-      <h2 style="margin:0 0 18px;color:#192C7B;font-size:44px;font-weight:900">اطلب عرض سعر خلال دقيقة</h2>
-      <p style="margin:0 0 32px;color:#686B70;font-size:17px;line-height:1.8">نموذج قصير وسيرد عليك فريق المبيعات في نفس اليوم. أو راسلنا مباشرة على واتساب.</p>
-      <a data-wa class="wa-green" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" aria-hidden="true" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>واتساب فوري</a>
+<%# 08 — Latest news (3 posts) %>
+<section id="news" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("home.news.label"), h2: t("home.news.h2"), desc: t("home.news.desc"), link: [ t("nav.news"), news_path ] %>
+    <div class="grid-3">
+      <% @latest_news.each do |post| %><%= render "shared/post_card", post: post %><% end %>
     </div>
-    <form id="quoteForm" data-reveal style="background:#fff;border-radius:22px;padding:38px;box-shadow:0 10px 40px rgba(25,44,123,.1);display:grid;gap:16px">
-      <input name="name" placeholder="الاسم" class="field">
-      <input name="phone" placeholder="رقم الجوال" class="field" inputmode="tel">
-      <select name="interest" class="field">
-        <option>نوع الاهتمام</option><option>منتج</option><option>شراكة توزيع</option><option>مشروع</option>
-      </select>
-      <textarea name="message" placeholder="رسالتك (اختياري)" rows="3" class="field" style="resize:vertical"></textarea>
-      <button type="submit" class="form-btn">إرسال الطلب</button>
-    </form>
+    <div data-reveal style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px" id="social">
+      <span style="align-self:center;color:#686B70;font-weight:700;font-size:15px"><%= t("home.news.cta") %></span>
+      <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" style="background:#192C7B" title="<%= s[:label] %>" target="_blank" rel="noopener"><%= s[:abbr] %></a><% end %>
+    </div>
   </div>
 </section>
 
-<!-- footer -->
-<footer style="background:#0D1744;color:rgba(255,255,255,.65);padding:70px 48px 36px">
-  <div style="max-width:1280px;margin:0 auto">
-    <div class="footer-grid" style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.12)">
-      <div>
-        <img src="/assets/logo-white.png" alt="ألمنيوم مزايا" style="height:74px;display:block;margin-bottom:18px">
-        <p style="margin:0;font-size:15px;line-height:1.8;max-width:320px">مصنع سعودي لمنتجات الألمنيوم منذ ١٩٨٩. سلالم، عربات صناعية، وحلول مخصصة للمشاريع الكبرى.</p>
-      </div>
-      <div>
-        <div style="color:#fff;font-weight:700;font-size:16px;margin-bottom:18px">روابط سريعة</div>
-        <div style="display:grid;gap:12px;font-size:15px">
-          <a href="/products" class="footer-link">المنتجات</a>
-          <a href="/projects" class="footer-link">المشاريع</a>
-          <a href="/quality" class="footer-link">الجودة والسلامة</a>
-          <a href="/partners" class="footer-link">شراكة معنا</a>
-        </div>
-      </div>
-      <div>
-        <div style="color:#fff;font-weight:700;font-size:16px;margin-bottom:18px">تواصل</div>
-        <div style="display:grid;gap:12px;font-size:15px">
-          <a data-wa dir="ltr" class="footer-link" href="#" style="unicode-bidi:isolate;text-align:end"><span data-wa-display></span></a>
-          <span>المنطقة الصناعية، الرياض</span>
-          <span>السبت – الخميس، ٨ص – ٥م</span>
-        </div>
-      </div>
-      <div>
-        <div style="color:#fff;font-weight:700;font-size:16px;margin-bottom:18px">تابعنا</div>
-        <div style="display:flex;gap:12px">
-          <a href="#hero" class="social">in</a>
-          <a href="#hero" class="social">X</a>
-          <a href="#hero" class="social">IG</a>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;justify-content:space-between;gap:16px;padding-top:28px;font-size:13.5px;flex-wrap:wrap">
-      <span>© ٢٠٢٦ ألمنيوم مزايا. جميع الحقوق محفوظة.</span>
-      <span>الأصل له اسم واحد.</span>
-    </div>
-  </div>
-</footer>
+<%# trust strip %>
+<section style="background:#fff;padding:0 0 64px;overflow:hidden">
+  <div data-reveal class="kicker-gray" style="text-align:center;margin-bottom:36px"><%= t("footer.trust") %></div>
+  <div id="marqueeRow" class="marquee-row" data-clients="<%= SiteData::CLIENTS.to_json %>"></div>
+</section>
 
-<a data-wa href="#" aria-label="واتساب" class="wa-fab"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
-</div>
-
-<script>
-(function () {
-  'use strict';
-
-  // ---- WhatsApp wiring ----
-  var WA_DISPLAY = '+966 50 000 0000';
-  var WA_HREF = 'https://wa.me/' + WA_DISPLAY.replace(/[^0-9]/g, '');
-  document.querySelectorAll('[data-wa]').forEach(function (a) { a.href = WA_HREF; a.target = '_blank'; a.rel = 'noopener'; });
-  document.querySelectorAll('[data-wa-display]').forEach(function (el) { el.textContent = WA_DISPLAY; });
-
-  var menuBtn = document.querySelector('.menu-btn');
-  var mobileNav = document.querySelector('.mobile-nav');
-  if (menuBtn && mobileNav) {
-    menuBtn.addEventListener('click', function () { mobileNav.classList.toggle('open'); });
-    mobileNav.addEventListener('click', function (e) { if (e.target.tagName === 'A') mobileNav.classList.remove('open'); });
-  }
-
-  // ---- contact form -> WhatsApp ----
-  var form = document.getElementById('quoteForm');
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var f = new FormData(form);
-    var lines = ['طلب عرض سعر من الموقع:'];
-    if (f.get('name')) lines.push('الاسم: ' + f.get('name'));
-    if (f.get('phone')) lines.push('الجوال: ' + f.get('phone'));
-    if (f.get('interest') && f.get('interest') !== 'نوع الاهتمام') lines.push('الاهتمام: ' + f.get('interest'));
-    if (f.get('message')) lines.push('الرسالة: ' + f.get('message'));
-    window.open(WA_HREF + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
-  });
-
-  // ---- trust marquee (two identical groups for seamless loop) ----
-  var clients = [
-    { name: 'ساكو SACO', logo: 'assets/logo-saco.png', bg: '#0D1744' },
-    { name: 'روشن ROSHN', logo: 'assets/logo-roshn.svg', bg: '#FFFFFF' },
-    { name: 'الدرعية DIRIYAH', logo: 'assets/logo-diriyah.png', bg: '#F7F1E6' },
-    { name: 'ساكو SACO', logo: 'assets/logo-saco.png', bg: '#0D1744' },
-    { name: 'روشن ROSHN', logo: 'assets/logo-roshn.svg', bg: '#FFFFFF' },
-    { name: 'الدرعية DIRIYAH', logo: 'assets/logo-diriyah.png', bg: '#F7F1E6' }
-  ];
-  var row = document.getElementById('marqueeRow');
-  for (var g = 0; g < 2; g++) {
-    var group = document.createElement('div');
-    group.style.cssText = 'display:flex;gap:90px;padding:0 45px;align-items:center';
-    clients.forEach(function (c) {
-      var item = document.createElement('div');
-      item.style.cssText = 'display:flex;align-items:center;gap:16px;white-space:nowrap';
-      var tile = document.createElement('div');
-      tile.style.cssText = 'width:64px;height:64px;border-radius:14px;overflow:hidden;flex-shrink:0;background:' + c.bg + ';display:flex;align-items:center;justify-content:center;padding:9px;box-sizing:border-box';
-      var img = document.createElement('img');
-      img.src = c.logo; img.alt = c.name; img.loading = 'lazy';
-      img.style.cssText = 'max-width:100%;max-height:100%;display:block';
-      tile.appendChild(img);
-      var label = document.createElement('div');
-      label.style.cssText = 'color:#9AA0A8;font-size:28px;font-weight:900;letter-spacing:1px';
-      label.textContent = c.name;
-      item.appendChild(tile); item.appendChild(label);
-      group.appendChild(item);
-    });
-    row.appendChild(group);
-  }
-
-  // ---- categories switcher ----
-  var catItems = Array.prototype.slice.call(document.querySelectorAll('.cat-item'));
-  var catBgs = Array.prototype.slice.call(document.querySelectorAll('.cat-bg'));
-  function setActiveCat(i) {
-    catItems.forEach(function (el, j) { el.classList.toggle('active', j === i); });
-    catBgs.forEach(function (el, j) { el.classList.toggle('active', j === i); });
-  }
-  catItems.forEach(function (el, i) {
-    el.addEventListener('mouseenter', function () { setActiveCat(i); });
-    el.addEventListener('click', function () { setActiveCat(i); });
-  });
-
-  // ---- splash ----
-  function setupSplash() {
-    var splash = document.getElementById('splash');
-    if (!splash) return;
-    document.body.style.overflow = 'hidden';
-    var rig = document.getElementById('splashRig'),
-        carrier = document.getElementById('splashCarrier'),
-        tag = document.getElementById('splashTag');
-    var H = innerHeight;
-    var METAL = 'linear-gradient(180deg,#F2F4F8 0%,#C6CBD4 42%,#9AA0AB 55%,#DFE3EA 100%)';
-    var METALV = 'linear-gradient(90deg,#F2F4F8 0%,#C6CBD4 42%,#9AA0AB 55%,#DFE3EA 100%)';
-    var bar = function (css, delay, from) {
-      var b = document.createElement('div');
-      b.style.cssText = 'position:absolute;border-radius:3px;box-shadow:0 4px 14px rgba(0,0,0,.4);opacity:0;transition:transform .7s cubic-bezier(.2,.9,.3,1) ' + delay + 'ms, opacity .4s ease ' + delay + 'ms;transform:' + from + ';' + css;
-      rig.appendChild(b);
-      return b;
-    };
-    var bars = [];
-    var TW = 190, GAP = 300;
-    [-1, 1].forEach(function (side) {
-      var edge = side === -1 ? 'right:calc(50% + ' + (GAP / 2) + 'px)' : 'left:calc(50% + ' + (GAP / 2) + 'px)';
-      var inner = edge;
-      bars.push(bar(edge + ';top:-2%;height:104%;width:9px;background:' + METALV, 100, 'translateY(' + (side * 40) + 'vh)'));
-      bars.push(bar((side === -1 ? 'right' : 'left') + ':calc(50% + ' + (GAP / 2 + TW) + 'px);top:-2%;height:104%;width:9px;background:' + METALV, 220, 'translateY(' + (-side * 40) + 'vh)'));
-      for (var i = 0; i < 6; i++) {
-        bars.push(bar(inner + ';top:' + (4 + i * 18) + '%;width:' + (TW + 9) + 'px;height:7px;background:' + METAL, 350 + i * 110, 'translateX(' + (side * 60) + 'vw)'));
-      }
-      for (var k = 0; k < 5; k++) {
-        var up = k % 2 === 0 ? 1 : -1;
-        bars.push(bar(inner + ';top:' + (4 + k * 18 + 9) + '%;width:' + Math.hypot(TW, H * 0.18) + 'px;height:5px;background:' + METAL + ';transform-origin:' + (side === -1 ? '100%' : '0') + ' 50%;opacity:.9', 500 + k * 110, 'translateX(' + (side * 60) + 'vw) rotate(0deg)'));
-        var el = bars[bars.length - 1];
-        el.dataset.rot = (side === -1 ? 1 : -1) * up * (Math.atan2(H * 0.18, TW) * 180 / Math.PI);
-      }
-    });
-    bar('left:calc(50% - ' + (GAP / 2 + TW) + 'px);right:calc(50% - ' + (GAP / 2 + TW) + 'px);top:2.5%;height:10px;background:' + METAL + ';border-radius:4px', 900, 'translateY(-60px)');
-    var cables = [-70, 70].map(function (x) {
-      var c = document.createElement('div');
-      c.style.cssText = 'position:absolute;left:calc(50% + ' + x + 'px);top:3.2%;width:3px;height:0;background:linear-gradient(180deg,#AEB4BE,#7E848E);opacity:0;transition:opacity .3s';
-      rig.appendChild(c);
-      return c;
-    });
-    requestAnimationFrame(function () { requestAnimationFrame(function () {
-      bars.forEach(function (b) {
-        b.style.transform = b.dataset.rot ? 'rotate(' + b.dataset.rot + 'deg)' : 'none';
-        b.style.opacity = '1';
-      });
-    }); });
-    var topY = H * 0.032, endY = H * 0.46, DESC = 2400;
-    setTimeout(function () {
-      cables.forEach(function (c) { c.style.opacity = '1'; });
-      carrier.style.transform = 'translate(-50%, ' + topY + 'px)';
-      carrier.style.transition = 'transform .01s';
-      requestAnimationFrame(function () {
-        carrier.style.transition = 'transform ' + DESC + 'ms cubic-bezier(.35,0,.3,1)';
-        carrier.style.transform = 'translate(-50%, ' + endY + 'px)';
-        cables.forEach(function (c) {
-          c.style.transition = 'height ' + DESC + 'ms cubic-bezier(.35,0,.3,1), opacity .3s';
-          c.style.height = (endY - topY + 20) + 'px';
-        });
-      });
-      setTimeout(function () { tag.style.opacity = '1'; }, DESC * 0.55);
-    }, 1500);
-    setTimeout(function () {
-      splash.style.transition = 'transform 1.15s cubic-bezier(.65,0,.35,1)';
-      splash.style.transform = 'translateY(102%)';
-      setTimeout(function () { splash.remove(); document.body.style.overflow = ''; }, 1200);
-    }, 1500 + DESC + 500);
-  }
-  setupSplash();
-
-  // ---- scroll reveals ----
-  var reveals = document.querySelectorAll('[data-reveal]');
-  reveals.forEach(function (el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(28px)';
-    el.style.transition = 'opacity .8s ease, transform .8s ease';
-  });
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (en.isIntersecting) {
-        en.target.style.opacity = '1';
-        en.target.style.transform = 'none';
-        io.unobserve(en.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  reveals.forEach(function (el) { io.observe(el); });
-
-  // ---- counters ----
-  var cio = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (!en.isIntersecting) return;
-      var el = en.target, target = +el.getAttribute('data-count'), t0 = performance.now();
-      var tick = function (now) {
-        var p = Math.min((now - t0) / 1600, 1), e = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(target * e).toLocaleString('ar-EG');
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      cio.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('[data-count]').forEach(function (el) { cio.observe(el); });
-
-  // ---- projects rail ----
-  (function () {
-    var sec = document.getElementById('projects'), track = document.getElementById('projTrack');
-    if (!sec || !track) return;
-    var loop = function () {
-      requestAnimationFrame(loop);
-      var r = sec.getBoundingClientRect();
-      var prog = Math.min(Math.max(-r.top / (r.height - innerHeight), 0), 1);
-      var max = Math.max(track.scrollWidth - track.parentElement.clientWidth, 0);
-      track.style.transform = 'translateX(' + (prog * max) + 'px)';
-    };
-    loop();
-  })();
-
-  // ---- 3D scaffold + ladder stage ----
-  async function setup3d() {
-    var host = document.getElementById('ladder3d');
-    if (!host || !window.WebGLRenderingContext) return;
-    var THREE;
-    try {
-      THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
-    } catch (err) { return; }
-    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
-    host.appendChild(renderer.domElement);
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
-    camera.position.set(0, 0.35, 5.6);
-    var pmrem = new THREE.PMREMGenerator(renderer);
-    var envScene = new THREE.Scene();
-    envScene.background = new THREE.Color(0x5a6a9e);
-    var addPanel = function (color, w, h, x, y, z) {
-      var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: color }));
-      m.position.set(x, y, z); m.lookAt(0, 0, 0); envScene.add(m);
-    };
-    addPanel(0xffffff, 9, 9, 0, 10, 2);
-    addPanel(0xb9c6f2, 6, 12, -10, 3, 5);
-    addPanel(0x8fa3e8, 6, 12, 10, 2, -4);
-    addPanel(0x27356f, 24, 8, 0, -9, 0);
-    addPanel(0xcdd6ee, 10, 8, 2, 3, 11);
-    scene.environment = pmrem.fromScene(envScene).texture;
-    scene.add(new THREE.HemisphereLight(0xdde4ff, 0x1a2350, 0.7));
-    var key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(3, 5, 4); scene.add(key);
-    var rim = new THREE.DirectionalLight(0xb9c6f2, 1.1); rim.position.set(-4, 2, -3); scene.add(rim);
-    var alu = new THREE.MeshStandardMaterial({ color: 0xd9dde3, metalness: 0.9, roughness: 0.25 });
-    var aluB = new THREE.MeshStandardMaterial({ color: 0xc3c8d0, metalness: 0.8, roughness: 0.42 });
-    var aluBox = new THREE.MeshStandardMaterial({ color: 0xd6dae1, metalness: 0.72, roughness: 0.36 });
-    var navy = new THREE.MeshStandardMaterial({ color: 0x192c7b, metalness: 0.35, roughness: 0.42 });
-    var rubber = new THREE.MeshStandardMaterial({ color: 0x23262b, metalness: 0, roughness: 0.9 });
-    var root = new THREE.Group(); scene.add(root);
-    var V3 = function (x, y, z) { return new THREE.Vector3(x, y, z); };
-    var tube = function (len, r, mat) { return new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 14), mat || alu); };
-    var spanTube = function (a, b, r, mat) {
-      var dir = b.clone().sub(a), m = tube(dir.length(), r, mat);
-      m.quaternion.setFromUnitVectors(V3(0, 1, 0), dir.clone().normalize());
-      m.position.copy(a).add(dir.multiplyScalar(0.5));
-      return m;
-    };
-    // scaffolding tower (builds piece by piece)
-    var scaffold = new THREE.Group(); root.add(scaffold);
-    var pieces = []; var ord = 0;
-    var P = function (m) { m.userData.tp = m.position.clone(); m.userData.ord = ord++; scaffold.add(m); pieces.push(m); return m; };
-    var SW = 1.15, SD = 0.85, corners = [[-SW/2, -SD/2], [SW/2, -SD/2], [SW/2, SD/2], [-SW/2, SD/2]];
-    corners.forEach(function (c) { var j = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.06, 0.2), navy); j.position.set(c[0], -1.31, c[1]); P(j); });
-    corners.forEach(function (c) { var s = tube(2.8, 0.036); s.position.set(c[0], 0.12, c[1]); P(s); });
-    var levels = [-1.02, -0.36, 0.32, 0.98];
-    levels.forEach(function (y) {
-      [-SD/2, SD/2].forEach(function (z) { P(spanTube(V3(-SW/2, y, z), V3(SW/2, y, z), 0.024)); });
-      [-SW/2, SW/2].forEach(function (x) { P(spanTube(V3(x, y, -SD/2), V3(x, y, SD/2), 0.024)); });
-      corners.forEach(function (c) { var cl = tube(0.07, 0.052, navy); cl.position.set(c[0], y, c[1]); P(cl); });
-    });
-    [-SD/2, SD/2].forEach(function (z, i) {
-      P(spanTube(V3(i ? SW/2 : -SW/2, -1.02, z), V3(i ? -SW/2 : SW/2, 0.32, z), 0.018, aluB));
-      P(spanTube(V3(i ? -SW/2 : SW/2, -0.36, z), V3(i ? SW/2 : -SW/2, 0.98, z), 0.018, aluB));
-    });
-    [-0.28, 0, 0.28].forEach(function (z) { var pl = new THREE.Mesh(new THREE.BoxGeometry(SW + 0.14, 0.045, 0.25), aluBox); pl.position.set(0, 1.02, z); P(pl); });
-    [1.24, 1.5].forEach(function (y) { [-SD/2, SD/2].forEach(function (z) { P(spanTube(V3(-SW/2, y, z), V3(SW/2, y, z), 0.02)); }); });
-    [-SW/2, SW/2].forEach(function (x) { P(spanTube(V3(x, 1.5, -SD/2), V3(x, 1.5, SD/2), 0.02)); });
-    var NPC = pieces.length;
-    // A-frame ladder (phase 2)
-    var ladder = new THREE.Group(); root.add(ladder);
-    var tilt = 0.24, LH = 2.4, W = 1.0, zc = Math.tan(tilt) * LH / 2, sinT = Math.sin(tilt);
-    var zAt = function (y, lean) { return lean * (-zc + y * sinT); };
-    [-W/2, W/2].forEach(function (x) { [1, -1].forEach(function (lean) {
-      var m = new THREE.Mesh(new THREE.BoxGeometry(0.09, LH + 0.05, 0.065), aluBox);
-      m.position.set(x, 0, lean * -zc); m.rotation.x = lean * tilt; ladder.add(m);
-    }); });
-    for (var i = 0; i < 5; i++) {
-      var y = -LH/2 + 0.28 + i * 0.42;
-      var step = new THREE.Mesh(new THREE.BoxGeometry(W + 0.04, 0.06, 0.22), aluBox);
-      step.position.set(0, y, zAt(y, 1)); ladder.add(step);
-      var grip = new THREE.Mesh(new THREE.BoxGeometry(W + 0.041, 0.012, 0.22), navy);
-      grip.position.set(0, y + 0.035, zAt(y, 1)); ladder.add(grip);
-    }
-    var top = new THREE.Mesh(new THREE.BoxGeometry(W + 0.16, 0.1, 0.36), navy);
-    top.position.set(0, LH/2 + 0.05, 0); ladder.add(top);
-    [-W/2, W/2].forEach(function (x) { [1, -1].forEach(function (lean) {
-      var foot = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.1, 0.17), rubber);
-      foot.position.set(x, -LH/2 - 0.045, zAt(-LH/2, lean)); ladder.add(foot);
-    }); });
-    [-0.32, 0.34].forEach(function (y) { ladder.add(spanTube(V3(-W/2 + 0.02, y, zAt(y, -1)), V3(W/2 - 0.02, y, zAt(y, -1)), 0.022, aluB)); });
-    var badge = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.02), navy);
-    badge.position.set(0, -0.02, zAt(-0.02, 1) - 0.115); ladder.add(badge);
-    ladder.scale.setScalar(0.001); ladder.visible = false;
-    // scroll-driven timeline
-    var stage = document.getElementById('stage3d');
-    var phaseA = document.getElementById('phaseA'), phaseB = document.getElementById('phaseB');
-    var specsA = Array.prototype.slice.call(document.querySelectorAll('[data-spec-a]'));
-    var specsB = Array.prototype.slice.call(document.querySelectorAll('[data-spec-b]'));
-    var showSpecs = function (list, on) {
-      list.forEach(function (el, i) {
-        el.style.transitionDelay = on ? (i * 130 + 'ms') : '0ms';
-        el.style.opacity = on ? '1' : '0';
-        el.style.transform = on ? 'none' : 'translateX(30px)';
-      });
-    };
-    var clamp01 = function (v) { return Math.min(Math.max(v, 0), 1); };
-    var smooth = function (v) { return v * v * (3 - 2 * v); };
-    var t = 0, phase = -1, aSpecs = false;
-    var resize = function () {
-      var w = host.clientWidth || 1, h = host.clientHeight || 1;
-      renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
-    };
-    resize();
-    new ResizeObserver(resize).observe(host);
-    var loop = function () {
-      requestAnimationFrame(loop);
-      var r = stage.getBoundingClientRect();
-      var prog = clamp01(-r.top / (r.height - innerHeight));
-      t += 0.004;
-      var build = clamp01(prog / 0.5);
-      var swap = smooth(clamp01((prog - 0.56) / 0.16));
-      pieces.forEach(function (m) {
-        var start = (m.userData.ord / NPC) * 0.82;
-        var e = 1 - Math.pow(1 - clamp01((build - start) / 0.18), 3);
-        m.position.y = m.userData.tp.y + (1 - e) * 2.4;
-        m.scale.setScalar(Math.max(e, 0.001));
-      });
-      scaffold.visible = swap < 0.999;
-      scaffold.position.y = -swap * 3;
-      scaffold.rotation.y = swap * 1.2;
-      var ls = swap * (1.18 - 0.18 * swap);
-      ladder.visible = swap > 0.001;
-      ladder.scale.setScalar(Math.max(ls, 0.001));
-      ladder.position.y = 0.1 - (1 - swap) * 1.6;
-      root.rotation.y = prog * Math.PI * 3 + t;
-      root.rotation.x = 0.07 + Math.sin(prog * Math.PI) * 0.12;
-      root.position.y = Math.sin(t * 2) * 0.03;
-      renderer.render(scene, camera);
-      var ph = prog > 0.6 ? 1 : 0;
-      if (!aSpecs && prog > 0.04) { aSpecs = true; showSpecs(specsA, true); }
-      if (ph !== phase) {
-        phase = ph;
-        phaseA.style.opacity = ph ? '0' : '1';
-        phaseA.style.transform = ph ? 'translateY(-28px)' : 'none';
-        phaseA.style.pointerEvents = ph ? 'none' : 'auto';
-        phaseB.style.opacity = ph ? '1' : '0';
-        phaseB.style.transform = ph ? 'none' : 'translateY(28px)';
-        phaseB.style.pointerEvents = ph ? 'auto' : 'none';
-        showSpecs(specsB, !!ph);
-        if (ph) showSpecs(specsA, false); else if (aSpecs) showSpecs(specsA, true);
-      }
-    };
-    loop();
-  }
-  setup3d();
-})();
-</script>
-</body>
-</html>
+<%# 09 — Final CTA %>
+<%= render "shared/cta_band", bg: "#fff", h2: t("home.final.h2"), desc: t("home.final.desc"), primary: [ t("common.request_quote"), rfq_path ], secondary: :whatsapp %>

@@ -1,24 +1,31 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html dir="<%= I18n.locale == :en ? "ltr" : "rtl" %>" lang="<%= I18n.locale %>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= content_for(:title) || "ألمنيوم مزايا — الأصل له اسم واحد" %></title>
-<meta name="description" content="<%= content_for(:description) %>">
+<title><%= content_for(:title) || t("home.title") %></title>
+<meta name="description" content="<%= content_for(:description) || t("home.description") %>">
 <meta property="og:type" content="website">
-<meta property="og:title" content="<%= content_for(:title) || "ألمنيوم مزايا — الأصل له اسم واحد" %>">
-<meta property="og:description" content="<%= content_for(:description) %>">
+<meta property="og:title" content="<%= content_for(:title) || t("home.title") %>">
+<meta property="og:description" content="<%= content_for(:description) || t("home.description") %>">
 <meta property="og:image" content="<%= request.base_url %>/assets/hero.jpg">
-<meta property="og:locale" content="ar_SA">
+<meta property="og:locale" content="<%= I18n.locale == :en ? "en_US" : "ar_SA" %>">
+<link rel="alternate" hreflang="ar" href="<%= request.base_url %><%= request.path.sub(%r{\A/en(?=/|\z)}, "").presence || "/" %>">
+<link rel="alternate" hreflang="en" href="<%= request.base_url %><%= request.path.start_with?("/en") ? request.path : "/en#{request.path}".chomp("/") %>">
+<link rel="canonical" href="<%= request.original_url.split('?').first %>">
 <link rel="icon" type="image/png" href="/assets/logo.png">
 <link rel="stylesheet" href="/site.css">
+<%= csrf_meta_tags %>
+<%= organization_jsonld %>
+<%= content_for :head %>
 </head>
-<body>
+<body class="<%= I18n.locale == :en ? "ltr" : "rtl" %>" data-whatsapp-href="<%= SiteData::WHATSAPP_HREF %>" data-whatsapp-display="<%= SiteData::WHATSAPP_DISPLAY %>">
 <div class="page">
 <%= render "shared/header" %>
-<%= yield %>
+<main><%= yield %></main>
 <%= render "shared/footer" %>
 </div>
+<%= render "shared/gate" %>
 <script src="/site.js"></script>
 <%= content_for :page_script %>
 </body>

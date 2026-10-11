@@ -1,0 +1,108 @@
+<% content_for :title, "#{@post[:title]} — #{t("nav.news")} — #{t("brand")}" %>
+<% content_for :description, @post[:excerpt] %>
+<% content_for :nav_active, "company" %>
+<% kind_label = @post[:type] == :news ? t("news.show.news") : t("news.show.article") %>
+<style>
+  .article{max-width:760px;margin:0 auto}
+  .article .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:#9AA0A8;font-size:14px;font-weight:700;margin-bottom:28px}
+  .article .meta .post-cat{color:#192C7B}
+  .article .art-img{height:400px;border-radius:24px;overflow:hidden;margin-bottom:36px;box-shadow:0 18px 50px rgba(25,44,123,.12)}
+  .article .body p{margin:0 0 20px;color:#1A1C20;font-size:17.5px;line-height:1.95}
+  .article .body p:first-child{font-size:19px;font-weight:600;color:#192C7B}
+  .article .checklist li{background:#F4F5F7}
+  .article .note{display:flex;gap:14px;align-items:start;background:#F4F5F7;border:1.5px dashed #C9CDD6;border-radius:16px;padding:18px 22px;color:#686B70;font-size:14.5px;line-height:1.7;margin-bottom:28px}
+  .article .share{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:40px;padding-top:28px;border-top:1px solid #E6E8EC}
+  .article .share span{color:#686B70;font-weight:700;font-size:15px}
+  .bg-white .post-card{border:1px solid #E6E8EC}
+  @media (max-width:960px){.article .art-img{height:240px}}
+</style>
+
+<%# Hero %>
+<%= render "shared/page_hero",
+      label: kind_label, h1: @post[:title], desc: @post[:excerpt],
+      crumbs: [ [ t("nav.company"), about_path ], [ t("nav.news"), news_path ], [ @post[:title], nil ] ] %>
+
+<%# Body %>
+<section class="section-pad bg-white">
+  <div class="wrap">
+    <article class="article">
+      <div data-reveal class="meta">
+        <span class="post-cat"><%= @post[:category] %></span>
+        <span>|</span>
+        <% if @post[:date] %><span><%= @post[:date] %></span><% else %><span class="pending"><%= t("news.show.date_pending") %></span><% end %>
+        <span>|</span>
+        <a href="<%= news_path(topic: @post[:topic]) %>#topics" class="chip"><%= SiteData::TOPICS[@post[:topic]] %></a>
+      </div>
+
+      <% if @post[:template] %>
+      <div data-reveal class="note"><span style="font-size:20px;line-height:1">ⓘ</span><span><%= t("news.show.template_note") %></span></div>
+      <% end %>
+
+      <% if @post[:image] && !@post[:template] %>
+      <div data-reveal class="art-img"><img src="<%= @post[:image] %>" alt="" class="cover"></div>
+      <% elsif @post[:template] %>
+      <div data-reveal class="art-img" style="box-shadow:none;border:1.5px dashed #C9CDD6"><div class="ph-slot"><%= @post[:category] %></div></div>
+      <% end %>
+
+      <div data-reveal class="body">
+        <% if @post[:body].present? %>
+          <% @post[:body].each do |para| %><p><%= para %></p><% end %>
+        <% else %>
+          <p><span class="pending"><%= t("common.pending") %></span></p>
+        <% end %>
+      </div>
+
+      <% if @post[:points].present? %>
+      <div class="grid-2" style="margin-top:28px">
+        <% @post[:points].each_with_index do |(title, desc), i| %>
+        <div data-reveal class="pillar" style="padding:28px 26px">
+          <div class="num-badge soft" style="width:44px;height:44px;font-size:17px;margin-bottom:14px;background:#fff"><%= num(i + 1) %></div>
+          <h3 style="margin:0 0 8px;color:#192C7B;font-size:18px;font-weight:800"><%= title %></h3>
+          <p style="margin:0;color:#686B70;font-size:14.5px;line-height:1.8"><%= desc %></p>
+        </div>
+        <% end %>
+      </div>
+      <% end %>
+
+      <% if @post[:checklist].present? %>
+      <ul data-reveal class="checklist" style="margin-top:28px">
+        <% @post[:checklist].each do |item| %><li><%= item %></li><% end %>
+      </ul>
+      <% end %>
+
+      <div data-reveal class="share">
+        <span><%= t("news.show.share") %></span>
+        <a data-wa href="#" class="btn-wa" style="padding:12px 24px;font-size:15px"><%= render "shared/wa_icon", size: 18 %> <%= t("news.show.share_whatsapp") %></a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<%# Related products %>
+<% if @products.any? %>
+<section class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", h2: t("news.show.products_h2"), link: [ t("common.explore_products"), products_path ] %>
+    <div class="grid-3">
+      <% @products.each do |p| %><%= render "shared/product_card", product: p %><% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<%# Related posts %>
+<% if @related.any? %>
+<section class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("news.hero.label"), h2: t("news.show.related_h2"), link: [ t("nav.news"), news_path ] %>
+    <div class="grid-3">
+      <% @related.each do |p| %><%= render "shared/post_card", post: p %><% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<%# Final CTA %>
+<%= render "shared/cta_band", bg: (@related.any? ? "#fff" : (@products.any? ? "#F4F5F7" : "#fff")),
+      label: t("news.final.label"), h2: t("news.final.h2"), desc: t("news.final.desc"),
+      primary: [ t("common.explore_products"), products_path ], secondary: [ t("common.contact_us"), contact_path ] %>

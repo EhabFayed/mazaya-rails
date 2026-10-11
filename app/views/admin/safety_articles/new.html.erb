@@ -1,0 +1,6 @@
+<% content_for :title, "دليل سلامة جديد" %>
+<div class="page-head">
+  <div><h1>دليل سلامة جديد</h1><p>الاسم والملخص إجباريان للعرض؛ النقاط وقائمة الفحص اختيارية.</p></div>
+  <div class="head-actions"><a href="<%= admin_safety_articles_path %>" class="btn-outline sm">← كل الأدلة</a></div>
+</div>
+<%= render "form", article: @article %>

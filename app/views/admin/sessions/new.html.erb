@@ -1,0 +1,9 @@
+<h1 style="margin:0 0 6px;color:#192C7B;font-size:24px;font-weight:900;text-align:center">لوحة التحكم</h1>
+<p style="margin:0 0 24px;color:#686B70;text-align:center;font-size:14.5px">سجّل الدخول لإدارة محتوى الموقع والطلبات.</p>
+<%= form_with url: admin_login_path, method: :post, local: true, class: "stack" do |f| %>
+  <label class="field-label">البريد الإلكتروني</label>
+  <%= f.email_field :email, class: "field", required: true, autofocus: true, value: params[:email], autocomplete: "username" %>
+  <label class="field-label">كلمة المرور</label>
+  <%= f.password_field :password, class: "field", required: true, autocomplete: "current-password" %>
+  <%= f.submit "دخول", class: "form-btn" %>
+<% end %>

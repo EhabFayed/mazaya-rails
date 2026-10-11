@@ -1,0 +1,27 @@
+<% content_for :title, "المشاريع" %>
+<div class="page-head">
+  <div><h1>المشاريع</h1><p><%= @projects.size %> مشروع · المميّزة تظهر في الرئيسية وصفحة B2B.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_project_path %>" class="btn-navy sm">+ مشروع جديد</a></div>
+</div>
+
+<% if @projects.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد مشاريع بعد. <a href="<%= new_admin_project_path %>">أضف أول مشروع</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th></th><th>الاسم</th><th>النوع</th><th>مميّز</th><th>الحالة</th><th>الترتيب</th><th>الحلول</th><th></th></tr></thead>
+  <tbody>
+    <% @projects.each do |p| %>
+    <tr>
+      <td><%= thumb(p.image, p.name_ar) %></td>
+      <td><a href="<%= edit_admin_project_path(p) %>"><%= p.name_ar %></a><div style="color:#686B70;font-size:12.5px" dir="ltr"><%= p.name_en.presence || p.slug %></div></td>
+      <td><%= p.type_ar.presence || "—" %></td>
+      <td><%= p.featured ? "★ مميّز" : "—" %></td>
+      <td><%= yes_no(p.published) %></td>
+      <td><%= p.position %></td>
+      <td><%= p.solutions.size %></td>
+      <td><a href="<%= edit_admin_project_path(p) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

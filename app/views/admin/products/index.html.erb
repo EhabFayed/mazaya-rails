@@ -1,0 +1,41 @@
+<% content_for :title, "المنتجات" %>
+<div class="page-head">
+  <div><h1>المنتجات</h1><p>إجمالي <%= Product.count %> منتج · المنتجات الجاهزة وحسب الطلب مع صورها ومواصفاتها وملفاتها الفنية.</p></div>
+  <div class="head-actions">
+    <a href="<%= import_admin_products_path %>" class="btn-outline sm">استيراد من Excel</a>
+    <a href="<%= new_admin_product_path %>" class="btn-navy sm">+ منتج جديد</a>
+  </div>
+</div>
+
+<%= form_with url: admin_products_path, method: :get, local: true, class: "toolbar" do |f| %>
+  <%= f.text_field :q, value: @q, class: "field sm", placeholder: "بحث بالاسم أو الكود" %>
+  <%= f.select :category_id, options_from_collection_for_select(@categories, :id, :name_ar, @category_id), { include_blank: "كل الفئات" }, class: "field sm" %>
+  <%= f.select :kind, options_for_select(Admin::ProductsController::KIND_LABELS.invert, @kind), { include_blank: "كل الأنواع" }, class: "field sm" %>
+  <%= f.select :published, options_for_select([ [ "منشور", "1" ], [ "مسودة", "0" ] ], @published), { include_blank: "منشور ومسودة" }, class: "field sm" %>
+  <button type="submit" class="btn-navy sm">تصفية</button>
+  <% if @q.present? || @category_id || @kind || @published %><a href="<%= admin_products_path %>" class="btn-outline sm">مسح</a><% end %>
+<% end %>
+
+<% if @products.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد منتجات مطابقة. <a href="<%= new_admin_product_path %>">أضف منتجًا</a> أو <a href="<%= import_admin_products_path %>">استورد من Excel</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th></th><th>الاسم</th><th>الكود</th><th>الفئة</th><th>النوع</th><th>مميز</th><th>الحالة</th><th>الترتيب</th></tr></thead>
+  <tbody>
+    <% @products.each do |p| %>
+    <% img = p.images.first %>
+    <tr>
+      <td><% if img&.representable? %><%= image_tag rails_representation_path(img.representation(resize_to_fill: [ 112, 84 ]), only_path: true), class: "thumb", alt: "" %><% else %><div class="thumb ph">—</div><% end %></td>
+      <td><a href="<%= edit_admin_product_path(p) %>"><%= p.name_ar %></a><% if p.name_en.present? %><div style="color:#686B70;font-size:13px" dir="ltr"><%= p.name_en %></div><% end %></td>
+      <td dir="ltr" style="text-align:end"><%= p.code.presence || "—" %></td>
+      <td><%= p.category.name_ar %><% if p.subcategory %> › <%= p.subcategory.name_ar %><% end %></td>
+      <td><span class="kind kind-<%= p.kind %>"><%= Admin::ProductsController::KIND_LABELS[p.kind] %></span></td>
+      <td><%= p.popular ? "★" : "—" %></td>
+      <td><%= yes_no(p.published) %></td>
+      <td dir="ltr"><%= p.position %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= pagination_links(@page, @pages) %>
+<% end %>

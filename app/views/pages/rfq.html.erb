@@ -1,0 +1,129 @@
+<% content_for :title, t("rfq.title") %>
+<% content_for :description, t("rfq.description") %>
+<% content_for :nav_active, "b2b" %>
+
+<style>
+.split-form{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:start}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sticky-intro{position:sticky;top:110px}
+@media(max-width:960px){.split-form,.f2{grid-template-columns:1fr}.sticky-intro{position:static}}
+</style>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.rfq"), nil ] ],
+      label: t("rfq.hero.label"), h1: t("rfq.hero.h1"), desc: t("rfq.hero.desc"),
+      primary: [ t("rfq.form.cta"), "#form" ],
+      secondary: :whatsapp %>
+
+<%# 02 — Form %>
+<section id="form" class="section-pad bg-soft">
+  <div class="wrap split-form">
+    <div data-reveal class="sticky-intro">
+      <div class="kicker-gray"><%= t("rfq.form.label") %></div>
+      <h2 style="margin:0 0 18px;color:#192C7B;font-size:38px;font-weight:900;line-height:1.25"><%= t("rfq.form.h2") %></h2>
+      <p style="margin:0 0 18px;color:#686B70;font-size:17px;line-height:1.8"><%= t("rfq.form.desc") %></p>
+      <p style="margin:0 0 28px;color:#9AA0A8;font-size:14px;font-weight:700"><%= t("common.required_hint") %></p>
+      <div style="display:grid;gap:10px;margin-bottom:28px">
+        <% %w[s1 s2 s3 s4 s5].each do |s| %>
+        <div style="display:flex;align-items:center;gap:12px;color:#192C7B;font-size:14.5px;font-weight:700"><span style="width:8px;height:8px;border-radius:50%;background:#B9C6F2;flex-shrink:0"></span><%= t("rfq.form.#{s}") %></div>
+        <% end %>
+      </div>
+      <a data-wa href="#" class="btn-wa"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
+    </div>
+
+    <form data-reveal data-lead-form data-kind="rfq" data-source="rfq-page" data-wa-title="<%= t('common.request_quote') %>" class="form-card">
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+
+      <div class="form-section"><%= t("rfq.form.s1") %></div>
+      <div class="f2">
+        <div><label class="field-label" for="rfq-name"><%= t("rfq.form.name") %></label><input id="rfq-name" name="lead[name]" class="field" data-label="<%= t("rfq.form.name") %>" required autocomplete="name"></div>
+        <div><label class="field-label" for="rfq-company"><%= t("rfq.form.company") %></label><input id="rfq-company" name="company" class="field" data-label="<%= t("rfq.form.company") %>" autocomplete="organization"></div>
+      </div>
+      <div class="f2">
+        <div><label class="field-label" for="rfq-email"><%= t("rfq.form.email") %></label><input id="rfq-email" type="email" name="lead[email]" class="field" data-label="<%= t("rfq.form.email") %>" inputmode="email" autocomplete="email" dir="ltr" style="text-align:end"></div>
+        <div><label class="field-label" for="rfq-phone"><%= t("rfq.form.phone") %></label><input id="rfq-phone" name="lead[phone]" class="field" data-label="<%= t("rfq.form.phone") %>" inputmode="tel" autocomplete="tel" dir="ltr" style="text-align:end"></div>
+      </div>
+
+      <div class="form-section"><%= t("rfq.form.s2") %></div>
+      <div class="f2">
+        <div><label class="field-label" for="rfq-project"><%= t("rfq.form.project_name") %></label><input id="rfq-project" name="project_name" class="field" data-label="<%= t("rfq.form.project_name") %>"></div>
+        <div>
+          <label class="field-label" for="rfq-type"><%= t("rfq.form.project_type") %></label>
+          <select id="rfq-type" name="project_type" class="field" data-label="<%= t("rfq.form.project_type") %>" required>
+            <option value=""><%= t("rfq.form.project_type").delete("*") %></option>
+            <optgroup label="<%= t("nav.b2c") %>"><% @categories.each do |c| %><option><%= c[:name] %></option><% end %></optgroup>
+            <optgroup label="<%= t("nav.custom_solutions") %>"><% @solutions.each do |s| %><option><%= s[:name] %></option><% end %></optgroup>
+            <option><%= t("common.other") %></option>
+          </select>
+        </div>
+      </div>
+      <div class="f2">
+        <div><label class="field-label" for="rfq-location"><%= t("rfq.form.location") %></label><input id="rfq-location" name="location" class="field" data-label="<%= t("rfq.form.location") %>" required></div>
+        <div><label class="field-label" for="rfq-timeline"><%= t("rfq.form.timeline") %></label><input id="rfq-timeline" name="timeline" class="field" data-label="<%= t("rfq.form.timeline") %>"></div>
+      </div>
+
+      <div class="form-section"><%= t("rfq.form.s3") %></div>
+      <div class="f2">
+        <div><label class="field-label" for="rfq-product"><%= t("rfq.form.product") %></label><input id="rfq-product" name="product" class="field" data-label="<%= t("rfq.form.product") %>" required></div>
+        <div><label class="field-label" for="rfq-quantity"><%= t("rfq.form.quantity") %></label><input id="rfq-quantity" name="quantity" class="field" data-label="<%= t("rfq.form.quantity") %>" required></div>
+      </div>
+      <div>
+        <label class="field-label" for="rfq-specs"><%= t("rfq.form.specs") %></label>
+        <textarea id="rfq-specs" name="specs" rows="4" class="field" data-label="<%= t("rfq.form.specs") %>" placeholder="<%= t("rfq.form.specs_placeholder") %>"></textarea>
+      </div>
+
+      <div class="form-section"><%= t("rfq.form.s4") %></div>
+      <div>
+        <label class="field-label" for="rfq-files"><%= t("rfq.form.attach") %></label>
+        <div class="upload-box"><%= t("rfq.form.attach_hint") %><input id="rfq-files" type="file" name="files" multiple aria-label="<%= t("rfq.form.upload") %>"></div>
+      </div>
+
+      <div class="form-section"><%= t("rfq.form.s5") %></div>
+      <div>
+        <label class="field-label" for="rfq-notes"><%= t("rfq.form.notes") %></label>
+        <textarea id="rfq-notes" name="lead[message]" rows="3" class="field" data-label="<%= t("rfq.form.notes") %>" placeholder="<%= t("rfq.form.notes_placeholder") %>"></textarea>
+      </div>
+
+      <button type="submit" class="form-btn"><%= t("rfq.form.cta") %></button>
+      <div class="form-msg" data-form-msg></div>
+      <div class="form-success">
+        <h3><%= t("common.sent_title") %></h3>
+        <p><%= t("rfq.after.desc") %></p>
+        <a data-wa-prefill class="btn-wa" href="#" target="_blank" rel="noopener"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%# 03 — After submission %>
+<section id="after" class="section-pad bg-white">
+  <div class="wrap grid-2" style="align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker-gray"><%= t("rfq.after.label") %></div>
+      <h2 style="margin:0 0 18px;color:#192C7B;font-size:38px;font-weight:900;line-height:1.25"><%= t("rfq.after.h2") %></h2>
+      <p style="margin:0;color:#686B70;font-size:17px;line-height:1.8"><%= t("rfq.after.desc") %></p>
+    </div>
+    <div data-reveal class="pillar" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-inline-start:6px solid #192C7B">
+      <div>
+        <div style="color:#192C7B;font-size:17px;font-weight:800;margin-bottom:8px"><%= t("rfq.after.response") %></div>
+        <% if SiteData.setting&.rfq_response_ar.present? %>
+          <div style="color:#192C7B;font-size:24px;font-weight:900"><%= SiteData.setting.rfq_response %></div>
+        <% else %>
+          <span class="pending" style="background:#fff"><%= t("rfq.after.response_pending") %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# 04 — Urgent %>
+<section id="urgent" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(37,211,102,.14),transparent 70%)"></div>
+  <div class="wrap" style="position:relative;text-align:center;max-width:760px">
+    <div data-reveal class="kicker"><%= t("rfq.urgent.label") %></div>
+    <h2 data-reveal style="margin:0 0 16px;color:#fff;font-size:40px;font-weight:900;line-height:1.25"><%= t("rfq.urgent.h2") %></h2>
+    <p data-reveal style="margin:0 0 32px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= t("rfq.urgent.desc") %></p>
+    <div data-reveal><a data-wa href="#" class="btn-wa" style="font-size:17px"><%= render "shared/wa_icon", size: 20 %> <%= t("common.whatsapp") %></a></div>
+  </div>
+</section>

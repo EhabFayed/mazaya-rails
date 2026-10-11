@@ -1,0 +1,38 @@
+# Kamal deployment (https://kamal-deploy.org). Fill in the host/registry and
+# put secrets in .kamal/secrets (see .env.example for the variable list).
+service: mazaya
+image: mazaya/web
+servers:
+  web:
+    - REPLACE_WITH_SERVER_IP
+proxy:
+  ssl: true
+  host: REPLACE_WITH_DOMAIN
+registry:
+  server: ghcr.io
+  username: REPLACE_WITH_REGISTRY_USER
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+env:
+  clear:
+    RAILS_ENV: production
+    APP_HOST: REPLACE_WITH_DOMAIN
+    ACTIVE_STORAGE_SERVICE: local
+    RAILS_MAX_THREADS: 5
+    SOLID_QUEUE_IN_PUMA: true   # runs the job supervisor (lead emails) inside the web process
+  secret:
+    - SECRET_KEY_BASE
+    - DATABASE_URL
+    - LEADS_NOTIFY_TO
+    - MAIL_FROM
+    - SMTP_ADDRESS
+    - SMTP_PORT
+    - SMTP_USERNAME
+    - SMTP_PASSWORD
+    - SMTP_DOMAIN
+    - ADMIN_USER
+    - ADMIN_PASSWORD
+volumes:
+  - "mazaya_storage:/rails/storage"   # Active Storage attachments (lead files)
+builder:
+  arch: amd64

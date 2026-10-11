@@ -1,0 +1,69 @@
+<% content_for :title, "#{@article[:name]} — #{t("nav.safety_page")} — #{t("brand")}" %>
+<% content_for :description, @article[:summary] %>
+<% content_for :nav_active, "quality" %>
+<style>
+  .on-white .product-card{border:1px solid #E6E8EC;box-shadow:0 4px 20px rgba(25,44,123,.06)}
+</style>
+
+<%# Hero %>
+<%= render "shared/page_hero",
+      label: "#{t("safety.show.label")} · #{@article[:step]}", h1: @article[:name], desc: @article[:summary],
+      crumbs: [ [ t("nav.safety_page"), safety_path ], [ @article[:name], nil ] ],
+      primary: [ t("safety.final.primary"), contact_path(dept: "technical") ], secondary: :whatsapp %>
+
+<%# Body %>
+<section class="section-pad bg-soft">
+  <div class="wrap">
+    <% if @article[:points] %>
+    <div class="grid-4">
+      <% @article[:points].each_with_index do |(title, desc), i| %>
+      <div data-reveal class="feature-card card-hover">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+    <% elsif @article[:checklist] %>
+    <div class="wrap-md">
+      <ul data-reveal class="checklist">
+        <% @article[:checklist].each do |item| %><li><%= item %></li><% end %>
+      </ul>
+    </div>
+    <% end %>
+  </div>
+</section>
+
+<%# Related products %>
+<% if @products.any? %>
+<section class="section-pad bg-white on-white">
+  <div class="wrap">
+    <%= render "shared/section_head", h2: t("safety.show.related_h2"), link: [ t("common.explore_products"), products_path ] %>
+    <div class="grid-3">
+      <% @products.each do |p| %><%= render "shared/product_card", product: p %><% end %>
+    </div>
+  </div>
+</section>
+<% end %>
+
+<%# Other guides %>
+<section class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("safety.show.label"), h2: t("safety.show.other_h2"), link: [ t("nav.guides"), safety_path + "#library" ] %>
+    <div class="grid-2">
+      <% @others.each do |a| %>
+      <a href="<%= safety_article_path(a[:slug]) %>" data-reveal class="feature-card card-hover" style="color:inherit">
+        <div class="step-num" style="color:#B9C6F2;font-size:26px;font-weight:900;margin-bottom:10px"><%= a[:step] %></div>
+        <h3><%= a[:name] %></h3>
+        <p style="margin-bottom:18px"><%= a[:summary] %></p>
+        <span class="card-link"><%= t("common.read_more") %> ←</span>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# Final CTA %>
+<%= render "shared/cta_band",
+      label: t("safety.final.label"), h2: t("safety.final.h2"), desc: t("safety.final.desc"),
+      primary: [ t("safety.final.primary"), contact_path(dept: "technical") ], secondary: [ t("common.explore_products"), products_path ] %>

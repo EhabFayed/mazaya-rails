@@ -1,0 +1,102 @@
+<% content_for :title, "#{@solution[:name]} — #{t("nav.custom_solutions")} — #{t("brand")}" %>
+<% solution_desc = @solution[:desc].presence || t("solutions.show.desc", name: @solution[:name]) %>
+<% content_for :description, solution_desc %>
+<% content_for :nav_active, "b2b" %>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.custom_solutions"), solutions_path ], [ @solution[:name], nil ] ],
+      label: t("solutions.show.label"), h1: @solution[:name], desc: solution_desc,
+      image: @solution[:image],
+      primary: [ t("solutions.hero.primary"), rfq_path ],
+      secondary: :whatsapp %>
+
+<%# 02 — What can be customised %>
+<section id="capabilities" class="section-pad bg-white">
+  <div class="wrap">
+    <div data-reveal style="display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap">
+      <span class="tag tag-custom"><%= t("common.custom") %></span>
+      <span class="chip" dir="ltr" style="unicode-bidi:isolate"><%= @solution[:en] %></span>
+      <a href="<%= product_category_path(@category[:slug]) %>" class="chip" style="color:#192C7B"><%= @category[:name] %></a>
+    </div>
+    <%= render "shared/section_head", label: t("solutions.capabilities.label"), h2: t("solutions.capabilities.h2"), desc: t("solutions.capabilities.desc") %>
+    <div class="grid-5">
+      <% @features.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="feature-card soft card-hover">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 03 — Process %>
+<section id="process" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("solutions.process.label"), h2: t("solutions.process.h2") %>
+    <div class="steps">
+      <% @steps.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="step card-hover">
+        <div class="step-num"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 04 — Related projects %>
+<section id="projects" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("solutions.projects.label"), h2: t("solutions.show.related_projects"), link: [ t("solutions.projects.cta"), projects_path ] %>
+    <% if @projects.any? %>
+    <div class="grid-2">
+      <% @projects.each do |p| %><%= render "shared/project_card", project: p, tall: true %><% end %>
+    </div>
+    <% else %>
+    <p data-reveal><span class="pending"><%= t("common.pending") %></span></p>
+    <% end %>
+  </div>
+</section>
+
+<%# 05 — Ready-made products in the same category %>
+<section id="category" class="section-pad bg-navy" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(185,198,242,.16),transparent 70%)"></div>
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker"><%= t("solutions.show.related_category") %></div>
+      <h2 style="margin:0 0 20px;color:#fff;font-size:42px;font-weight:900;line-height:1.25"><%= @category[:name] %></h2>
+      <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= @category[:desc] %></p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="<%= product_category_path(@category[:slug]) %>" class="btn-white"><%= t("common.explore_category") %></a>
+        <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= SiteData.download(@category[:catalog])[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="btn-ghost"><%= t("common.download_catalog") %></a>
+      </div>
+    </div>
+    <a href="<%= product_category_path(@category[:slug]) %>" data-reveal style="display:block;height:380px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)"><img src="<%= @category[:image] %>" alt="<%= @category[:name] %>" class="cover" loading="lazy"></a>
+  </div>
+</section>
+
+<%# 06 — Other solutions %>
+<section id="others" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("nav.custom_solutions"), h2: t("solutions.show.other"), link: [ t("common.explore_solutions"), solutions_path ] %>
+    <div class="grid-4">
+      <% @others.each do |s| %>
+      <a href="<%= solution_path(s[:slug]) %>" data-reveal class="cat-card card-hover">
+        <div class="cat-media" style="height:150px"><img src="<%= s[:image] %>" alt="<%= s[:name] %>" loading="lazy"></div>
+        <div class="cat-body" style="padding:20px 22px 24px;gap:8px">
+          <div class="product-cat" dir="ltr" style="text-align:end"><%= s[:en] %></div>
+          <h3 style="font-size:18px"><%= s[:name] %></h3>
+          <span class="card-link" style="font-size:14px"><%= t("common.explore_solutions") %> ←</span>
+        </div>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 07 — Final CTA %>
+<%= render "shared/cta_band", bg: "#F4F5F7", label: t("solutions.final.label"), h2: t("solutions.final.h2"), desc: t("solutions.final.desc"), primary: [ t("solutions.final.primary"), rfq_path ], secondary: :whatsapp %>

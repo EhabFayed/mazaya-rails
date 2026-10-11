@@ -35,6 +35,7 @@
 
 # Ignore Kamal files.
 /config/deploy*.yml
+/compose.production.yml
 /.kamal
 
 # Ignore development files

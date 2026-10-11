@@ -1,0 +1,20 @@
+<%# Gated-download modal (IA doc §06): 3 fields, file opens immediately, not asked again this session. %>
+<div id="gate" class="gate" hidden role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-backdrop" data-gate-close></div>
+  <form class="gate-card" data-lead-form data-kind="download" data-source="gate">
+    <button type="button" class="gate-x" data-gate-close aria-label="<%= t("gate.close") %>">✕</button>
+    <div class="kicker-gray" style="margin-bottom:8px"><%= t("gate.title") %></div>
+    <h3 id="gateTitle" class="gate-title" data-gate-title></h3>
+    <p class="gate-desc"><%= t("gate.desc") %></p>
+    <input type="hidden" name="lead[download_key]" data-gate-key>
+    <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp">
+    <input name="lead[name]" class="field" placeholder="<%= t("gate.name") %>" required>
+    <input name="lead[phone]" class="field" placeholder="<%= t("gate.phone") %> / <%= t("gate.email") %>" inputmode="tel">
+    <select name="lead[org_type]" class="field">
+      <option value=""><%= t("gate.org_type") %></option>
+      <% SiteData::ORG_TYPES.each do |k, v| %><option value="<%= k %>"><%= v %></option><% end %>
+    </select>
+    <button type="submit" class="form-btn"><%= t("gate.submit") %></button>
+    <div class="form-msg" data-form-msg></div>
+  </form>
+</div>

@@ -1,0 +1,58 @@
+<% content_for :title, "استيراد المنتجات" %>
+<div class="page-head">
+  <div><h1>استيراد من Excel</h1><p>ارفع ملف Excel (xlsx) أو CSV لإضافة المنتجات أو تحديثها دفعة واحدة.</p></div>
+  <div class="head-actions">
+    <a href="<%= import_admin_products_path(format: :csv) %>" class="btn-outline sm">تنزيل القالب (CSV)</a>
+    <a href="<%= admin_products_path %>" class="btn-outline sm">← كل المنتجات</a>
+  </div>
+</div>
+
+<% if @result %>
+<div class="section">
+  <h2><%= @result.dry_run ? "نتيجة الفحص (لم يُحفظ شيء)" : "تم الاستيراد" %></h2>
+  <div class="chips" style="margin:10px 0 14px">
+    <span class="chip">الصفوف: <%= @result.total %></span>
+    <span class="chip" style="background:#E3F6EA;color:#1B7F4B">جديد: <%= @result.created %></span>
+    <span class="chip" style="background:#E4E8F4;color:#192C7B">محدَّث: <%= @result.updated %></span>
+    <span class="chip" style="<%= 'background:#FBE7E6;color:#B3261E' if @result.skipped.positive? %>">متجاوز: <%= @result.skipped %></span>
+  </div>
+  <% if @result.errors.any? %>
+  <table class="adm-table">
+    <thead><tr><th>الصف</th><th>الخطأ</th></tr></thead>
+    <tbody><% @result.errors.each do |n, msg| %><tr><td dir="ltr"><%= n %></td><td><%= msg %></td></tr><% end %></tbody>
+  </table>
+  <% else %>
+  <p class="muted">لا توجد أخطاء.</p>
+  <% end %>
+  <% if @result.dry_run && @result.errors.empty? %><p class="hint" style="margin-top:10px">كل الصفوف صالحة؛ أعد الرفع بدون تفعيل «فحص فقط» لحفظها.</p><% end %>
+</div>
+<% end %>
+
+<div class="section">
+  <h2>رفع الملف</h2>
+  <%= form_with url: import_admin_products_path, method: :post, local: true, multipart: true do |f| %>
+    <div class="form-grid">
+      <div class="full"><label class="field-label" for="file">ملف Excel أو CSV</label><%= f.file_field :file, accept: ".xlsx,.xls,.ods,.csv", class: "field sm", required: true %></div>
+      <div class="full"><label style="display:flex;align-items:center;gap:8px;font-weight:700;color:#192C7B"><%= f.check_box :dry_run, { checked: @dry_run.nil? || @dry_run }, "1", "0" %> فحص فقط (يعرض النتيجة دون حفظ)</label></div>
+    </div>
+    <div class="sticky-actions"><%= f.submit "استيراد", class: "btn-navy sm" %></div>
+  <% end %>
+</div>
+
+<div class="section">
+  <h2>تعليمات</h2>
+  <p class="sub">الصف الأول هو صف العناوين. العناوين مقبولة بالإنجليزية (كما في القالب) أو بالعربية.</p>
+  <ul style="margin:0;padding-inline-start:18px;color:#3A3D44;font-size:14.5px;line-height:1.9">
+    <li>يتم التعرف على المنتج بالكود <code dir="ltr">code</code>؛ إن كان الكود فارغًا يُستخدم الاسم العربي. المنتج الموجود يُحدَّث، وغير الموجود يُضاف.</li>
+    <li>الفئة والفئة الفرعية تُطابَق بالاسم العربي وتُنشأ تلقائيًا إن لم تكن موجودة (الرابط من الاسم الإنجليزي).</li>
+    <li><code dir="ltr">kind</code>: <code dir="ltr">ready</code> / جاهز أو <code dir="ltr">custom</code> / حسب الطلب. <code dir="ltr">popular</code>: yes / no أو نعم / لا.</li>
+    <li>المواصفات: حتى ٨ مجموعات <code dir="ltr">spec_N_label_ar, spec_N_label_en, spec_N_value_ar, spec_N_value_en</code> (أو «مواصفة N»، «مواصفة N (إنجليزي)»، «قيمة N»، «قيمة N (إنجليزي)»). تُستبدل مواصفات المنتج كاملة عند وجود أي مجموعة.</li>
+    <li>الأعمدة الفارغة لا تمسح القيم الحالية للمنتجات الموجودة.</li>
+  </ul>
+  <div style="overflow-x:auto;margin-top:14px">
+    <table class="adm-table" style="font-size:12.5px">
+      <thead><tr><% ProductImporter::BASE_HEADERS.each do |h| %><th dir="ltr"><%= h %></th><% end %><th dir="ltr">spec_1_label_ar …</th></tr></thead>
+      <tbody><tr><td>سلالم</td><td dir="ltr">Ladders</td><td>سلم مفرد</td><td dir="ltr">Single Ladder</td><td dir="ltr">MML-100</td><td>سلم مفرد ٣ م</td><td dir="ltr">Single Ladder 3m</td><td>سلم ألومنيوم…</td><td dir="ltr">Aluminium…</td><td dir="ltr">ready</td><td dir="ltr">yes</td><td>الخامة</td></tr></tbody>
+    </table>
+  </div>
+</div>

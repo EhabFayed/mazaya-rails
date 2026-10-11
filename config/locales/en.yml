@@ -1,31 +1,852 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+# English copy — transcribed from "Mazaya website content" (Canva deck, English versions).
+# Text in [square brackets] is a placeholder the client still has to supply.
 en:
-  hello: "Hello world"
+  date:
+    formats:
+      month: "%B %Y"
+  brand: "Mazaya Aluminum"
+  tagline: "The Original. The Trusted Name."
+  common:
+    request_quote: "Request a Quote"
+    whatsapp: "Contact Us on WhatsApp"
+    whatsapp_direct: "WhatsApp"
+    contact_us: "Contact Us"
+    explore_products: "Explore Products"
+    explore_solutions: "Explore Solutions"
+    explore_category: "Explore Category"
+    view_product: "View Product"
+    view_project: "View Project"
+    read_more: "Read More"
+    read_article: "Read Article"
+    read_news: "Read More"
+    download_catalog: "Download Catalog"
+    download_pdf: "Download PDF"
+    ready: "Ready-made"
+    custom: "Custom-made"
+    pending: "[To be added once confirmed]"
+    search: "Search"
+    search_placeholder: "Search products, solutions, articles…"
+    home: "Home"
+    back: "Back"
+    soon: "Coming Soon"
+    all: "All"
+    send: "Submit"
+    sending: "Sending…"
+    sent_title: "We've received your request"
+    sent_body: "The relevant team will get in touch. For urgent requests you can contact us directly on WhatsApp."
+    error: "Not sent. Check the name and phone or email, or contact us on WhatsApp."
+    required_hint: "* Required fields"
+    other: "Other"
+
+  nav:
+    b2b: "Business Solutions"
+    b2c: "Products"
+    quality: "Quality & Safety"
+    company: "Company"
+    contact: "Contact Us"
+    b2b_intro: "For contractors, businesses and projects: custom solutions, technical catalog, request a quote, and distribution partnership."
+    b2c_intro: "Ready-made products for everyday and professional use, with multiple options, sizes and specifications."
+    custom_solutions: "Custom Solutions"
+    projects: "Projects"
+    ecatalog: "E-Catalog"
+    rfq: "Request a Quote"
+    partner: "Partner with Mazaya"
+    b2c_hub: "All Products"
+    popular: "Most Popular"
+    quality_page: "Quality & Certifications"
+    safety_page: "Safety & User Guide"
+    original: "Original vs. Counterfeit"
+    guides: "User Guide Library"
+    about: "About Us"
+    news: "News & Articles"
+    departments: "Contact by Department"
+    lang_en: "عربي"
+    lang_soon: "النسخة العربية"
+    aria_main: "Main menu"
+    aria_menu: "Menu"
+    aria_mobile: "Mobile menu"
+
+  footer:
+    company_title: "Mazaya"
+    business_title: "Business Solutions"
+    products_title: "Products"
+    catalog_title: "Catalog"
+    catalog_headline: "Mazaya Products & Solutions in One Place."
+    catalog_desc: "Explore our catalog to discover available products, specifications, and solutions."
+    contact_title: "Contact Us"
+    sales: "Sales"
+    export: "Export"
+    technical: "Technical Support"
+    whatsapp: "WhatsApp"
+    social: "Social Media"
+    trust: "Trusted by"
+    rights: "© %{year} Mazaya Aluminum. All rights reserved."
+    about_blurb: "A Saudi company specializing in the manufacturing and supply of aluminum products and solutions for construction, commercial, and industrial applications since 1991."
+
+  gate:
+    title: "Enter your details to download the file"
+    desc: "A short one-time form; the download starts right away."
+    name: "Name"
+    company: "Company Name"
+    email: "Email Address"
+    phone: "Mobile Number"
+    org_type: "Organization Type"
+    submit: "Download File"
+    close: "Close"
+
+  home:
+    title: "Mazaya Aluminum — The Original. The Trusted Name."
+    description: "Since 1991, we have been manufacturing aluminum products and solutions in Saudi Arabia for projects, industrial sectors, and a wide range of applications, backed by more than 35 years of experience."
+    hero:
+      badge: "Made in Saudi Arabia · Since 1991"
+      h1: "The Original. The Trusted Name."
+      desc: "Since 1991, we have been manufacturing aluminum products and solutions in Saudi Arabia for projects, industrial sectors, and a wide range of applications, backed by more than 35 years of experience."
+      primary: "Request a Quote"
+      secondary: "Explore Our Products"
+    paths:
+      label: "What Are You Looking For?"
+      h2: "Ready-Made Products or Solutions Built for Your Project."
+      b2b_label: "For Businesses & Projects"
+      b2b_title: "Custom Solutions & Projects"
+      b2b_desc: "From industrial products to access solutions, work platforms, and custom manufacturing, we develop solutions around your project requirements and technical specifications."
+      b2b_cta: "Explore Business Solutions"
+      b2c_label: "For Everyday & Professional Use"
+      b2c_title: "Ready-Made Products"
+      b2c_desc: "Explore Mazaya's ready-made products and compare available options, sizes, and specifications to find the right product for your needs."
+      b2c_cta: "Browse Products"
+    numbers:
+      h2: "Experience Measured by What We've Achieved"
+    why:
+      label: "Why Mazaya?"
+      h2: "Local Expertise. Clear Standards. Solutions Built Around Your Needs."
+      intro: "For more than 35 years, Mazaya has evolved to provide a comprehensive range of aluminum products and solutions for projects and various sectors, supported by local manufacturing capabilities, quality and safety standards, and custom manufacturing capabilities."
+      cards:
+        - ["Made in Saudi Arabia", "Local manufacturing expertise since 1991."]
+        - ["Quality & Safety", "Products supported by quality standards and load and safety testing."]
+        - ["Custom Solutions", "Designs, dimensions, thicknesses, load requirements, and finishes can be customized to meet project requirements."]
+        - ["Wide Distribution Network", "A broad distributor network serving customers across Saudi Arabia and international markets."]
+      cta: "Learn More About Mazaya"
+    original:
+      label: "Choose the Original"
+      h2: "Looking Similar Doesn't Mean Performing the Same."
+      desc: "An original product is about more than a name. Materials, manufacturing quality, testing, and safety standards all make a difference in real-world use."
+      desc2: "Learn how to distinguish original Mazaya products from counterfeit alternatives."
+      cta: "How to Identify an Original Product"
+    projects:
+      label: "Projects We're Proud Of"
+      h2: "Experience Across Major Projects in Saudi Arabia"
+      desc: "Over the years, Mazaya products and solutions have contributed to a number of prominent projects across the Kingdom."
+      cta: "Explore Our Projects"
+    partners:
+      label: "Mazaya Partners"
+      h2: "A Wide Network. Partnerships Built to Grow."
+      desc: "Our distributor network plays an essential role in bringing Mazaya products closer to customers across Saudi Arabia. We continue to develop long-term partnerships that support the growth of both Mazaya and our partners."
+      cta: "Partner with Mazaya"
+    news:
+      label: "Latest from Mazaya"
+      h2: "See What's Happening at Mazaya"
+      desc: "New products, projects, events, and the latest updates from Mazaya."
+      cta: "Follow Us"
+    final:
+      h2: "Have a Project or Looking for a Specific Product?"
+      desc: "Whether you need a ready-made product or a solution developed around your project requirements, the Mazaya team can help you find the right option."
+
+  b2b:
+    title: "Business Solutions & Projects — Mazaya Aluminum"
+    description: "We provide aluminum products and solutions for contractors, businesses, and projects, with custom manufacturing capabilities tailored to technical specifications and application requirements."
+    hero:
+      label: "For Businesses & Projects"
+      h1: "From Project Requirements to Solutions Ready for Execution."
+      desc: "We provide aluminum products and solutions for contractors, businesses, and projects, with custom manufacturing capabilities tailored to technical specifications and application requirements."
+      secondary: "Download the Technical Catalog"
+    solutions:
+      label: "Business Solutions"
+      h2: "Different Requirements. Manufacturing Capabilities to Match."
+      desc: "Whether you need a product with specific specifications or a solution developed specifically for your project, Mazaya offers both ready-made products and custom manufacturing capabilities."
+    custom:
+      label: "Custom Manufacturing"
+      h2: "When Your Project Needs More Than a Ready-Made Product."
+      desc: "We develop custom solutions around project requirements, from design and dimensions to thicknesses, load requirements, finishes, and colors."
+      desc2: "You can provide your own engineering drawings or work with the Mazaya team to develop a design suited to your application."
+      points:
+        - ["Design", "Based on client-provided drawings or developed by Mazaya."]
+        - ["Dimensions & Thicknesses", "Specified according to solution requirements."]
+        - ["Loads & Performance", "Considered according to design and application requirements."]
+        - ["Finishes & Colors", "Customizable options based on project requirements."]
+      cta: "Explore Custom Solutions"
+    projects:
+      label: "Proven Experience"
+      h2: "Trusted Across Major Projects in Saudi Arabia."
+      desc: "Our manufacturing experience extends to contributions across a number of prominent projects in the Kingdom."
+      cta: "Explore All Projects"
+    catalog:
+      label: "E-Catalog"
+      h2: "Products and Specifications, All in One Place."
+      desc: "Explore Mazaya's range of products and solutions, with available options and specifications to help you identify the right fit for your business or project requirements."
+      primary: "Explore the Catalog"
+    rfq:
+      label: "Have Project Requirements?"
+      h2: "Share the Details. We'll Take It from There."
+      desc: "Send us your project type, quantities, and required specifications. You can also attach drawings or tender documents so your request can be directed to the right team."
+    partnership:
+      label: "Mazaya Partners"
+      h2: "Partnerships That Go Beyond Supply."
+      desc: "We work with a wide network of distributors and build long-term business relationships that support the reach of Mazaya products across customers and markets."
+      cta: "Partner with Mazaya"
+    final:
+      h2: "Ready for Your Project Requirements."
+      desc: "From ready-made products to custom solutions, connect with the Mazaya team and share your requirements to get started."
+
+  solutions:
+    title: "Custom Solutions — Mazaya Aluminum"
+    description: "We develop and manufacture custom aluminum solutions based on your project requirements and technical specifications, from dimensions and design to load requirements and finishes."
+    hero:
+      label: "Custom Solutions for Projects"
+      h1: "Solutions Designed Around Your Project Requirements."
+      desc: "We develop and manufacture custom aluminum solutions based on your project requirements and technical specifications, from dimensions and design to load requirements and finishes."
+      primary: "Request a Custom Solution Consultation"
+      secondary: "Share Your Project Requirements"
+    capabilities:
+      label: "Customization Capabilities"
+      h2: "Your Project Requirements Define the Solution."
+      desc: "Different applications and working environments come with different requirements. Mazaya's manufacturing capabilities allow key elements to be customized to suit the specific needs of each project."
+    process:
+      label: "From Requirements to Manufacturing"
+      h2: "A Clear Process for Developing the Right Solution."
+    examples:
+      label: "What Can We Customize?"
+      h2: "Solutions Built Around Your Application Requirements."
+      desc: "Mazaya's capabilities cover a range of solutions that can be developed and customized according to the technical specifications of each project."
+      cta: "Discuss Your Project Requirements"
+    drawing:
+      label: "Design Flexibility"
+      h2: "Have a Drawing? We'll Start from There."
+      h2b: "Need a Design? We'll Develop It with You."
+      desc: "Solutions can be manufactured based on engineering drawings provided by the client, or Mazaya can develop the design to suit the project and application requirements."
+      cta: "Share Your Drawing or Specifications"
+    sectors:
+      label: "Solutions Across Different Sectors"
+      h2: "Manufacturing Capabilities for Diverse Requirements."
+      desc: "We develop custom solutions for projects, professional applications, and industrial environments based on the specific use and technical requirements of each project."
+      cta: "Talk to Our Team"
+    projects:
+      label: "From Experience to Execution"
+      h2: "Experience Across Prominent Projects in Saudi Arabia."
+      desc: "Mazaya has contributed to a number of major projects across the Kingdom, supported by manufacturing experience that serves a wide range of project and application requirements."
+      cta: "Explore Our Projects"
+    final:
+      label: "Start with Your Project Requirements"
+      h2: "Have an Idea, Engineering Drawing, or Specific Requirements?"
+      desc: "Share your project details, specifications, or available drawings, and let the Mazaya team review your solution requirements with you."
+      primary: "Request a Custom Solution Consultation"
+      secondary: "Upload Drawing or Specifications"
+    show:
+      label: "Custom Solution"
+      desc: "%{name} are developed according to project requirements and technical specifications, from dimensions and design to load requirements and finishes."
+      related_projects: "Projects Featuring This Solution"
+      related_category: "Ready-made products in the same category"
+      other: "Other Custom Solutions"
+
+  catalog:
+    title: "E-Catalog — Mazaya Aluminum"
+    description: "Explore Mazaya catalogs to find the products, solutions, and specifications you need for your business and projects."
+    hero:
+      label: "E-Catalog"
+      h1: "Mazaya Products & Solutions in One Place."
+      desc: "Explore Mazaya catalogs to find the products, solutions, and specifications you need for your business and projects."
+      primary: "Explore the Catalog"
+      secondary: "Download the Full Catalog"
+    main:
+      label: "Full Catalog"
+      h2: "Everything You Need to Find the Right Product or Solution."
+      desc: "Browse the full catalog to explore Mazaya's range of products and solutions, along with available options and specifications."
+      version: "Edition"
+      updated: "Last Updated"
+      pending: "[To be added]"
+      viewer: "Catalog viewer"
+      viewer_note: "The catalog will be displayed here in-page once the final PDF is received."
+    categories:
+      label: "Browse by Category"
+      h2: "Choose the Category You're Looking For."
+      desc: "For quicker access, browse or download the catalog for the product category you need."
+      cta: "Explore Category"
+      download: "Download Category Catalog"
+    download:
+      label: "Keep a Copy"
+      h2: "Download the Catalog for Easy Access Anytime."
+      desc: "Get a PDF copy of the catalog to browse products and specifications or share it with your team whenever needed."
+      name: "Name"
+      company: "Company Name"
+      email: "Email Address"
+      phone: "Mobile Number"
+      cta: "Download the Catalog"
+    help:
+      label: "Need Help Choosing?"
+      h2: "Share Your Requirements, and We'll Help You Find the Right Option."
+      desc: "If you are looking for a product with specific specifications or need a custom solution for your project, contact the Mazaya team and share your requirements."
+
+  rfq:
+    title: "Request a Quote — Mazaya Aluminum"
+    description: "Send us your project details and required specifications. Your request will be directed to the appropriate team for review and follow-up."
+    hero:
+      label: "Request a Quote"
+      h1: "Share Your Project Requirements."
+      desc: "Send us your project details and required specifications. Your request will be directed to the appropriate team for review and follow-up."
+    form:
+      label: "Request Details"
+      h2: "The More Details You Share, the More Accurately We Can Assess Your Request."
+      desc: "Complete the available information below and attach any drawings or technical documents, if available."
+      s1: "01 — Contact Information"
+      name: "Name*"
+      company: "Company Name*"
+      email: "Email Address*"
+      phone: "Mobile Number*"
+      s2: "02 — Project Information"
+      project_name: "Project Name"
+      project_type: "Project Type*"
+      location: "Project Location*"
+      timeline: "Required Timeline"
+      s3: "03 — Request Requirements"
+      product: "Required Product or Solution*"
+      quantity: "Required Quantity*"
+      specs: "Technical Specifications & Requirements"
+      specs_placeholder: "Add dimensions, load requirements, finishes, or any other available technical specifications."
+      s4: "04 — Attachments"
+      attach: "Attach Project Files"
+      attach_hint: "You can attach engineering drawings, tender documents, or other available technical files."
+      upload: "Upload Files"
+      s5: "05 — Additional Information"
+      notes: "Additional Notes or Details"
+      notes_placeholder: "Add any other information that may help our team understand your project requirements."
+      cta: "Submit Request for Quotation"
+    after:
+      label: "What Happens Next?"
+      h2: "We Review the Details, Then the Right Team Gets in Touch."
+      desc: "Once your request is received, our team will review the submitted information and attachments to assess your requirements and proceed with the next steps."
+      response: "Expected response time:"
+      response_pending: "[To be confirmed by Mazaya]"
+    urgent:
+      label: "Need a Faster Response?"
+      h2: "Contact Us Directly on WhatsApp."
+      desc: "For urgent requests, contact our team directly and share your project details with us."
+
+  partners:
+    title: "Become a Partner — Mazaya Aluminum"
+    description: "We work with a wide network of distributors across Saudi Arabia and international markets, building long-term relationships based on market understanding and mutual value."
+    hero:
+      label: "Partner with Mazaya"
+      h1: "A Partnership That Grows with Your Business."
+      desc: "We work with a wide network of distributors across Saudi Arabia and international markets, building long-term relationships based on market understanding and mutual value."
+      primary: "Apply to Become a Distributor"
+    network:
+      label: "Mazaya Network"
+      h2: "A Distribution Network Across Saudi Arabia and Beyond."
+      desc: "Mazaya works with a wide network of distribution partners to bring its products closer to customers across different markets. This network plays an essential role in our business."
+    portfolio:
+      label: "Products for Your Business"
+      h2: "A Diverse Portfolio for Different Market Needs."
+      desc: "Mazaya's product portfolio enables distributors to serve a wide range of professional, commercial, and everyday applications."
+      cta: "Explore Our Products"
+    support:
+      label: "Partner Support"
+      h2: "Support That Strengthens Your Market Presence."
+      desc: "We are developing a support system that helps our partners present Mazaya products more clearly and consistently across the market."
+      items:
+        - "Product Information & Materials"
+        - "Catalogs & Specifications"
+        - "Brand Materials"
+        - "Marketing & Communication Support"
+    approach:
+      label: "Long-Term Partnerships"
+      h2: "Partnerships Built to Last."
+      desc: "We focus on building long-term distribution relationships that strengthen Mazaya's market presence and create sustainable value for both sides."
+    form:
+      label: "Start Your Partnership Application"
+      h2: "Interested in Becoming a Mazaya Distributor?"
+      desc: "Tell us about your business and the market you operate in, and our team will review the available partnership opportunities."
+      s1: "01 — Contact Information"
+      name: "Name*"
+      company: "Company / Business Name*"
+      email: "Email Address*"
+      phone: "Mobile Number*"
+      s2: "02 — Business Information"
+      country: "Country*"
+      city: "City / Region*"
+      business_type: "Business Type*"
+      years: "Years of Market Experience"
+      s3: "03 — Distribution Information"
+      products: "Products You Are Interested in Distributing"
+      markets: "Markets or Regions You Currently Cover"
+      outlets: "Number of Outlets / Branches"
+      notes: "Additional Information"
+      business_types: ["Building Materials Trade", "Tools & Equipment", "Retail", "Wholesale Distribution", "Other"]
+      cta: "Apply to Become a Distributor"
+    availability:
+      label: "Distribution Opportunities"
+      h2: "Partnership Opportunities Based on Market Availability."
+      desc: "Distribution applications are reviewed based on the market, region, nature of the business, and alignment with Mazaya's existing distribution network."
+    final:
+      h2: "Start the Conversation About Partnership."
+      desc: "Share your business details and the market you operate in, and let the Mazaya team review the opportunity to work together."
+      primary: "Apply to Become a Distributor"
+      secondary: "Contact Us"
+
+  b2c:
+    title: "Ready-Made Products — Mazaya Aluminum"
+    description: "Explore Mazaya's ready-made products for a wide range of applications, and compare available options and specifications to find the right fit for your needs."
+    hero:
+      label: "Mazaya Products"
+      h1: "The Right Product Starts with Your Needs."
+      desc: "Explore Mazaya's ready-made products for a wide range of applications, and compare available options and specifications to find the right fit for your needs."
+      primary: "Browse Products"
+    categories:
+      label: "Browse by Category"
+      h2: "Everything You Need, Within Easy Reach."
+      desc: "Start with the category you need and explore the available products and options."
+    finder:
+      label: "Find What You Need"
+      h2: "Not Sure Which Option to Choose? Start with How You'll Use It."
+      desc: "Answer a few simple questions to help you find products that best match your needs."
+      q1: "What are you looking for?"
+      q2: "Where will you use it?"
+      q2_options: ["Indoors", "Outdoors", "Both"]
+      q3: "What is the intended use?"
+      q3_options: ["Personal Use", "Professional Use", "Commercial Use"]
+      cta: "View Recommended Products"
+    popular:
+      label: "Most Popular"
+      h2: "Products Our Customers Choose Again and Again."
+      desc: "Explore some of Mazaya's most popular products."
+    why:
+      label: "Why Mazaya?"
+      h2: "Experience That Makes a Difference in Every Product."
+      cards:
+        - ["Made in Saudi Arabia", "Local manufacturing experience since 1991."]
+        - ["Quality & Safety", "A strong focus on quality standards, safety, and product testing."]
+        - ["A Wide Range of Options", "Products and specifications designed for different needs and applications."]
+      cta: "Learn More About Mazaya"
+    store:
+      label: "Coming Soon"
+      h2: "Mazaya Products, Closer to You."
+      desc: "We are working on an online shopping experience that will make it easier to explore and order Mazaya products."
+      cta: "Shop Mazaya Products"
+    final:
+      label: "Need Help?"
+      h2: "Can't Find the Product You're Looking For?"
+      desc: "Contact the Mazaya team and share your requirements so we can help you find the right option."
+
+  category:
+    subcategories_label: "Sub-Categories"
+    subcategories_h2: "Choose the Type Closest to Your Use."
+    subcategories_desc: "Selecting a type here filters the products on this page."
+    products_label: "Products"
+    products_h2: "Browse Products and Compare Options."
+    products_desc: "Use the filters to reach the products closest to your needs."
+    count: "%{count} products shown"
+    empty_title: "No matching products"
+    empty_desc: "Try changing the selected type or filter."
+    catalog_label: "Category Catalog"
+    catalog_h2: "All %{name} in One File."
+    catalog_desc: "Download the %{name} catalog to review the available products, options, and specifications."
+    catalog_cta: "Download Category Catalog"
+    help_label: "Need Help?"
+    help_h2: "Need Help Choosing the Right Product?"
+    help_desc: "Share your needs and intended use, and the Mazaya team will help you reach the right option."
+    results_hint: "“View Product” opens the detailed product page."
+    view_sub: "View %{name}"
+
+  product:
+    specs_h2: "Specifications & Dimensions"
+    specs_desc: "Product specifications and dimensions are shown here. Final values will be added from the product data."
+    spec_pending: "[To be added from product data]"
+    sizes_h2: "Sizes & Codes"
+    sizes_cols: ["Code", "Size", "Key Specification"]
+    tds_h3: "Technical Data Sheet (TDS)"
+    tds_desc: "Download the complete technical specifications for this product as a PDF."
+    tds_cta: "Download TDS"
+    guide_h3: "User & Installation Guide"
+    guide_desc: "Usage, installation, and safety instructions for this product."
+    guide_cta: "View Guide"
+    original_h3: "Make Sure It's Original"
+    original_desc: "Check the Mazaya logo, product information, and purchase source before use."
+    original_cta: "Authenticity Checks"
+    quality_cta: "Quality & Certifications"
+    related_h2: "Related Products"
+    projects_h2: "Projects Featuring This Product"
+    buy_soon: "Buy Now — Coming Soon"
+    quote_cta: "Request a Quote for This Product"
+    custom_cta: "Request a Custom Solution Consultation"
+    gallery_note: "Product images from multiple angles"
+    custom_band_h3: "Need a custom version of this product?"
+    features_label: "Key Features"
+    features_h2: "More Flexibility Across More Uses."
+    applications_label: "Applications"
+    applications_h2: "Designed for Different Tasks and Uses."
+    specs_label: "Technical Specifications"
+    specs_intro: "Key information is shown directly on the page; exact sizes and codes are added from the approved product file."
+    spec_col: "Specification"
+    detail_col: "Details"
+    docs_label: "Technical Documents"
+    docs_h2: "All the Technical Information You Need."
+    guide_safety_h3: "User & Safety Guide"
+    original_label: "Original Product"
+    original_h2: "Make Sure You've Chosen the Original."
+    original_p: "Learn the marks that help you verify original Mazaya products and what to look for before buying."
+    original_visual: "Visual details for verifying authenticity"
+    related_label: "Related Products"
+    related_h2b: "You May Also Like."
+    faq_label: "Quick Info"
+    faq_h2: "Information You May Need Before Ordering."
+    final_h2: "Is This Product Right for Your Needs?"
+    final_desc: "Contact the Mazaya team to ask about the product or request a quote."
+    code: "Product Code"
+
+  about:
+    title: "About Us — Mazaya Aluminum"
+    description: "Mazaya Aluminum Factory Co. is a Saudi company specializing in the manufacturing and supply of aluminum products and solutions for construction, commercial, and industrial applications since 1991."
+    hero:
+      label: "About Us"
+      h1: "Since 1991, We've Been Building Solutions That Evolve with Market Needs."
+      desc: "Mazaya Aluminum Factory Co. is a Saudi company specializing in the manufacturing and supply of aluminum products and solutions for construction, commercial, and industrial applications. Since 1991, our experience has continued to evolve alongside the changing needs of the market and different projects."
+    story:
+      label: "Our Story"
+      h2: "Over Three Decades of Experience and Growth."
+      p1: "Mazaya's journey began in 1991 with the manufacturing of aluminum products. As market needs evolved, our scope expanded to include a broader range of products and solutions serving different projects and sectors."
+      p2: "Today, Mazaya combines standard ready-made products with custom solutions, allowing us to address diverse requirements in design, dimensions, specifications, and applications."
+    values:
+      label: "Our Values"
+      h2: "Principles That Guide the Way We Work."
+      items:
+        - ["Saudi Roots", "We take pride in our Saudi roots and the local expertise we have built over the years."]
+        - ["Safety First", "We place safety at the forefront when developing our products and solutions."]
+        - ["Reliability & Availability", "We work to provide products and solutions our customers can rely on and access when needed."]
+        - ["Experience & Legacy", "We build on experience that began in 1991 and continue to develop it in line with market needs."]
+        - ["Innovation & Customization", "We develop solutions for different applications, with the flexibility to address specific requirements."]
+        - ["Partnership & Support", "We build long-term relationships with our customers and partners that go beyond product supply."]
+    numbers:
+      label: "Mazaya in Numbers"
+      h2: "Numbers That Tell Part of Our Story."
+      items:
+        - ["35+ Years", "of experience in manufacturing aluminum products and solutions."]
+        - ["4+ Million Ladders", "manufactured throughout Mazaya's journey."]
+        - ["350+ Distributors", "across Mazaya's distribution network."]
+        - ["88%", "of sales are generated within Saudi Arabia."]
+    profile:
+      label: "Company Profile"
+      h2: "Discover Mazaya in More Detail."
+      desc: "Download Mazaya's company profile for a broader overview of our journey, areas of expertise, capabilities, products, and solutions."
+      cta: "Download Company Profile"
+      meta: "PDF | [File Size]"
+    what:
+      label: "What We Do"
+      h2: "Ready-Made Products and Solutions Developed Around Project Requirements."
+      intro: "We provide products and solutions for a wide range of needs, from ready-made options with defined specifications to solutions developed around the requirements of each project."
+      ready_title: "Ready-Made Products for Different Applications."
+      ready_desc: "A diverse range of products available in multiple specifications, dimensions, and options for professional, commercial, and everyday applications."
+      custom_title: "Solutions Built Around Your Project Requirements."
+      custom_desc: "Solutions developed according to project needs, from design and dimensions to thicknesses, load requirements, and finishes."
+      custom_cta: "Explore Custom Solutions"
+    range:
+      label: "Our Product Range"
+      h2: "A Diverse Range of Products and Solutions."
+      cta: "Explore All Products"
+    capabilities:
+      label: "Manufacturing Capabilities"
+      h2: "Manufacturing Capabilities That Support Diverse Project Requirements."
+      intro: "Mazaya combines its experience in aluminum manufacturing with the flexibility to address different project requirements, enabling us to develop products and solutions with specifications suited to each application."
+      items:
+        - ["Local Manufacturing", "Extensive experience in manufacturing aluminum products and solutions in Saudi Arabia."]
+        - ["Project-Based Customization", "Flexibility to develop products and solutions according to project-specific design, dimensions, and specification requirements."]
+        - ["Diverse Product Capabilities", "Capabilities spanning a broad product range, from ladders and access solutions to material handling, drainage, access hatches, and aluminum solutions."]
+        - ["Specification Flexibility", "The ability to accommodate different requirements for dimensions, thicknesses, loads, and finishes depending on the product and project."]
+    final:
+      label: "Start with Mazaya"
+      h2: "From Ready-Made Products to Custom Solutions for Your Project."
+      desc: "Explore Mazaya products or share your project requirements with us to find the right solution for your needs."
+      primary: "Explore Products"
+      secondary: "Talk to Our Projects Team"
+
+  projects:
+    title: "Projects — Mazaya Aluminum"
+    description: "Throughout its journey, Mazaya has contributed products and solutions to a number of major projects across Saudi Arabia, serving a variety of requirements and applications."
+    hero:
+      label: "Our Projects"
+      h1: "A Presence Across Some of Saudi Arabia's Most Prominent Projects."
+      desc: "Throughout its journey, Mazaya has contributed products and solutions to a number of major projects across Saudi Arabia, serving a variety of requirements and applications."
+    intro:
+      label: "Selected Projects"
+      h2: "Our Experience Across Projects of Different Scales."
+      desc: "Explore a selection of reference projects Mazaya has contributed to, reflecting our experience in manufacturing and supplying aluminum products and solutions for project requirements."
+    show:
+      label: "Project"
+      overview: "Project Overview"
+      requirements_h2: "Project Requirements"
+      requirements_pending: "[Description of the project requirements to be added once the approved information is available.]"
+      solution_h2: "Solution Provided"
+      solution_pending: "[Details of the products or solutions provided by Mazaya and how they addressed the project requirements.]"
+      gallery_h2: "Project Gallery"
+      gallery_pending: "[Approved project images to be added.]"
+      solutions_h2: "Solutions Related to This Project"
+      more_h2: "More Projects"
+    custom_cta:
+      label: "Project Solutions"
+      h2: "Every Project Has Its Requirements. We Develop Solutions to Match."
+      desc: "We develop custom aluminum solutions around project requirements, with the flexibility to accommodate specific specifications, dimensions, and custom orders for projects and large quantities."
+      cta: "Explore Custom Solutions"
+    final:
+      label: "Have a Project?"
+      h2: "Share Your Project Requirements with Us."
+      desc: "Send us your project details and required specifications, and the Mazaya team will review your requirements and discuss the right solution for your project."
+      primary: "Submit Your Project Requirements"
+      secondary: "Request a Quote"
+
+  original:
+    title: "Original vs. Counterfeit — Mazaya Aluminum"
+    description: "Counterfeit products may look similar to the original, but the differences can extend to product origin, manufacturing quality, and the safety standards behind them."
+    hero:
+      label: "Original vs Counterfeit"
+      h1: "The Difference Goes Beyond Appearance."
+      desc: "Counterfeit products may look similar to the original, but the differences can extend to product origin, manufacturing quality, and the safety standards behind them."
+      cta: "Learn How to Identify the Original"
+    why:
+      label: "Why Original Matters"
+      h2: "Choosing the Right Product Starts with Knowing Its Source."
+      p1: "Original Mazaya products are backed by established manufacturing, quality, and testing processes. Counterfeit products, on the other hand, may not provide the same level of verification or reliable information about their origin and manufacturing."
+      p2: "Verifying product authenticity is therefore more than a purchasing detail; it is an important step before use."
+    identify:
+      label: "Authenticity Checks"
+      h2: "How Can You Identify an Original Mazaya Product?"
+      photo_note: "Real photos of the authenticity marks on the product and packaging (label, QR, serial number, engraving)"
+    compare:
+      label: "Comparison"
+      h2: "What Sets an Original Mazaya Product Apart?"
+      original_col: "Original Mazaya Product"
+      counterfeit_col: "Counterfeit Product"
+      slider_hint: "Drag the handle left and right to compare"
+      original_badge: "✓ Original"
+      counterfeit_badge: "✕ Counterfeit"
+    safety:
+      label: "Safety First"
+      h2: "It May Look Similar, but It Is Not the Same Product."
+      desc: "For products used for access, material handling, or within working environments, visual similarity is not enough. Specifications, manufacturing quality, testing, and assembly all contribute to how a product performs in use."
+      cta: "Explore Our Quality & Safety Standards"
+    verify:
+      label: "Product Verification"
+      h2: "Unsure Whether Your Product Is Original?"
+      desc: "If you are unsure about a product, contact the Mazaya team and share the available product details and images to help us verify its authenticity."
+      product: "Product Name / Code"
+      place: "Place of Purchase"
+      city: "City"
+      images: "Upload Product Images"
+      packaging: "Upload Packaging / Label Image"
+      name: "Name"
+      phone: "Mobile Number"
+      cta: "Submit Verification Request"
+    authorized:
+      label: "Buy with Confidence"
+      h2: "Start with a Trusted Source."
+      desc: "Purchase Mazaya products through authorized sales channels and distributors, and check the product information before buying."
+      cta: "Find Your Nearest Distributor"
+    final:
+      label: "Mazaya Products"
+      h2: "Choose the Original from the Start."
+      desc: "Explore Mazaya products and specifications to find the right options for your needs."
+
+  quality:
+    title: "Quality & Certifications — Mazaya Aluminum"
+    description: "Mazaya follows a system of quality standards, testing, and certifications that supports product quality and reliability, from manufacturing through final product testing."
+    hero:
+      label: "Quality & Certifications"
+      h1: "Quality Starts with Manufacturing and Is Proven Through Testing."
+      desc: "Mazaya follows a system of quality standards, testing, and certifications that supports product quality and reliability, from manufacturing through final product testing."
+      cta: "Explore Certifications & Approvals"
+    approach:
+      label: "Our Approach to Quality"
+      h2: "Quality Is Part of the Manufacturing Process."
+      desc: "Mazaya has invested in manufacturing technologies, machinery, molds, and specially designed assemblies to enhance product quality and manufacturing precision, supported by product quality and load testing."
+    certifications:
+      label: "Certifications & Approvals"
+      h2: "Standards and Certifications That Support Product Quality."
+      intro: "Mazaya's quality framework includes a range of certifications and reports related to quality, safety, and product testing."
+    load:
+      label: "Load Testing"
+      h2: "Because Load Capacity Should Be Tested."
+      desc: "Quality and load tests are conducted on products, with particular importance for ladders, scaffolding, and work platforms, where load capacity and safety data are essential considerations when evaluating a product for use."
+      video: "Actual video footage of load testing inside the factory"
+      images: "Images and reports from load tests"
+      cta: "View Test Reports"
+    manufacturing:
+      label: "Inside the Factory"
+      h2: "From Manufacturing Precision to Product Testing."
+      desc: "Mazaya supports its manufacturing processes with technologies, machinery, molds, and specially designed assemblies that contribute to the required levels of precision and product quality."
+    documents:
+      label: "Documentation"
+      h2: "Certificates and Reports in One Place."
+      desc: "Explore the available documentation related to quality, certifications, approvals, and product testing."
+      pending: "The document will be uploaded here once approved"
+    products:
+      label: "Quality Across Our Products"
+      h2: "Review the Specifications Before Choosing Your Product."
+      desc: "Explore Mazaya products and review the available specifications and technical information for each product to find the right option for your application."
+    final:
+      label: "Need Technical Information?"
+      h2: "Contact Us for Technical Details."
+      desc: "If you need additional information about specifications, testing, or certifications, contact the Mazaya team for the available technical details."
+      cta: "Contact Us for Technical Details"
+
+  safety:
+    title: "Safety & User Guide — Mazaya Aluminum"
+    description: "Choosing the right product for the task, inspecting it before use, and following the appropriate operating and installation instructions are essential steps for safer and more efficient use."
+    hero:
+      label: "Safety & User Guide"
+      h1: "Safe Use Starts with Choosing the Right Product."
+      desc: "Choosing the right product for the task, inspecting it before use, and following the appropriate operating and installation instructions are essential steps for safer and more efficient use."
+      cta: "Explore User Guides"
+    choose:
+      label: "Before Use"
+      h2: "Choose the Product Based on the Task."
+      desc: "Products vary depending on the application, required height, working environment, and load requirements. Safe use therefore begins with selecting the right product for the task and reviewing its specifications before use."
+      cta: "Explore Products"
+    inspect:
+      label: "Pre-Use Inspection"
+      h2: "Inspect the Product Before You Start."
+      desc: "A visual inspection before each use can help identify visible damage or issues that may affect safe operation."
+    use:
+      label: "During Use"
+      h2: "Use the Product as Intended."
+      desc: "Each product has specific operating requirements and specifications that should be followed. Review the product guide and follow the relevant installation, operating, and load instructions before use."
+    library:
+      label: "Guide Library"
+      h2: "Find the Right Guide for Your Product in One Place."
+      desc: "Search for your product to access the available user guides, installation instructions, and related information."
+      search: "Search by Product Name or Code"
+      filter: "Product Category"
+      code: "Product Code"
+      docs: "Available Documents"
+      view: "View Guide"
+      download: "Download PDF"
+      empty: "No matching guides"
+    find:
+      label: "Can't Find Your Guide?"
+      h2: "Send Us Your Product Code."
+      desc: "If you cannot find the guide you are looking for, send the product name or code to the Mazaya team and we will help you access the available information."
+      cta: "Contact Technical Support"
+    quality:
+      label: "Quality & Testing"
+      h2: "Safety Starts Before the Product Reaches You."
+      desc: "Mazaya supports its products through quality and load testing, along with certifications related to quality and safety. Explore the available tests and documentation on our Quality & Certifications page."
+      cta: "Explore Quality & Certifications"
+    final:
+      label: "Need Assistance?"
+      h2: "Check the Product and Its Instructions Before You Start."
+      desc: "If you have questions about product selection, use, or technical information, contact the Mazaya team for assistance."
+      primary: "Contact Technical Support"
+    show:
+      label: "Safety Guide"
+      related_h2: "Products Related to This Guide"
+      other_h2: "Other Guides"
+
+  news:
+    title: "News & Articles — Mazaya Aluminum"
+    description: "Stay up to date with Mazaya's latest news, products, and events, and explore practical insights on products, applications, safety, and project solutions."
+    hero:
+      label: "News & Articles"
+      h1: "Expertise We Share. Updates That Matter to You."
+      desc: "Stay up to date with Mazaya's latest news, products, and events, and explore practical insights on products, applications, safety, and project solutions."
+    featured:
+      label: "Featured"
+      h2: "Latest Highlights."
+    latest:
+      label: "Mazaya News"
+      h2: "Latest News & Updates."
+    articles:
+      label: "Articles"
+      h2: "Practical Insights for Better Selection and Use."
+      desc: "Practical content designed to help you understand products and applications, and choose the right solution for your work or project requirements."
+    topics:
+      label: "Browse by Topic"
+      h2: "Find the Content That Matters to You."
+    show:
+      article: "Article"
+      news: "News"
+      related_h2: "Related Articles & News"
+      products_h2: "Products related to this topic"
+      share: "Share"
+      share_whatsapp: "Share on WhatsApp"
+      template_note: "This is a news template — to be completed when real news is available."
+      date_pending: "[Publication Date]"
+    final:
+      label: "Explore Mazaya"
+      h2: "From Useful Insights to the Right Product."
+      desc: "Explore Mazaya's products and solutions, with specifications and technical information available to help you find the right option for your needs."
+
+  contact:
+    title: "Contact Us — Mazaya Aluminum"
+    description: "Whether you are looking for a product, have specific project requirements, need technical support, or are interested in a partnership, contact the Mazaya team and we will direct your inquiry to the right department."
+    hero:
+      label: "Contact Us"
+      h1: "Tell Us What You Need. We'll Connect You with the Right Team."
+      desc: "Whether you are looking for a product, have specific project requirements, need technical support, or are interested in a partnership, contact the Mazaya team and we will direct your inquiry to the right department."
+      primary: "Send Your Inquiry"
+    form:
+      label: "Send Your Inquiry"
+      h2: "Tell Us How We Can Help."
+      desc: "Complete the form and select the type of inquiry so your request can be directed to the right team."
+      name: "Full Name"
+      name_ph: "Enter your name"
+      phone: "Mobile Number"
+      phone_ph: "Enter your mobile number"
+      email: "Email — Optional"
+      email_ph: "Enter your email"
+      company: "Company / Organization — Optional"
+      company_ph: "Company name"
+      type: "Inquiry Type"
+      message: "Message"
+      message_ph: "Tell us about your inquiry"
+      attachment: "Attach a file or project specifications — Optional"
+      cta: "Submit Inquiry"
+    departments:
+      label: "Contact by Department"
+      h2: "Direct Your Request to the Right Team from the Start."
+    location:
+      label: "Our Location"
+      h2: "Mazaya Aluminum Factory"
+      address: "Address"
+      address_pending: "[Approved Factory Address]"
+      hours: "Working Hours"
+      hours_pending: "[Working Days & Hours]"
+      map_pending: "Google Maps — to be added once the address is approved"
+      cta: "Get Directions"
+    whatsapp:
+      label: "Direct Contact"
+      h2: "Prefer to Contact Us on WhatsApp?"
+      desc: "For quick inquiries and requests, contact the Mazaya team directly through WhatsApp."
+      phone: "Phone"
+      phone_pending: "[Approved Contact Number]"
+      email: "Email"
+      email_pending: "[Approved Email Address]"
+    quick:
+      label: "You May Also Be Looking For"
+      h2: "Quick Access to What You Need."
+      items:
+        - ["Request a Quote", "For projects or orders with specific requirements.", "Request a Quote", "/en/rfq"]
+        - ["Custom Solutions", "Solutions developed around your project requirements.", "Explore Custom Solutions", "/en/solutions"]
+        - ["E-Catalog", "Explore Mazaya products and their specifications.", "Browse E-Catalog", "/en/catalog"]
+        - ["User Guides", "Access available user guides and product usage information.", "Explore User Guides", "/en/safety"]
+
+  search:
+    title: "Search — Mazaya Aluminum"
+    description: "Search Mazaya Aluminum products, solutions, projects, and articles."
+    h1: "Search Results"
+    results: "%{count} results for “%{query}”"
+    empty: "No matching results."
+    hint: "Try another keyword, or browse products and solutions from the menu."
+    prompt: "Search for a product, category, custom solution, project, or article."
+    types:
+      category: "Category"
+      product: "Product"
+      solution: "Custom Solution"
+      project: "Project"
+      safety: "Safety Guide"
+      news: "News"
+      article: "Article"

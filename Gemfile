@@ -11,12 +11,13 @@ gem "puma", ">= 5.0"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
-gem 'enumerize', '~> 2.8', '>= 2.8.1'
-gem 'rack-cors'
-gem 'sidekiq', '~> 8.0', '>= 8.0.1'
-gem 'jwt'
-gem 'ruby-vips'
+gem "enumerize", "~> 2.8", ">= 2.8.1"
+gem "rack-cors"
+gem "sidekiq", "~> 8.0", ">= 8.0.1"
+gem "jwt"
+gem "ruby-vips"
 gem "image_processing", "~> 1.2"
+gem "roo", "~> 2.10" # Excel import for the product catalog
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -37,10 +38,11 @@ gem "thruster", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "minitest", "< 6" # rails 8.0 test runner is not compatible with minitest 6
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
-  gem 'faker'
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false

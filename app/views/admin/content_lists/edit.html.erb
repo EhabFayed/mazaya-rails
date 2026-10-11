@@ -1,0 +1,14 @@
+<% content_for :title, @list.label %>
+<div class="page-head">
+  <div><h1><%= @list.label %></h1><p dir="ltr" style="text-align:end"><%= @list.key %></p></div>
+  <div class="head-actions"><a href="<%= admin_content_lists_path %>" class="btn-outline sm">← كل القوائم</a></div>
+</div>
+<%= errors_for(@list) %>
+<%= form_with model: @list, url: admin_content_list_path(@list.key), method: :patch, local: true, id: "content-list-form" do |f| %>
+  <%= rows_editor("content_list", :items, @list.items, schema_cols(@list), title: @list.label, hint: "رتّب الصفوف بالأسهم؛ الصفوف الفارغة تُحذف تلقائيًا. لو حذفت كل الصفوف يعود الموقع للمحتوى الافتراضي.") %>
+<% end %>
+
+<div class="sticky-actions">
+  <button type="submit" form="content-list-form" class="btn-navy sm">حفظ</button>
+  <a href="<%= admin_content_lists_path %>" class="btn-outline sm">إلغاء</a>
+</div>

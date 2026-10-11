@@ -1,0 +1,6 @@
+<% content_for :title, "وثيقة جديدة" %>
+<div class="page-head">
+  <div><h1>وثيقة جديدة</h1><p>ارفع ملف PDF وحدد المفتاح المستخدم في روابط التحميل.</p></div>
+  <div class="head-actions"><a href="<%= admin_documents_path %>" class="btn-outline sm">← كل الوثائق</a></div>
+</div>
+<%= render "form", document: @document %>

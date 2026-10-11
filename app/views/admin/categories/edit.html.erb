@@ -1,0 +1,10 @@
+<% content_for :title, "تعديل: #{@category.name_ar}" %>
+<div class="page-head">
+  <div><h1><%= @category.name_ar %></h1><p><%= @category.products.count %> منتج · <%= yes_no(@category.published) %></p></div>
+  <div class="head-actions">
+    <a href="<%= product_category_path(category: @category.slug) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a>
+    <a href="<%= admin_products_path(category_id: @category.id) %>" class="btn-outline sm">منتجات الفئة</a>
+    <a href="<%= admin_categories_path %>" class="btn-outline sm">← كل الفئات</a>
+  </div>
+</div>
+<%= render "form" %>

@@ -1,124 +1,161 @@
-<% content_for :title, "الأصلي مقابل المقلد — ألمنيوم مزايا" %>
-<% content_for :description, "كيف تفرّق بين سلّم مزايا الأصلي وأي تقليد: أربع علامات لا تقبل التزوير." %>
-<% content_for :nav_active, "products" %>
+<% content_for :title, t("original.title") %>
+<% content_for :description, t("original.description") %>
+<% content_for :nav_active, "quality" %>
 
-<section style="background:#0D1744;padding:170px 48px 80px;position:relative;overflow:hidden">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 65% at 20% 40%,rgba(185,198,242,.14),transparent 70%)"></div>
-  <div style="position:relative;max-width:1280px;margin:0 auto">
-    <div data-reveal class="kicker">الأصلي في مواجهة المقلد</div>
-    <h1 data-reveal style="margin:0 0 16px;color:#fff;font-size:clamp(40px,4.5vw,64px);font-weight:900">السوق مليء بالمقلد.<br>هكذا تعرف الأصل.</h1>
-    <p data-reveal style="margin:0;color:rgba(255,255,255,.75);font-size:19px;line-height:1.8;max-width:640px">التقليد لا يسرق الاسم فقط — يسرق السلامة. اسحب المقارنة وشاهد الفرق بعينك.</p>
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      label: t("original.hero.label"), h1: t("original.hero.h1"), desc: t("original.hero.desc"),
+      crumbs: [ [ t("nav.quality"), quality_path ], [ t("nav.original"), nil ] ],
+      primary: [ t("original.hero.cta"), "#identify" ], secondary: :whatsapp, image: "/assets/hero.jpg" %>
+
+<%# 02 — Why original %>
+<section class="section-pad bg-white">
+  <div class="wrap grid-2" style="align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker-gray"><%= t("original.why.label") %></div>
+      <h2 style="margin:0 0 20px;color:#192C7B;font-size:42px;font-weight:900;line-height:1.25"><%= t("original.why.h2") %></h2>
+      <p style="margin:0 0 14px;color:#686B70;font-size:17.5px;line-height:1.8"><%= t("original.why.p1") %></p>
+      <p style="margin:0;color:#1A1C20;font-size:17px;font-weight:600;line-height:1.8"><%= t("original.why.p2") %></p>
+    </div>
+    <div data-reveal style="height:420px;border-radius:26px;overflow:hidden;box-shadow:0 24px 60px rgba(25,44,123,.14)"><img src="/assets/hero.jpg" alt="" class="cover" loading="lazy"></div>
   </div>
 </section>
 
-<section style="padding:90px 48px 40px;background:#F4F5F7">
-  <div style="max-width:1180px;margin:0 auto">
-    <div data-reveal id="cmp" style="position:relative;height:520px;border-radius:26px;overflow:hidden;box-shadow:0 24px 64px rgba(25,44,123,.16);user-select:none">
-      <div style="position:absolute;inset:0;filter:grayscale(.85) contrast(.82) brightness(.8)"><img src="/assets/cat-carts.jpg" alt="المنتج المقلد" class="cover" loading="lazy"></div>
-      <div id="cmpReal" style="position:absolute;inset:0;clip-path:inset(0 0 0 50%)"><img src="/assets/hero.jpg" alt="المنتج الأصلي" class="cover" loading="lazy"></div>
-      <div style="position:absolute;top:22px;right:24px;background:#192C7B;color:#fff;font-size:14px;font-weight:800;border-radius:999px;padding:9px 20px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.3)">✓ الأصلي</div>
-      <div style="position:absolute;top:22px;left:24px;background:rgba(35,38,43,.88);color:#fff;font-size:14px;font-weight:800;border-radius:999px;padding:9px 20px;pointer-events:none">✕ المقلد</div>
+<%# 03 — Identify: 4 visual checks + before/after slider %>
+<section id="identify" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("original.identify.label"), h2: t("original.identify.h2"), center: true %>
+    <div class="grid-4">
+      <% @checks.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="feature-card card-hover" style="padding:0;overflow:hidden">
+        <div style="height:190px"><div class="ph-slot"><%= title %></div></div>
+        <div style="padding:26px 26px 30px;display:flex;flex-direction:column;flex:1">
+          <div class="num-badge soft" style="width:44px;height:44px;font-size:17px;margin-bottom:14px"><%= num(i + 1) %></div>
+          <h3><%= title %></h3>
+          <p><%= desc %></p>
+        </div>
+      </div>
+      <% end %>
+    </div>
+    <p data-reveal style="margin:22px 0 0;text-align:center;color:#9AA0A8;font-size:13.5px;font-weight:600;line-height:1.7"><%= t("original.identify.photo_note") %></p>
+
+    <div data-reveal id="cmp" style="position:relative;height:520px;border-radius:26px;overflow:hidden;box-shadow:0 24px 64px rgba(25,44,123,.16);user-select:none;margin-top:64px">
+      <div style="position:absolute;inset:0;filter:grayscale(.85) contrast(.82) brightness(.8)"><img src="/assets/cat-carts.jpg" alt="<%= t("original.compare.counterfeit_col") %>" class="cover" loading="lazy"></div>
+      <div id="cmpReal" style="position:absolute;inset:0;clip-path:inset(0 0 0 50%)"><img src="/assets/hero.jpg" alt="<%= t("original.compare.original_col") %>" class="cover" loading="lazy"></div>
+      <div style="position:absolute;top:22px;right:24px;background:#192C7B;color:#fff;font-size:14px;font-weight:800;border-radius:999px;padding:9px 20px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.3)"><%= t("original.compare.original_badge") %></div>
+      <div style="position:absolute;top:22px;left:24px;background:rgba(35,38,43,.88);color:#fff;font-size:14px;font-weight:800;border-radius:999px;padding:9px 20px;pointer-events:none"><%= t("original.compare.counterfeit_badge") %></div>
       <div id="cmpHandle" style="position:absolute;top:0;bottom:0;left:50%;width:44px;margin-left:-22px;cursor:ew-resize;display:flex;align-items:center;justify-content:center;touch-action:none">
         <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 14px rgba(0,0,0,.45)"></div>
         <div style="position:relative;width:52px;height:52px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.35);color:#192C7B;font-size:18px;font-weight:900">⇄</div>
       </div>
     </div>
-    <div data-reveal style="text-align:center;color:#686B70;font-size:14px;font-weight:600;margin-top:18px">اسحب المقبض يمينًا ويسارًا للمقارنة</div>
+    <div data-reveal style="text-align:center;color:#686B70;font-size:14px;font-weight:600;margin-top:18px"><%= t("original.compare.slider_hint") %></div>
   </div>
 </section>
 
-<section style="padding:70px 48px;background:#F4F5F7">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="margin-bottom:44px">
-      <h2 style="margin:0;color:#192C7B;font-size:38px;font-weight:900">أربع علامات لا تقبل التزوير</h2>
-    </div>
-    <div class="grid-2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:22px">
-      
-      <div data-reveal style="background:#fff;border-radius:20px;padding:30px 32px;display:flex;gap:20px;align-items:start">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">١</div>
-        <div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:20px;font-weight:800">الاسم المحفور</h3>
-          <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">شعار مزايا محفور بالبثق في جسم القائم نفسه — ليس ملصقًا يُنزع.</p>
-        </div>
-      </div>
-      <div data-reveal style="background:#fff;border-radius:20px;padding:30px 32px;display:flex;gap:20px;align-items:start">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">٢</div>
-        <div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:20px;font-weight:800">ختم الجودة</h3>
-          <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">ختم دفعة الإنتاج وتاريخها على كل منتج، يمكن التحقق منه لدى المصنع.</p>
-        </div>
-      </div>
-      <div data-reveal style="background:#fff;border-radius:20px;padding:30px 32px;display:flex;gap:20px;align-items:start">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">٣</div>
-        <div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:20px;font-weight:800">الوزن والسماكة</h3>
-          <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">سماكات مبثوقة محسوبة — المقلد أخف وأرق ويُحس فرقه باليد.</p>
-        </div>
-      </div>
-      <div data-reveal style="background:#fff;border-radius:20px;padding:30px 32px;display:flex;gap:20px;align-items:start">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">٤</div>
-        <div>
-          <h3 style="margin:0 0 8px;color:#192C7B;font-size:20px;font-weight:800">تشطيب الخامة</h3>
-          <p style="margin:0;color:#686B70;font-size:15px;line-height:1.8">لمعان أكسدة موحد بدون بقع أو خدوش تصنيع.</p>
-        </div>
-      </div>
+<%# 04 — Comparison table %>
+<section class="section-pad bg-white">
+  <div class="wrap-md">
+    <%= render "shared/section_head", label: t("original.compare.label"), h2: t("original.compare.h2"), center: true %>
+    <div data-reveal style="overflow-x:auto">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th><%= t("original.compare.original_col") %></th>
+            <th class="bad"><%= t("original.compare.counterfeit_col") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @comparison.each do |good, bad| %>
+          <tr><td class="good">✓ <%= good %></td><td class="bad">✕ <%= bad %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
 
-<section style="padding:30px 48px 90px;background:#F4F5F7">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="background:#0D1744;border-radius:26px;padding:56px 60px">
-      <h2 style="margin:0 0 32px;color:#fff;font-size:32px;font-weight:900">ما الذي تخسره مع المقلد؟</h2>
-      <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px">
-        
+<%# 05 — Safety band %>
+<section class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 15% 50%,rgba(185,198,242,.14),transparent 70%)"></div>
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
+    <div data-reveal>
+      <div class="kicker"><%= t("original.safety.label") %></div>
+      <h2 style="margin:0 0 18px;color:#fff;font-size:40px;font-weight:900;line-height:1.25"><%= t("original.safety.h2") %></h2>
+    </div>
+    <div data-reveal>
+      <p style="margin:0 0 30px;color:rgba(255,255,255,.78);font-size:17.5px;line-height:1.8"><%= t("original.safety.desc") %></p>
+      <a href="<%= quality_path %>" class="btn-white"><%= t("original.safety.cta") %></a>
+    </div>
+  </div>
+</section>
+
+<%# 06 — Verify your product %>
+<section id="verify" class="section-pad bg-soft">
+  <div class="wrap grid-2" style="align-items:start;gap:50px">
+    <div data-reveal>
+      <div class="kicker-gray"><%= t("original.verify.label") %></div>
+      <h2 style="margin:0 0 18px;color:#192C7B;font-size:42px;font-weight:900;line-height:1.25"><%= t("original.verify.h2") %></h2>
+      <p style="margin:0 0 30px;color:#686B70;font-size:17.5px;line-height:1.8"><%= t("original.verify.desc") %></p>
+      <a data-wa href="#" class="btn-wa"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
+    </div>
+    <form data-reveal data-lead-form data-kind="contact" data-source="original-verify" data-wa-title="<%= t('original.verify.cta') %>" class="form-card">
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <div>
+        <label class="field-label" for="verify-product"><%= t("original.verify.product") %></label>
+        <input id="verify-product" name="product" class="field" data-label="<%= t("original.verify.product") %>" required>
+      </div>
+      <div class="grid-2" style="gap:14px">
         <div>
-          <div style="color:#B9C6F2;font-size:19px;font-weight:800;margin-bottom:8px">السلامة أولًا</div>
-          <div style="color:rgba(255,255,255,.7);font-size:15px;line-height:1.8">درجات تنحني ومفاصل تنهار تحت الحمل — إصابات حقيقية في مواقع العمل.</div>
+          <label class="field-label" for="verify-place"><%= t("original.verify.place") %></label>
+          <input id="verify-place" name="place" class="field" data-label="<%= t("original.verify.place") %>">
         </div>
         <div>
-          <div style="color:#B9C6F2;font-size:19px;font-weight:800;margin-bottom:8px">عمر أقصر</div>
-          <div style="color:rgba(255,255,255,.7);font-size:15px;line-height:1.8">خامة منخفضة النقاء تتشقق وتتأكسد خلال أشهر بدل سنوات.</div>
-        </div>
-        <div>
-          <div style="color:#B9C6F2;font-size:19px;font-weight:800;margin-bottom:8px">بدون ضمان</div>
-          <div style="color:rgba(255,255,255,.7);font-size:15px;line-height:1.8">لا جهة تتحمل المسؤولية — لا صيانة، لا استبدال، لا مساءلة.</div>
+          <label class="field-label" for="verify-city"><%= t("original.verify.city") %></label>
+          <input id="verify-city" name="city" class="field" data-label="<%= t("original.verify.city") %>">
         </div>
       </div>
+      <div class="grid-2" style="gap:14px">
+        <label class="upload-box"><%= t("original.verify.images") %><input type="file" name="images" accept="image/*" multiple></label>
+        <label class="upload-box"><%= t("original.verify.packaging") %><input type="file" name="packaging" accept="image/*"></label>
+      </div>
+      <div class="grid-2" style="gap:14px">
+        <div>
+          <label class="field-label" for="verify-name"><%= t("original.verify.name") %> *</label>
+          <input id="verify-name" name="lead[name]" class="field" data-label="<%= t("original.verify.name") %>" required>
+        </div>
+        <div>
+          <label class="field-label" for="verify-phone"><%= t("original.verify.phone") %> *</label>
+          <input id="verify-phone" name="lead[phone]" class="field" inputmode="tel" data-label="<%= t("original.verify.phone") %>" required>
+        </div>
+      </div>
+      <button type="submit" class="form-btn"><%= t("original.verify.cta") %></button>
+      <div class="form-msg" data-form-msg></div>
+      <div style="color:#9AA0A8;font-size:12.5px"><%= t("common.required_hint") %></div>
+      <div class="form-success">
+        <h3><%= t("common.sent_title") %></h3>
+        <p><%= t("common.sent_body") %></p>
+        <a data-wa-prefill class="btn-wa" target="_blank" rel="noopener"><%= t("common.whatsapp") %></a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%# 07 — Buy from authorized channels %>
+<section class="section-pad bg-white" style="padding-bottom:60px">
+  <div class="wrap">
+    <div data-reveal class="feature-card soft" style="flex-direction:row;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:48px 56px;border-radius:26px">
+      <div style="max-width:680px">
+        <div class="kicker-gray"><%= t("original.authorized.label") %></div>
+        <h2 style="margin:0 0 12px;color:#192C7B;font-size:32px;font-weight:900;line-height:1.3"><%= t("original.authorized.h2") %></h2>
+        <p style="font-size:16.5px"><%= t("original.authorized.desc") %></p>
+      </div>
+      <a href="<%= contact_path(dept: "sales") %>" class="btn-navy"><%= t("original.authorized.cta") %></a>
     </div>
   </div>
 </section>
 
-<section style="padding:0 48px 100px;background:#F4F5F7">
-  <div data-reveal class="cta-band" style="padding:56px 64px">
-    <div>
-      <h2 style="margin:0 0 10px;color:#fff;font-size:30px;font-weight:900">عندك شك في منتج؟</h2>
-      <p style="margin:0;color:rgba(255,255,255,.75);font-size:16.5px">أرسل لنا صورة على واتساب ونتأكد معك من الأصالة مجانًا.</p>
-    </div>
-    <a data-wa href="#" class="btn-wa">تأكد من الأصالة الآن</a>
-  </div>
-</section>
-
-<% content_for :page_script do %>
-<script>
-// before/after comparison slider
-(function () {
-  var box = document.getElementById('cmp');
-  var real = document.getElementById('cmpReal');
-  var handle = document.getElementById('cmpHandle');
-  if (!box || !real || !handle) return;
-  var set = function (pct) {
-    pct = Math.min(Math.max(pct, 4), 96);
-    real.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
-    handle.style.left = pct + '%';
-  };
-  handle.addEventListener('pointerdown', function (e) {
-    e.preventDefault();
-    var r = box.getBoundingClientRect();
-    var move = function (ev) { set(((ev.clientX - r.left) / r.width) * 100); };
-    var up = function () { removeEventListener('pointermove', move); removeEventListener('pointerup', up); };
-    addEventListener('pointermove', move); addEventListener('pointerup', up);
-  });
-})();
-</script>
-<% end %>
+<%# 08 — Final CTA %>
+<%= render "shared/cta_band", bg: "#fff",
+      label: t("original.final.label"), h2: t("original.final.h2"), desc: t("original.final.desc"),
+      primary: [ t("common.explore_products"), products_path ], secondary: [ t("common.contact_us"), contact_path ] %>

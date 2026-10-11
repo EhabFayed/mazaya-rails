@@ -1,0 +1,26 @@
+<%# Dark page hero. locals: label, h1, desc, crumbs: [[text, href], ...], primary: [text, href, gate_key?], secondary: [text, href] | :whatsapp, image (optional) %>
+<section class="page-hero<%= ' page-hero-img' if local_assigns[:image] %>">
+  <% if local_assigns[:image] %><img src="<%= image %>" alt="" class="page-hero-bg"><div class="page-hero-shade"></div><% end %>
+  <div class="page-hero-glow"></div>
+  <div class="wrap" style="position:relative">
+    <% if local_assigns[:crumbs] %>
+    <div data-reveal class="crumb">
+      <a href="<%= root_path %>"><%= t("common.home") %></a>
+      <% crumbs.each do |text, href| %><span class="crumb-sep">/</span><% if href %><a href="<%= href %>"><%= text %></a><% else %><span><%= text %></span><% end %><% end %>
+    </div>
+    <% end %>
+    <% if local_assigns[:label] %><div data-reveal class="kicker"><%= label %></div><% end %>
+    <h1 data-reveal><%= h1 %></h1>
+    <% if local_assigns[:desc] %><p data-reveal class="page-hero-desc"><%= desc %></p><% end %>
+    <% if local_assigns[:primary] || local_assigns[:secondary] %>
+    <div data-reveal class="hero-actions">
+      <% if local_assigns[:primary] %><a href="<%= primary[1] %>" class="btn-white"<%= raw(' data-gate="' + primary[2] + '"') if primary[2] %>><%= primary[0] %></a><% end %>
+      <% if local_assigns[:secondary] == :whatsapp %>
+        <a data-wa href="#" class="btn-ghost"><%= render "shared/wa_icon", size: 18, color: "#25D366" %> <%= t("common.whatsapp") %></a>
+      <% elsif local_assigns[:secondary] %>
+        <a href="<%= secondary[1] %>" class="btn-ghost"<%= raw(' data-gate="' + secondary[2] + '"') if secondary[2] %>><%= secondary[0] %></a>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+</section>

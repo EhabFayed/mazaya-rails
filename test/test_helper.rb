@@ -4,12 +4,16 @@ require "rails/test_help"
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
-
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
+  end
+end
 
-    # Add more helper methods to be used by all tests here...
+class ActionDispatch::IntegrationTest
+  # Logs in an admin (or the given role) for /admin requests.
+  def sign_in_admin(role: "admin")
+    user = User.create!(name: "Test #{role}", email: "#{role}-#{SecureRandom.hex(3)}@test.local", password: "secret-pass-123", role: role)
+    post admin_login_path, params: { email: user.email, password: "secret-pass-123" }
+    user
   end
 end

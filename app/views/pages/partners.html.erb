@@ -1,106 +1,175 @@
-<% content_for :title, "شراكة معنا — ألمنيوم مزايا" %>
-<% content_for :description, "انضم إلى شبكة ٣٥٠+ موزّعًا معتمدًا: هوامش واضحة، حماية مناطق، ودعم تسويقي ٨٠/٢٠." %>
-<% content_for :nav_active, "partners" %>
+<% content_for :title, t("partners.title") %>
+<% content_for :description, t("partners.description") %>
+<% content_for :nav_active, "b2b" %>
 
-<section style="background:#0D1744;padding:170px 48px 80px;position:relative;overflow:hidden">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(185,198,242,.16),transparent 70%)"></div>
-  <div class="grid-2" style="position:relative;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center">
-    <div>
-      <div data-reveal class="kicker">شراكة معنا</div>
-      <h1 data-reveal style="margin:0 0 16px;color:#fff;font-size:clamp(38px,4.2vw,58px);font-weight:900;line-height:1.25">انضم إلى شبكة من ٣٥٠+ موزّعًا</h1>
-      <p data-reveal style="margin:0 0 32px;color:rgba(255,255,255,.75);font-size:18px;line-height:1.8">منتج يبيع نفسه باسمه، وهوامش واضحة، ودعم لا يتوقف عند التوقيع.</p>
-      <a data-reveal href="#apply" class="btn-white" style="font-size:17px;padding:16px 36px">قدّم كموزّع الآن</a>
-    </div>
-    <div data-reveal class="grid-2m" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;text-align:center">
-      
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:28px 20px"><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="350">0</span>+</div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">موزّع معتمد</div></div>
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:28px 20px"><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="7">0</span></div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">أسواق تصدير</div></div>
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:28px 20px"><div style="color:#fff;font-size:34px;font-weight:900"><span data-count="88">0</span>٪</div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">حصة السوق</div></div>
-      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:28px 20px"><div style="color:#fff;font-size:34px;font-weight:900">٢٤ س</div><div style="color:rgba(255,255,255,.65);font-size:14px;margin-top:6px">رد على طلبات الانضمام</div></div>
+<style>
+.grid-32{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
+.grid-32>*{grid-column:span 2}
+.grid-32>*:nth-child(n+4){grid-column:span 3}
+.stat-grid.stat-grid-3{grid-template-columns:repeat(3,1fr)}
+.split-form{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:start}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sticky-intro{position:sticky;top:110px}
+@media(max-width:960px){.grid-32,.split-form,.f2,.stat-grid.stat-grid-3{grid-template-columns:1fr}.grid-32>*{grid-column:auto}.sticky-intro{position:static}}
+</style>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.partner"), nil ] ],
+      label: t("partners.hero.label"), h1: t("partners.hero.h1"), desc: t("partners.hero.desc"),
+      image: "/assets/cat-carts.jpg",
+      primary: [ t("partners.hero.primary"), "#apply" ],
+      secondary: :whatsapp %>
+
+<%# 02 — Network %>
+<section id="network" class="section-pad bg-navy" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 20%,rgba(185,198,242,.16),transparent 70%)"></div>
+  <div class="wrap" style="position:relative">
+    <%= render "shared/section_head", dark: true, center: true, label: t("partners.network.label"), h2: t("partners.network.h2"), desc: t("partners.network.desc") %>
+    <div class="stat-grid stat-grid-3">
+      <% SiteData::PARTNER_STATS.each do |s| %>
+      <div data-reveal class="stat">
+        <div class="stat-num"><span data-count="<%= s[:value] %>">0</span><small><%= s[:suffix] %></small><% if s[:label].present? %> <small><%= s[:label] %></small><% end %></div>
+        <div class="stat-sub"><%= s[:sub] %></div>
+      </div>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section style="padding:100px 48px;background:#F4F5F7">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal style="margin-bottom:48px">
-      <h2 style="margin:0;color:#192C7B;font-size:40px;font-weight:900">ماذا تكسب كموزّع مزايا؟</h2>
-    </div>
-    <div class="grid-2m" style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px">
-      
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:32px 28px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin-bottom:18px">١</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:19px;font-weight:800">هامش ربح واضح</h3>
-        <p style="margin:0;color:#686B70;font-size:14.5px;line-height:1.8">تسعير ثابت معلن للموزّعين، بدون مفاجآت في منتصف السنة.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:32px 28px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin-bottom:18px">٢</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:19px;font-weight:800">حماية مناطق</h3>
-        <p style="margin:0;color:#686B70;font-size:14.5px;line-height:1.8">سياسة توزيع جغرافي تحمي استثمارك في منطقتك.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:32px 28px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin-bottom:18px">٣</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:19px;font-weight:800">توريد سريع</h3>
-        <p style="margin:0;color:#686B70;font-size:14.5px;line-height:1.8">مخزون محلي دائم — المصنع هنا وليس وراء البحر.</p>
-      </div>
-      <div data-reveal class="card-hover" style="background:#fff;border-radius:20px;padding:32px 28px">
-        <div style="width:52px;height:52px;border-radius:14px;background:#192C7B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin-bottom:18px">٤</div>
-        <h3 style="margin:0 0 10px;color:#192C7B;font-size:19px;font-weight:800">منتج معروف</h3>
-        <p style="margin:0;color:#686B70;font-size:14.5px;line-height:1.8">٣٥ سنة من الثقة تعني عميلًا يسأل عن الاسم بنفسه.</p>
-      </div>
-    </div>
-    <div data-reveal style="margin-top:26px;background:#192C7B;border-radius:20px;padding:34px 40px;display:flex;align-items:center;gap:26px;flex-wrap:wrap">
-      <div style="color:#fff;font-size:44px;font-weight:900">٨٠/٢٠</div>
-      <div>
-        <div style="color:#fff;font-size:18px;font-weight:800;margin-bottom:4px">حزمة الدعم التسويقي</div>
-        <div style="color:rgba(255,255,255,.7);font-size:15px;line-height:1.7">مواد جاهزة، حملات مشتركة، وأولوية مشاركة في المعارض — نتحمل النصيب الأكبر.</div>
-      </div>
+<%# 03 — Portfolio %>
+<section id="portfolio" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("partners.portfolio.label"), h2: t("partners.portfolio.h2"), desc: t("partners.portfolio.desc"), link: [ t("partners.portfolio.cta"), products_path ] %>
+    <div class="grid-32">
+      <% @categories.each do |c| %>
+      <a href="<%= product_category_path(c[:slug]) %>" data-reveal class="cat-card card-hover">
+        <div class="cat-media"><img src="<%= c[:image] %>" alt="<%= c[:name] %>" loading="lazy"></div>
+        <div class="cat-body">
+          <div class="product-cat" dir="ltr" style="text-align:end"><%= c[:en] %></div>
+          <h3><%= c[:name] %></h3>
+          <p><%= c[:desc] %></p>
+          <span class="card-link"><%= t("common.explore_category") %> ←</span>
+        </div>
+      </a>
+      <% end %>
     </div>
   </div>
 </section>
 
-<section id="apply" style="padding:100px 48px;background:#fff">
-  <div class="grid-2" style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start">
+<%# 04 — Partner support %>
+<section id="support" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("partners.support.label"), h2: t("partners.support.h2"), desc: t("partners.support.desc"), center: true %>
+    <div class="grid-4">
+      <% t("partners.support.items").each_with_index do |item, i| %>
+      <div data-reveal class="pillar">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3 style="margin:0;color:#192C7B;font-size:20px;font-weight:800;line-height:1.5"><%= item %></h3>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 05 — Approach %>
+<section id="approach" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 15% 50%,rgba(185,198,242,.14),transparent 70%)"></div>
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
     <div data-reveal>
-      <h2 style="margin:0 0 18px;color:#192C7B;font-size:38px;font-weight:900">قدّم كموزّع</h2>
-      <p style="margin:0 0 28px;color:#686B70;font-size:16.5px;line-height:1.8">نموذج واحد قصير — يصل مباشرة لفريق الشراكات، والرد خلال يوم عمل.</p>
-      <div style="display:grid;gap:16px">
-        
-        <div style="display:flex;gap:16px;align-items:start">
-          <div style="width:40px;height:40px;border-radius:12px;background:#F4F5F7;color:#192C7B;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0">١</div>
-          <div>
-            <div style="color:#192C7B;font-weight:800;font-size:16px">أرسل النموذج</div>
-            <div style="color:#686B70;font-size:14.5px;margin-top:3px;line-height:1.7">بياناتك الأساسية ونشاطك الحالي.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:16px;align-items:start">
-          <div style="width:40px;height:40px;border-radius:12px;background:#F4F5F7;color:#192C7B;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0">٢</div>
-          <div>
-            <div style="color:#192C7B;font-weight:800;font-size:16px">مكالمة تعريفية</div>
-            <div style="color:#686B70;font-size:14.5px;margin-top:3px;line-height:1.7">فريق الشراكات يتصل خلال يوم عمل.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:16px;align-items:start">
-          <div style="width:40px;height:40px;border-radius:12px;background:#F4F5F7;color:#192C7B;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0">٣</div>
-          <div>
-            <div style="color:#192C7B;font-weight:800;font-size:16px">اعتماد وانطلاق</div>
-            <div style="color:#686B70;font-size:14.5px;margin-top:3px;line-height:1.7">اتفاقية، تدريب على المنتجات، وأول شحنة.</div>
-          </div>
-        </div>
+      <div class="kicker"><%= t("partners.approach.label") %></div>
+      <h2 style="margin:0 0 20px;color:#fff;font-size:42px;font-weight:900;line-height:1.25"><%= t("partners.approach.h2") %></h2>
+      <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= t("partners.approach.desc") %></p>
+      <a href="#apply" class="btn-white"><%= t("partners.hero.primary") %></a>
+    </div>
+    <div data-reveal style="height:380px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)"><img src="/assets/proj-saco.jpg" alt="" class="cover" loading="lazy"></div>
+  </div>
+</section>
+
+<%# 06 — Application form %>
+<section id="apply" class="section-pad bg-soft">
+  <div class="wrap split-form">
+    <div data-reveal class="sticky-intro">
+      <div class="kicker-gray"><%= t("partners.form.label") %></div>
+      <h2 style="margin:0 0 18px;color:#192C7B;font-size:38px;font-weight:900;line-height:1.25"><%= t("partners.form.h2") %></h2>
+      <p style="margin:0 0 18px;color:#686B70;font-size:17px;line-height:1.8"><%= t("partners.form.desc") %></p>
+      <p style="margin:0 0 28px;color:#9AA0A8;font-size:14px;font-weight:700"><%= t("common.required_hint") %></p>
+      <div style="display:grid;gap:10px">
+        <% %w[s1 s2 s3].each do |s| %>
+        <div style="display:flex;align-items:center;gap:12px;color:#192C7B;font-size:14.5px;font-weight:700"><span style="width:8px;height:8px;border-radius:50%;background:#B9C6F2;flex-shrink:0"></span><%= t("partners.form.#{s}") %></div>
+        <% end %>
       </div>
     </div>
-    <form data-reveal data-wa-form="طلب انضمام موزّع من الموقع" style="background:#F4F5F7;border-radius:22px;padding:38px;display:grid;gap:16px">
-      <input placeholder="الاسم الكامل" class="field" style="background:#fff">
-      <input placeholder="اسم المنشأة التجارية" class="field" style="background:#fff">
-      <div class="grid-2m" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <input placeholder="المدينة" class="field" style="background:#fff">
-        <input placeholder="رقم الجوال" class="field" style="background:#fff" inputmode="tel">
+
+    <form data-reveal data-lead-form data-kind="partner" data-source="partners-page" data-wa-title="<%= t('partners.form.cta') %>" class="form-card">
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+
+      <div class="form-section"><%= t("partners.form.s1") %></div>
+      <div class="f2">
+        <div><label class="field-label" for="pt-name"><%= t("partners.form.name") %></label><input id="pt-name" name="lead[name]" class="field" data-label="<%= t("partners.form.name") %>" required autocomplete="name"></div>
+        <div><label class="field-label" for="pt-company"><%= t("partners.form.company") %></label><input id="pt-company" name="company" class="field" data-label="<%= t("partners.form.company") %>" required autocomplete="organization"></div>
       </div>
-      <select class="field" style="background:#fff">
-        <option>نشاطك الحالي</option><option>تجارة مواد بناء</option><option>أدوات ومعدات</option><option>تجزئة</option><option>أخرى</option>
-      </select>
-      <button type="submit" class="form-btn">أرسل طلب الانضمام</button>
-      <div style="color:#9AA0A8;font-size:13px;text-align:center">بالإرسال أنت توافق على تواصل فريقنا معك.</div>
+      <div class="f2">
+        <div><label class="field-label" for="pt-email"><%= t("partners.form.email") %></label><input id="pt-email" type="email" name="lead[email]" class="field" data-label="<%= t("partners.form.email") %>" inputmode="email" autocomplete="email" dir="ltr" style="text-align:end"></div>
+        <div><label class="field-label" for="pt-phone"><%= t("partners.form.phone") %></label><input id="pt-phone" name="lead[phone]" class="field" data-label="<%= t("partners.form.phone") %>" inputmode="tel" autocomplete="tel" dir="ltr" style="text-align:end"></div>
+      </div>
+
+      <div class="form-section"><%= t("partners.form.s2") %></div>
+      <div class="f2">
+        <div><label class="field-label" for="pt-country"><%= t("partners.form.country") %></label><input id="pt-country" name="country" class="field" data-label="<%= t("partners.form.country") %>" required autocomplete="country-name"></div>
+        <div><label class="field-label" for="pt-city"><%= t("partners.form.city") %></label><input id="pt-city" name="city" class="field" data-label="<%= t("partners.form.city") %>" required autocomplete="address-level2"></div>
+      </div>
+      <div class="f2">
+        <div>
+          <label class="field-label" for="pt-type"><%= t("partners.form.business_type") %></label>
+          <select id="pt-type" name="business_type" class="field" data-label="<%= t("partners.form.business_type") %>" required>
+            <option value=""><%= t("partners.form.business_type").delete("*") %></option>
+            <% t("partners.form.business_types").each do |o| %><option><%= o %></option><% end %>
+          </select>
+        </div>
+        <div><label class="field-label" for="pt-years"><%= t("partners.form.years") %></label><input id="pt-years" name="years" class="field" data-label="<%= t("partners.form.years") %>" inputmode="numeric"></div>
+      </div>
+
+      <div class="form-section"><%= t("partners.form.s3") %></div>
+      <div>
+        <label class="field-label" for="pt-products"><%= t("partners.form.products") %></label>
+        <select id="pt-products" name="products" class="field" data-label="<%= t("partners.form.products") %>" multiple size="5" style="height:auto">
+          <% @categories.each do |c| %><option><%= c[:name] %></option><% end %>
+        </select>
+      </div>
+      <div class="f2">
+        <div><label class="field-label" for="pt-markets"><%= t("partners.form.markets") %></label><input id="pt-markets" name="markets" class="field" data-label="<%= t("partners.form.markets") %>"></div>
+        <div><label class="field-label" for="pt-outlets"><%= t("partners.form.outlets") %></label><input id="pt-outlets" name="outlets" class="field" data-label="<%= t("partners.form.outlets") %>" inputmode="numeric"></div>
+      </div>
+      <div>
+        <label class="field-label" for="pt-notes"><%= t("partners.form.notes") %></label>
+        <textarea id="pt-notes" name="lead[message]" rows="3" class="field" data-label="<%= t("partners.form.notes") %>"></textarea>
+      </div>
+
+      <button type="submit" class="form-btn"><%= t("partners.form.cta") %></button>
+      <div class="form-msg" data-form-msg></div>
+      <div class="form-success">
+        <h3><%= t("common.sent_title") %></h3>
+        <p><%= t("common.sent_body") %></p>
+        <a data-wa-prefill class="btn-wa" href="#" target="_blank" rel="noopener"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
+      </div>
     </form>
   </div>
 </section>
+
+<%# 07 — Availability note %>
+<section class="section-pad-sm bg-white">
+  <div class="wrap">
+    <div data-reveal class="pillar" style="display:flex;gap:24px;align-items:start;flex-wrap:wrap">
+      <div class="num-badge soft" style="margin:0;font-size:24px">!</div>
+      <div style="flex:1;min-width:260px">
+        <div class="kicker-gray" style="margin-bottom:8px"><%= t("partners.availability.label") %></div>
+        <h3 style="margin:0 0 10px;color:#192C7B;font-size:24px;font-weight:900;line-height:1.35"><%= t("partners.availability.h2") %></h3>
+        <p style="margin:0;color:#686B70;font-size:16px;line-height:1.8"><%= t("partners.availability.desc") %></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# 08 — Final CTA %>
+<%= render "shared/cta_band", bg: "#fff", label: t("partners.hero.label"), h2: t("partners.final.h2"), desc: t("partners.final.desc"), primary: [ t("partners.final.primary"), "#apply" ], secondary: [ t("partners.final.secondary"), contact_path ] %>

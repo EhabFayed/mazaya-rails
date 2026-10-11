@@ -1,0 +1,98 @@
+<%= errors_for(post) %>
+<%= form_with model: [ :admin, post ], local: true, multipart: true, id: "post-form" do |f| %>
+  <div class="section">
+    <h2>النوع والتصنيف</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">نوع المنشور</label>
+        <div style="display:flex;gap:18px;font-size:14.5px">
+          <label style="display:flex;gap:6px;align-items:center"><%= f.radio_button :post_type, "news" %> خبر</label>
+          <label style="display:flex;gap:6px;align-items:center"><%= f.radio_button :post_type, "article" %> مقال</label>
+        </div>
+        <div class="hint">الأخبار تظهر في صفحة الأخبار والرئيسية؛ المقالات في مكتبة المقالات.</div>
+      </div>
+      <div>
+        <label class="field-label">الموضوع</label>
+        <%= f.select :topic, Post::TOPICS.map { |k| [ SiteData::TOPICS[k].to_s, k ] }, {}, class: "field sm" %>
+        <div class="hint">يُستخدم في فلتر المواضيع بصفحة الأخبار.</div>
+      </div>
+      <div class="full"><%= bi_field(f, :category, "التصنيف الظاهر", hint: "مثال: أخبار الشركة، إطلاق منتج، دليل سلامة.") %></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>المحتوى</h2>
+    <div class="stack">
+      <%= bi_field(f, :title, "العنوان", required: true) %>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">الرابط (slug)</label>
+          <%= f.text_field :slug, class: "field sm", dir: "ltr", placeholder: "new-catalog-2026", data: { slug_target: true } %>
+          <div class="hint">يُولّد تلقائيًا من العنوان لو تركته فارغًا.</div>
+        </div>
+        <div>
+          <label class="field-label">تاريخ النشر</label>
+          <%= f.date_field :published_on, class: "field sm", dir: "ltr" %>
+        </div>
+      </div>
+      <%= bi_field(f, :excerpt, "المقتطف", type: :text_area, rows: 2, hint: "يظهر في كارت المنشور ووصف الصفحة.") %>
+      <%= bi_field(f, :body, "النص الكامل", type: :text_area, rows: 10, hint: "افصل الفقرات بسطر فارغ.") %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>الصورة</h2>
+    <div class="images" style="margin-bottom:10px">
+      <% if post.image.attached? %>
+        <div class="img-card"><%= image_tag rails_representation_path(post.image.variant(resize_to_fill: [ 300, 220 ]), only_path: true), alt: post.title_ar %><div class="body"><span style="color:#686B70"><%= post.image.filename %></span></div></div>
+      <% end %>
+      <div id="post-image-preview" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+    <%= f.file_field :image, accept: "image/*", class: "field sm", data: { preview: "#post-image-preview" } %>
+    <div class="hint">اختيار صورة جديدة يستبدل الحالية عند الحفظ.</div>
+  </div>
+
+  <%= rows_editor("post", :points, post.points, [ [ "title_ar", "العنوان (عربي)", :text ], [ "title_en", "العنوان (EN)", :text ], [ "desc_ar", "الوصف (عربي)", :textarea ], [ "desc_en", "الوصف (EN)", :textarea ] ], title: "النقاط الرئيسية", hint: "بلوكات عنوان + وصف تظهر تحت النص (اختياري).") %>
+  <%= rows_editor("post", :checklist, post.checklist, [ [ "text_ar", "النص (عربي)", :text ], [ "text_en", "النص (EN)", :text ] ], title: "قائمة الفحص", hint: "قائمة نقاط قصيرة تظهر كـ checklist (اختياري).") %>
+
+  <div class="section">
+    <h2>روابط مرتبطة</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">منتجات مرتبطة</label>
+        <%= f.select :related_slugs, @products.map { |p| [ "#{p.name_ar} (#{p.category&.name_ar})", p.slug ] }, { selected: post.related_slugs }, multiple: true, class: "field sm", size: [ @products.size, 8 ].min.clamp(3, 8) %>
+        <div class="hint">اضغط Ctrl/⌘ لاختيار أكثر من منتج.</div>
+      </div>
+      <div>
+        <label class="field-label">دليل سلامة مرتبط</label>
+        <%= f.select :related_safety_slug, @safety_articles.map { |a| [ a.name_ar, a.slug ] }, { include_blank: "— بدون —" }, class: "field sm" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>النشر</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">الترتيب</label>
+        <%= f.number_field :position, class: "field sm", dir: "ltr" %>
+        <div class="hint">الأصغر يظهر أولًا.</div>
+      </div>
+      <div class="stack">
+        <label class="field-label">الحالة</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :published %> منشور في الموقع</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :featured %> مميّز (يظهر أول صفحة الأخبار)</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :template %> قالب (نص تجريبي يحتاج استبدال)</label>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="sticky-actions">
+  <button type="submit" form="post-form" class="btn-navy sm">حفظ</button>
+  <a href="<%= admin_posts_path %>" class="btn-outline sm">إلغاء</a>
+  <% if post.persisted? %>
+    <span style="flex:1"></span>
+    <%= button_to "حذف المنشور", admin_post_path(post), method: :delete, class: "btn-danger", form: { data: { turbo: false }, style: "margin:0" }, data: { confirm: "حذف \"#{post.title_ar}\" نهائيًا؟" } %>
+  <% end %>
+</div>

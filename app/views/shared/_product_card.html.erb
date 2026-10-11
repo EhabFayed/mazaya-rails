@@ -1,0 +1,14 @@
+<%# locals: product %>
+<% category = SiteData.category(product[:category]) %>
+<a href="<%= product_path(product[:category], product[:slug]) %>" data-reveal class="card-hover product-card" data-kind="<%= product[:kind] %>" data-sub="<%= product[:subcategory] %>">
+  <div class="product-media">
+    <% if product[:images].present? %><img src="<%= product[:images].first[:src] %>" alt="<%= product[:name] %>" class="cover" loading="lazy"><% else %><div class="ph-slot"><%= product[:name] %></div><% end %>
+    <span class="tag tag-<%= product[:kind] %>"><%= SiteData.kind_label(product[:kind]) %></span>
+  </div>
+  <div class="product-body">
+    <div class="product-cat"><%= category[:name] %></div>
+    <h3><%= product[:name] %></h3>
+    <p><%= product[:summary] %></p>
+    <span class="card-link"><%= t("common.view_product") %> ←</span>
+  </div>
+</a>

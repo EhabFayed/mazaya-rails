@@ -1,0 +1,26 @@
+<% content_for :title, "الفئات" %>
+<div class="page-head">
+  <div><h1>الفئات</h1><p>فئات المنتجات وفئاتها الفرعية · ترتيبها هنا هو ترتيبها في الموقع.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_category_path %>" class="btn-navy sm">+ فئة جديدة</a></div>
+</div>
+
+<% if @categories.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد فئات بعد. <a href="<%= new_admin_category_path %>">أضف فئة</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th></th><th>الاسم</th><th>الرابط</th><th>فئات فرعية</th><th>منتجات</th><th>الحالة</th><th>الترتيب</th></tr></thead>
+  <tbody>
+    <% @categories.each do |c| %>
+    <tr>
+      <td><%= thumb(c.image) %></td>
+      <td><a href="<%= edit_admin_category_path(c) %>"><%= c.name_ar %></a><% if c.name_en.present? %><div style="color:#686B70;font-size:13px" dir="ltr"><%= c.name_en %></div><% end %></td>
+      <td dir="ltr" style="text-align:end"><%= c.slug %></td>
+      <td><%= @sub_counts[c.id] || 0 %></td>
+      <td><% n = @prod_counts[c.id] || 0 %><% if n.positive? %><a href="<%= admin_products_path(category_id: c.id) %>"><%= n %></a><% else %>0<% end %></td>
+      <td><%= yes_no(c.published) %></td>
+      <td dir="ltr"><%= c.position %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

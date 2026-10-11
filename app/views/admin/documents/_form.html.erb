@@ -1,0 +1,76 @@
+<%= errors_for(document) %>
+<%= form_with model: [ :admin, document ], local: true, multipart: true, id: "document-form" do |f| %>
+  <div class="section">
+    <h2>البيانات الأساسية</h2>
+    <div class="stack">
+      <%= bi_field(f, :title, "عنوان الوثيقة", required: true) %>
+      <div class="form-grid">
+        <div>
+          <label class="field-label">المفتاح (key)</label>
+          <%= f.text_field :key, class: "field sm", dir: "ltr", placeholder: "catalog-full" %>
+          <div class="hint">يُستخدم في روابط التحميل مثل catalog-full. أحرف لاتينية صغيرة وأرقام وشرطات — لا تغيّره لو الموقع يشير إليه.</div>
+        </div>
+        <div>
+          <label class="field-label">نوع الوثيقة</label>
+          <%= f.select :doc_type, AdminHelper::DOC_TYPES.map { |k, v| [ v, k ] }, {}, class: "field sm" %>
+          <div class="hint">الشهادات وتقارير الاختبار تظهر في صفحة الجودة.</div>
+        </div>
+      </div>
+      <%= bi_field(f, :desc, "الوصف", type: :text_area, rows: 2) %>
+      <%= bi_field(f, :cta, "نص زر التحميل", hint: "مثال: تحميل الكتالوج. يُستخدم العنوان لو تركته فارغًا.") %>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>الملف</h2>
+    <% if document.file.attached? %>
+      <p class="sub">الملف الحالي: <a href="<%= rails_blob_path(document.file, disposition: "inline") %>" target="_blank" rel="noopener"><%= document.file.filename %></a> <span style="color:#9AA0A8">(<%= number_to_human_size(document.file.byte_size) %>)</span></p>
+    <% else %>
+      <p class="sub" style="color:#8A5A00">لا يوجد ملف مرفوع — الموقع يعرض ملفًا مؤقتًا حتى ترفع PDF.</p>
+    <% end %>
+    <%= f.file_field :file, accept: ".pdf,application/pdf", class: "field sm" %>
+    <div class="hint">PDF فقط. اختيار ملف جديد يستبدل الحالي عند الحفظ.</div>
+  </div>
+
+  <div class="section">
+    <h2>الإصدار والوصول</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">الإصدار</label>
+        <%= f.text_field :version, class: "field sm", dir: "ltr", placeholder: "v3.2" %>
+      </div>
+      <div>
+        <label class="field-label">تاريخ الإصدار</label>
+        <%= f.date_field :version_date, class: "field sm", dir: "ltr" %>
+      </div>
+      <div class="full">
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :gated %> تحميل بنموذج</label>
+        <div class="hint">يطلب نموذج (اسم + بريد) قبل التحميل ويسجّل الطلب في الطلبات.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>النشر</h2>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">الترتيب</label>
+        <%= f.number_field :position, class: "field sm", dir: "ltr" %>
+        <div class="hint">الأصغر يظهر أولًا.</div>
+      </div>
+      <div>
+        <label class="field-label">الحالة</label>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14.5px"><%= f.check_box :published %> منشور في الموقع</label>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="sticky-actions">
+  <button type="submit" form="document-form" class="btn-navy sm">حفظ</button>
+  <a href="<%= admin_documents_path %>" class="btn-outline sm">إلغاء</a>
+  <% if document.persisted? %>
+    <span style="flex:1"></span>
+    <%= button_to "حذف الوثيقة", admin_document_path(document), method: :delete, class: "btn-danger", form: { data: { turbo: false }, style: "margin:0" }, data: { confirm: "حذف الوثيقة \"#{document.title_ar}\" (المفتاح #{document.key})؟ أي رابط تحميل في الموقع يشير إلى هذا المفتاح سيتوقف عن العمل." } %>
+  <% end %>
+</div>

@@ -1,0 +1,26 @@
+<% content_for :title, "الحلول المخصصة" %>
+<div class="page-head">
+  <div><h1>الحلول المخصصة</h1><p><%= @solutions.size %> حل · تظهر في صفحة الحلول وصفحات المشاريع المرتبطة.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_solution_path %>" class="btn-navy sm">+ حل جديد</a></div>
+</div>
+
+<% if @solutions.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد حلول بعد. <a href="<%= new_admin_solution_path %>">أضف أول حل</a>.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th></th><th>الاسم</th><th>الفئة</th><th>المشاريع</th><th>الحالة</th><th>الترتيب</th><th></th></tr></thead>
+  <tbody>
+    <% @solutions.each do |s| %>
+    <tr>
+      <td><%= thumb(s.image, s.name_ar) %></td>
+      <td><a href="<%= edit_admin_solution_path(s) %>"><%= s.name_ar %></a><div style="color:#686B70;font-size:12.5px" dir="ltr"><%= s.name_en.presence || s.slug %></div></td>
+      <td><%= s.category&.name_ar || "—" %></td>
+      <td><%= s.projects.size %></td>
+      <td><%= yes_no(s.published) %></td>
+      <td><%= s.position %></td>
+      <td><a href="<%= edit_admin_solution_path(s) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

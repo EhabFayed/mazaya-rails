@@ -1,45 +1,194 @@
-<% content_for :title, "تواصل معنا — ألمنيوم مزايا" %>
-<% content_for :description, "اطلب عرض سعر خلال دقيقة — نموذج قصير يصل لفريق المبيعات والرد في نفس اليوم." %>
+<% content_for :title, t("contact.title") %>
+<% content_for :description, t("contact.description") %>
+<% content_for :nav_active, "contact" %>
+<%# Department -> preselected inquiry type (indexes into SiteData::INQUIRY_TYPES) %>
+<% dept_interest = { "sales" => @inquiry_types[0], "export" => @inquiry_types[2], "technical" => @inquiry_types[3], "partners" => @inquiry_types[4] } %>
+<% selected_interest = dept_interest[@dept] %>
+<style>
+  /* Contact page */
+  .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:start}
+  .dept-card.is-active{box-shadow:0 0 0 2.5px #192C7B}
+  .dept-card .card-link{margin-top:auto;padding-top:14px}
+  .loc-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:stretch}
+  .map-box{height:420px;border-radius:24px;overflow:hidden;background:#E9EBF0}
+  .map-box iframe{width:100%;height:100%;border:0;display:block}
+  .info-row{display:flex;flex-direction:column;gap:6px;padding:18px 0;border-bottom:1px solid #E6E8EC}
+  .info-row:last-of-type{border-bottom:none}
+  .info-label{color:#192C7B;font-size:14px;font-weight:800}
+  .info-value{color:#686B70;font-size:15.5px;line-height:1.7}
+  .wa-info{display:flex;gap:28px;flex-wrap:wrap;margin-top:26px;color:rgba(255,255,255,.7);font-size:14.5px}
+  .wa-info b{display:block;color:#fff;font-size:13px;letter-spacing:1px;margin-bottom:6px}
+  @media (max-width:960px){.contact-grid,.loc-grid{grid-template-columns:1fr;gap:32px}.map-box{height:300px}}
+</style>
 
-<section style="background:#0D1744;padding:170px 48px 80px">
-  <div style="max-width:1280px;margin:0 auto">
-    <div data-reveal class="kicker">تواصل معنا</div>
-    <h1 data-reveal style="margin:0 0 16px;color:#fff;font-size:clamp(40px,4.5vw,64px);font-weight:900">اطلب عرض سعر خلال دقيقة</h1>
-    <p data-reveal style="margin:0;color:rgba(255,255,255,.75);font-size:19px;line-height:1.8;max-width:600px">نموذج قصير يصل مباشرة لفريق المبيعات — والرد في نفس اليوم.</p>
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.contact"), nil ] ],
+      label: t("contact.hero.label"), h1: t("contact.hero.h1"), desc: t("contact.hero.desc"),
+      primary: [ t("contact.hero.primary"), "#form" ], secondary: :whatsapp %>
+
+<%# 02 — Departments %>
+<section id="departments" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("contact.departments.label"), h2: t("contact.departments.h2"), center: true %>
+    <div class="grid-4">
+      <% @departments.each do |d| %>
+      <a href="#form" data-dept="<%= d[:key] %>" data-reveal class="feature-card card-hover dept-card<%= ' is-active' if @dept == d[:key] %>">
+        <h3><%= d[:name] %></h3>
+        <p><%= d[:desc] %></p>
+        <span class="card-link"><%= t("contact.form.label") %> ←</span>
+      </a>
+      <% end %>
+    </div>
   </div>
 </section>
 
-<section style="padding:90px 48px;background:#F4F5F7">
-  <div class="grid-2" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start">
-    <form data-reveal data-wa-form="طلب عرض سعر من الموقع" style="background:#fff;border-radius:22px;padding:40px;box-shadow:0 10px 40px rgba(25,44,123,.1);display:grid;gap:16px">
-      <input placeholder="الاسم" class="field">
-      <input placeholder="رقم الجوال" class="field" inputmode="tel">
-      <select class="field">
-        <option>نوع الاهتمام</option><option>منتج</option><option>شراكة توزيع</option><option>مشروع</option>
-      </select>
-      <textarea placeholder="رسالتك (اختياري)" rows="4" class="field" style="resize:vertical"></textarea>
-      <button type="submit" class="form-btn">إرسال الطلب</button>
-    </form>
-    <div style="display:grid;gap:18px">
-      <a data-reveal data-wa href="#" style="display:flex;align-items:center;gap:18px;background:#25D366;border-radius:20px;padding:26px 30px;color:#fff;transition:transform .3s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
-        <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" aria-hidden="true" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></div>
+<%# 03 — Contact form %>
+<section id="form" class="section-pad bg-white">
+  <div class="wrap contact-grid">
+    <div data-reveal>
+      <div class="kicker-gray"><%= t("contact.form.label") %></div>
+      <h2 style="margin:0 0 16px;color:#192C7B;font-size:40px;font-weight:900;line-height:1.25"><%= t("contact.form.h2") %></h2>
+      <p style="margin:0 0 28px;color:#686B70;font-size:17px;line-height:1.85"><%= t("contact.form.desc") %></p>
+      <ul class="checklist" style="margin-bottom:28px">
+        <% @departments.each do |d| %><li style="background:#F4F5F7"><span><b style="color:#192C7B"><%= d[:name] %></b> — <%= d[:desc] %></span></li><% end %>
+      </ul>
+      <p style="margin:0 0 14px;color:#9AA0A8;font-size:13.5px"><%= t("common.required_hint") %></p>
+      <a data-wa href="#" class="btn-wa"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp_direct") %></a>
+    </div>
+
+    <form data-reveal data-lead-form data-kind="contact" data-source="contact-page" data-wa-title="<%= t('contact.form.cta') %>" class="form-card" novalidate="false">
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input type="hidden" name="department" data-label="<%= t("nav.departments") %>" value="<%= @dept %>">
+      <div>
+        <label class="field-label" for="lead_name"><%= t("contact.form.name") %> *</label>
+        <input id="lead_name" name="lead[name]" class="field" placeholder="<%= t("contact.form.name_ph") %>" data-label="<%= t("contact.form.name") %>" required autocomplete="name">
+      </div>
+      <div class="grid-2" style="gap:14px">
         <div>
-          <div style="font-size:18px;font-weight:800">واتساب فوري</div>
-          <div dir="ltr" style="font-size:15px;opacity:.9;unicode-bidi:isolate;text-align:end" data-wa-display></div>
+          <label class="field-label" for="lead_phone"><%= t("contact.form.phone") %> *</label>
+          <input id="lead_phone" name="lead[phone]" class="field" placeholder="<%= t("contact.form.phone_ph") %>" data-label="<%= t("contact.form.phone") %>" inputmode="tel" autocomplete="tel" required>
         </div>
-      </a>
-      <div data-reveal style="background:#fff;border-radius:20px;padding:26px 30px">
-        <div style="color:#192C7B;font-size:17px;font-weight:800;margin-bottom:6px">عنوان المصنع</div>
-        <div style="color:#686B70;font-size:15px;line-height:1.8">المنطقة الصناعية، الرياض، المملكة العربية السعودية</div>
+        <div>
+          <label class="field-label" for="lead_email"><%= t("contact.form.email") %></label>
+          <input id="lead_email" name="lead[email]" type="email" class="field" placeholder="<%= t("contact.form.email_ph") %>" data-label="<%= t("contact.form.email") %>" autocomplete="email">
+        </div>
       </div>
-      <div data-reveal style="background:#fff;border-radius:20px;padding:26px 30px">
-        <div style="color:#192C7B;font-size:17px;font-weight:800;margin-bottom:6px">ساعات العمل</div>
-        <div style="color:#686B70;font-size:15px;line-height:1.8">السبت – الخميس، ٨ صباحًا – ٥ مساءً</div>
+      <div class="grid-2" style="gap:14px">
+        <div>
+          <label class="field-label" for="lead_company"><%= t("contact.form.company") %></label>
+          <input id="lead_company" name="company" class="field" placeholder="<%= t("contact.form.company_ph") %>" data-label="<%= t("contact.form.company") %>" autocomplete="organization">
+        </div>
+        <div>
+          <label class="field-label" for="lead_interest"><%= t("contact.form.type") %> *</label>
+          <select id="lead_interest" name="lead[interest]" class="field" data-label="<%= t("contact.form.type") %>" required>
+            <option value=""><%= t("contact.form.type") %></option>
+            <% @inquiry_types.each do |type| %><option value="<%= type %>"<%= ' selected' if type == selected_interest %>><%= type %></option><% end %>
+          </select>
+        </div>
       </div>
-      <div data-reveal style="height:230px;border-radius:20px;overflow:hidden;position:relative">
-        <div class="ph-slot">خريطة موقع المصنع</div>
-        <div style="position:absolute;bottom:16px;inset-inline-start:18px;background:rgba(13,23,68,.85);color:#fff;font-size:13px;font-weight:700;border-radius:999px;padding:8px 16px;pointer-events:none">📍 موقع المصنع على الخريطة</div>
+      <div>
+        <label class="field-label" for="lead_message"><%= t("contact.form.message") %></label>
+        <textarea id="lead_message" name="lead[message]" class="field" rows="5" placeholder="<%= t("contact.form.message_ph") %>" data-label="<%= t("contact.form.message") %>"></textarea>
+      </div>
+      <label class="upload-box">
+        <%= t("contact.form.attachment") %>
+        <input type="file" name="file">
+      </label>
+      <button type="submit" class="form-btn"><%= t("contact.form.cta") %></button>
+      <div class="form-msg" data-form-msg></div>
+      <div class="form-success">
+        <h3><%= t("common.sent_title") %></h3>
+        <p><%= t("common.sent_body") %></p>
+        <a data-wa-prefill href="#" class="btn-wa" target="_blank" rel="noopener"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%# 04 — Location %>
+<section id="location" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("contact.location.label"), h2: t("contact.location.h2") %>
+    <div class="loc-grid">
+      <div data-reveal class="map-box">
+        <% if SiteData::MAP_EMBED.present? %>
+          <iframe src="<%= SiteData::MAP_EMBED %>" title="<%= t("contact.location.h2") %>" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <% else %>
+          <div class="ph-slot"><%= t("contact.location.map_pending") %></div>
+        <% end %>
+      </div>
+      <div data-reveal class="feature-card" style="padding:14px 30px 30px">
+        <div class="info-row">
+          <span class="info-label"><%= t("contact.location.address") %></span>
+          <span class="info-value"><%= SiteData::ADDRESS.presence || raw("<span class=\"pending\">#{ERB::Util.h(t("contact.location.address_pending"))}</span>") %></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><%= t("contact.location.hours") %></span>
+          <span class="info-value"><%= SiteData::HOURS.presence || raw("<span class=\"pending\">#{ERB::Util.h(t("contact.location.hours_pending"))}</span>") %></span>
+        </div>
+        <div style="margin-top:auto;padding-top:22px">
+          <% if SiteData::ADDRESS.present? %>
+            <a href="https://www.google.com/maps/search/?api=1&query=<%= ERB::Util.url_encode(SiteData::ADDRESS) %>" target="_blank" rel="noopener" class="btn-navy"><%= t("contact.location.cta") %></a>
+          <% else %>
+            <span class="btn-disabled" aria-disabled="true"><%= t("contact.location.cta") %></span>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<%# 05 — WhatsApp %>
+<section id="whatsapp" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(37,211,102,.12),transparent 70%);pointer-events:none"></div>
+  <div class="wrap" style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap">
+    <div data-reveal style="max-width:640px">
+      <div class="kicker"><%= t("contact.whatsapp.label") %></div>
+      <h2 style="margin:0 0 14px;color:#fff;font-size:40px;font-weight:900;line-height:1.25"><%= t("contact.whatsapp.h2") %></h2>
+      <p style="margin:0;color:rgba(255,255,255,.75);font-size:17px;line-height:1.8"><%= t("contact.whatsapp.desc") %></p>
+      <div class="wa-info">
+        <div><b><%= t("contact.whatsapp.phone") %></b><% if SiteData::PHONE.present? %><span dir="ltr" style="unicode-bidi:isolate"><%= SiteData::PHONE %></span><% else %><span class="pending"><%= t("contact.whatsapp.phone_pending") %></span><% end %></div>
+        <div><b><%= t("contact.whatsapp.email") %></b><% if SiteData::EMAIL.present? %><a href="mailto:<%= SiteData::EMAIL %>" style="color:#B9C6F2"><%= SiteData::EMAIL %></a><% else %><span class="pending"><%= t("contact.whatsapp.email_pending") %></span><% end %></div>
+        <div><b><%= t("footer.whatsapp") %></b><span dir="ltr" style="unicode-bidi:isolate" data-wa-display></span></div>
+      </div>
+    </div>
+    <a data-wa href="#" data-reveal class="btn-wa" style="font-size:18px;padding:18px 36px"><%= render "shared/wa_icon", size: 22 %> <%= t("common.whatsapp") %></a>
+  </div>
+</section>
+
+<%# 06 — Quick links %>
+<section id="quick" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("contact.quick.label"), h2: t("contact.quick.h2"), center: true %>
+    <div class="grid-4">
+      <% t("contact.quick.items").each do |title, desc, cta, href| %>
+      <a href="<%= href %>" data-reveal class="feature-card soft card-hover">
+        <h3><%= title %></h3>
+        <p style="margin-bottom:18px"><%= desc %></p>
+        <span class="card-link"><%= cta %> ←</span>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<% content_for :page_script do %>
+<script>
+// Department cards: preselect the inquiry type and scroll to the form without a reload.
+(function () {
+  var map = <%= raw dept_interest.to_json %>;
+  var sel = document.getElementById('lead_interest');
+  var hidden = document.querySelector('form[data-lead-form] input[name=department]');
+  var cards = document.querySelectorAll('[data-dept]');
+  cards.forEach(function (a) {
+    a.addEventListener('click', function () {
+      var key = a.getAttribute('data-dept');
+      if (sel && map[key]) sel.value = map[key];
+      if (hidden) hidden.value = key;
+      cards.forEach(function (x) { x.classList.toggle('is-active', x === a); });
+    });
+  });
+})();
+</script>
+<% end %>

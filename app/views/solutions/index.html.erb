@@ -1,0 +1,120 @@
+<% content_for :title, t("solutions.title") %>
+<% content_for :description, t("solutions.description") %>
+<% content_for :nav_active, "b2b" %>
+
+<style>
+.grid-32{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
+.grid-32>*{grid-column:span 2}
+.grid-32>*:nth-child(n+4){grid-column:span 3}
+@media(max-width:960px){.grid-32{grid-template-columns:1fr}.grid-32>*{grid-column:auto}}
+</style>
+
+<%# 01 — Hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.custom_solutions"), nil ] ],
+      label: t("solutions.hero.label"), h1: t("solutions.hero.h1"), desc: t("solutions.hero.desc"),
+      image: "/assets/cat-custom.jpg",
+      primary: [ t("solutions.hero.primary"), rfq_path ],
+      secondary: [ t("solutions.hero.secondary"), "#{rfq_path}#form" ] %>
+
+<%# 02 — Capabilities (what can be customised) %>
+<section id="capabilities" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("solutions.capabilities.label"), h2: t("solutions.capabilities.h2"), desc: t("solutions.capabilities.desc"), center: true %>
+    <div class="grid-5">
+      <% @features.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="feature-card soft card-hover">
+        <div class="num-badge"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 03 — How it works %>
+<section id="process" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("solutions.process.label"), h2: t("solutions.process.h2") %>
+    <div class="steps">
+      <% @steps.each_with_index do |(title, desc), i| %>
+      <div data-reveal class="step card-hover">
+        <div class="step-num"><%= num(i + 1) %></div>
+        <h3><%= title %></h3>
+        <p><%= desc %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 04 — Examples: the five named solutions %>
+<section id="examples" class="section-pad bg-dark" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 20%,rgba(185,198,242,.14),transparent 70%)"></div>
+  <div class="wrap" style="position:relative">
+    <%= render "shared/section_head", dark: true, label: t("solutions.examples.label"), h2: t("solutions.examples.h2"), desc: t("solutions.examples.desc") %>
+    <div class="grid-32">
+      <% @solutions.each do |s| %>
+      <a href="<%= solution_path(s[:slug]) %>" data-reveal class="cat-card dark card-hover">
+        <div class="cat-media"><img src="<%= s[:image] %>" alt="<%= s[:name] %>" loading="lazy"><span class="tag tag-custom" style="position:absolute;top:14px;inset-inline-start:14px"><%= t("common.custom") %></span></div>
+        <div class="cat-body">
+          <div class="product-cat" dir="ltr" style="text-align:end;color:#B9C6F2"><%= s[:en] %></div>
+          <h3><%= s[:name] %></h3>
+          <p><%= SiteData.category(s[:category])[:b2b] %></p>
+          <span class="card-link"><%= t("common.explore_solutions") %> ←</span>
+        </div>
+      </a>
+      <% end %>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:44px"><a href="<%= rfq_path %>" class="btn-white"><%= t("solutions.examples.cta") %></a></div>
+  </div>
+</section>
+
+<%# 05 — Your drawing or ours %>
+<section id="drawing" class="section-pad bg-white">
+  <div class="wrap">
+    <div data-reveal class="kicker-gray" style="text-align:center"><%= t("solutions.drawing.label") %></div>
+    <div class="grid-2" style="margin-top:28px">
+      <div data-reveal class="pillar" style="display:flex;gap:22px;align-items:start">
+        <div class="num-badge" style="margin:0"><%= num(1) %></div>
+        <h2 style="margin:0;color:#192C7B;font-size:30px;font-weight:900;line-height:1.35"><%= t("solutions.drawing.h2") %></h2>
+      </div>
+      <div data-reveal class="pillar" style="display:flex;gap:22px;align-items:start">
+        <div class="num-badge" style="margin:0"><%= num(2) %></div>
+        <h2 style="margin:0;color:#192C7B;font-size:30px;font-weight:900;line-height:1.35"><%= t("solutions.drawing.h2b") %></h2>
+      </div>
+    </div>
+    <div data-reveal style="max-width:760px;margin:40px auto 0;text-align:center">
+      <p style="margin:0 0 28px;color:#686B70;font-size:17.5px;line-height:1.8"><%= t("solutions.drawing.desc") %></p>
+      <a href="<%= rfq_path %>" class="btn-navy"><%= t("solutions.drawing.cta") %></a>
+    </div>
+  </div>
+</section>
+
+<%# 06 — Sectors %>
+<section id="sectors" class="section-pad bg-navy" style="position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(185,198,242,.16),transparent 70%)"></div>
+  <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
+    <div data-reveal style="height:380px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)"><img src="/assets/proj-infra.jpg" alt="" class="cover" loading="lazy"></div>
+    <div data-reveal>
+      <div class="kicker"><%= t("solutions.sectors.label") %></div>
+      <h2 style="margin:0 0 20px;color:#fff;font-size:42px;font-weight:900;line-height:1.25"><%= t("solutions.sectors.h2") %></h2>
+      <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= t("solutions.sectors.desc") %></p>
+      <a href="<%= contact_path %>" class="btn-white"><%= t("solutions.sectors.cta") %></a>
+    </div>
+  </div>
+</section>
+
+<%# 07 — Projects %>
+<section id="projects" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("solutions.projects.label"), h2: t("solutions.projects.h2"), desc: t("solutions.projects.desc"), link: [ t("solutions.projects.cta"), projects_path ] %>
+    <div class="grid-32">
+      <% @projects.each do |p| %><%= render "shared/project_card", project: p %><% end %>
+    </div>
+  </div>
+</section>
+
+<%# 08 — Final CTA %>
+<%= render "shared/cta_band", bg: "#F4F5F7", label: t("solutions.final.label"), h2: t("solutions.final.h2"), desc: t("solutions.final.desc"), primary: [ t("solutions.final.primary"), rfq_path ], secondary: [ t("solutions.final.secondary"), "#{rfq_path}#form" ] %>

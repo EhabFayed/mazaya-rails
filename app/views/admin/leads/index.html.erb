@@ -1,0 +1,55 @@
+<% content_for :title, "الطلبات" %>
+<div class="page-head">
+  <div>
+    <h1>الطلبات الواردة</h1>
+    <p>إجمالي <%= @status_counts.values.sum %> طلب · كل نموذج في الموقع يصل هنا مع نوعه ومصدره.</p>
+  </div>
+  <div class="head-actions">
+    <a href="<%= admin_leads_path(format: :csv, kind: @kind, status: @status) %>" class="btn-outline sm">تصدير CSV</a>
+  </div>
+</div>
+
+<%= form_with url: admin_leads_path, method: :get, local: true, class: "toolbar" do |f| %>
+  <%= f.hidden_field :kind, value: @kind if @kind %>
+  <%= f.hidden_field :status, value: @status if @status %>
+  <%= f.search_field :q, value: @q, class: "field sm", placeholder: "ابحث بالاسم / الجوال / البريد / الرسالة…" %>
+  <%= f.submit "بحث", class: "btn-navy sm", name: nil %>
+  <% if @q.present? %><a href="<%= admin_leads_path(kind: @kind, status: @status) %>" class="btn-outline sm">مسح البحث</a><% end %>
+<% end %>
+
+<div class="filters chips">
+  <a href="<%= admin_leads_path(kind: @kind, q: @q.presence) %>" class="filter<%= ' active' if @status.nil? %>">كل الحالات (<%= @status_counts.values.sum %>)</a>
+  <% Lead::STATUSES.each do |s| %>
+    <a href="<%= admin_leads_path(kind: @kind, status: s, q: @q.presence) %>" class="filter<%= ' active' if @status == s %>"><%= AdminHelper::LEAD_STATUS[s] %> (<%= @status_counts[s] || 0 %>)</a>
+  <% end %>
+</div>
+<div class="filters chips">
+  <a href="<%= admin_leads_path(status: @status, q: @q.presence) %>" class="filter<%= ' active' if @kind.nil? %>">كل الأنواع (<%= @counts.values.sum %>)</a>
+  <% Lead::KINDS.each do |k| %>
+    <a href="<%= admin_leads_path(kind: k, status: @status, q: @q.presence) %>" class="filter<%= ' active' if @kind == k %>"><%= LeadMailer::KIND_LABELS[k] %> (<%= @counts[k] || 0 %>)</a>
+  <% end %>
+</div>
+
+<% if @leads.empty? %>
+  <div class="card" style="text-align:center"><p class="muted"><%= @q.present? || @kind || @status ? "لا توجد طلبات مطابقة لهذا الفلتر." : "لا توجد طلبات بعد." %></p></div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th>#</th><th>الوقت</th><th>النوع</th><th>الاسم</th><th>التواصل</th><th>الاهتمام / الملف</th><th>الحالة</th><th>المسؤول</th><th>مرفقات</th></tr></thead>
+  <tbody>
+    <% @leads.each do |l| %>
+    <tr>
+      <td><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td>
+      <td dir="ltr" style="white-space:nowrap;text-align:end"><%= l.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+      <td><span class="kind kind-<%= l.kind %>"><%= LeadMailer::KIND_LABELS.fetch(l.kind, l.kind) %></span></td>
+      <td><a href="<%= admin_lead_path(l) %>"><%= l.name %></a><% if l.payload["company"].present? %><div class="hint"><%= l.payload["company"] %></div><% end %></td>
+      <td dir="ltr" style="text-align:end"><%= l.phone %><% if l.email.present? %><div class="hint"><%= l.email %></div><% end %></td>
+      <td><%= l.interest.presence || l.download_key.presence || l.payload["product"].presence || l.payload["project_type"].presence || "—" %></td>
+      <td><span class="status status-<%= l.status %>"><%= AdminHelper::LEAD_STATUS.fetch(l.status, l.status) %></span></td>
+      <td><%= l.assigned_to&.name || "—" %></td>
+      <td><%= l.files.attached? ? l.files.size : "—" %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= pagination_links(@page, @pages) %>
+<% end %>

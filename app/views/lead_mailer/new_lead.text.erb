@@ -1,0 +1,13 @@
+ألومنيوم مزايا — <%= @kind %>
+
+الاسم: <%= @lead.name %>
+الجوال: <%= @lead.phone %>
+البريد: <%= @lead.email %>
+نوع الجهة: <%= @lead.org_type %>
+الاهتمام: <%= @lead.interest %>
+الرسالة: <%= @lead.message %>
+الملف المطلوب: <%= @lead.download_key %>
+المصدر: <%= @lead.source %>
+<% @lead.payload.each do |k, v| %><%= k %>: <%= v %>
+<% end %>
+<%= admin_lead_url(@lead) %>

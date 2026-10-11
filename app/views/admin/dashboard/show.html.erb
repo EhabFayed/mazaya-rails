@@ -1,0 +1,47 @@
+<% content_for :title, "الرئيسية" %>
+<div class="page-head">
+  <div><h1>أهلًا <%= current_user.name %></h1><p>نظرة سريعة على الطلبات والمحتوى واللي لسه ناقص قبل الإطلاق.</p></div>
+  <div class="head-actions"><a href="<%= admin_leads_path(status: 'new') %>" class="btn-navy sm">الطلبات الجديدة (<%= @lead_counts["new"] || 0 %>)</a></div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="kpi-num"><%= @leads_today %></div><div class="kpi-label">طلبات اليوم</div></div>
+  <div class="kpi"><div class="kpi-num"><%= @leads_week %></div><div class="kpi-label">آخر ٧ أيام</div></div>
+  <div class="kpi"><div class="kpi-num"><%= @lead_counts["new"] || 0 %></div><div class="kpi-label">بانتظار التواصل</div></div>
+  <div class="kpi"><div class="kpi-num"><%= @lead_counts["won"] || 0 %></div><div class="kpi-label">تم إغلاقها (won)</div></div>
+</div>
+
+<div class="grid-2" style="gap:22px;align-items:start;margin-top:22px">
+  <div class="card">
+    <div class="card-head"><h2>آخر الطلبات</h2><a href="<%= admin_leads_path %>">كل الطلبات ←</a></div>
+    <% if @recent_leads.empty? %><p class="muted">لا توجد طلبات بعد.</p><% else %>
+    <table class="adm-table">
+      <thead><tr><th>#</th><th>النوع</th><th>الاسم</th><th>الحالة</th><th>الوقت</th></tr></thead>
+      <tbody>
+        <% @recent_leads.each do |l| %>
+        <tr><td><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td><td><span class="kind kind-<%= l.kind %>"><%= LeadMailer::KIND_LABELS[l.kind] %></span></td><td><a href="<%= admin_lead_path(l) %>"><%= l.name %></a></td><td><span class="status status-<%= l.status %>"><%= t("admin.lead_status.#{l.status}", default: l.status) %></span></td><td dir="ltr" style="text-align:end"><%= l.created_at.strftime("%m-%d %H:%M") %></td></tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% end %>
+    <div class="chips" style="margin-top:14px"><% @leads_by_kind.each do |k, n| %><span class="chip"><%= LeadMailer::KIND_LABELS[k] %>: <%= n %> (٣٠ يوم)</span><% end %></div>
+  </div>
+
+  <div style="display:grid;gap:22px">
+    <div class="card">
+      <div class="card-head"><h2>ناقص قبل الإطلاق</h2></div>
+      <% if @pending.empty? %><p class="muted">كل البيانات مكتملة.</p><% else %>
+      <ul class="todo"><% @pending.each do |label, href| %><li><a href="<%= href %>"><%= label %></a></li><% end %></ul>
+      <% end %>
+    </div>
+    <% if can?(:content) %>
+    <div class="card">
+      <div class="card-head"><h2>المحتوى</h2></div>
+      <table class="adm-table">
+        <thead><tr><th>القسم</th><th>الإجمالي</th><th>منشور / بملف</th><th></th></tr></thead>
+        <tbody><% @content.each do |label, (total, pub, href)| %><tr><td><a href="<%= href %>"><%= label %></a></td><td><%= total %></td><td><%= pub %></td><td><a href="<%= href %>">إدارة ←</a></td></tr><% end %></tbody>
+      </table>
+    </div>
+    <% end %>
+  </div>
+</div>

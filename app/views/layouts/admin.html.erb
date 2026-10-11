@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title><%= content_for(:title) || "لوحة التحكم" %> — مزايا</title>
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/admin.css">
+<%= csrf_meta_tags %>
+</head>
+<body class="adm">
+<aside class="adm-side">
+  <a href="<%= admin_root_path %>" class="adm-brand"><img src="/assets/logo-white.png" alt="مزايا"><span>لوحة التحكم</span></a>
+  <% nav = [
+       [ "dashboard", "الرئيسية", admin_root_path, nil ],
+       [ "leads", "الطلبات", admin_leads_path, :leads, Lead.where(status: "new").count ],
+       [ "products", "المنتجات", admin_products_path, :content ],
+       [ "categories", "الفئات", admin_categories_path, :content ],
+       [ "solutions", "الحلول المخصصة", admin_solutions_path, :content ],
+       [ "projects", "المشاريع", admin_projects_path, :content ],
+       [ "posts", "الأخبار والمقالات", admin_posts_path, :content ],
+       [ "safety_articles", "أدلة السلامة", admin_safety_articles_path, :content ],
+       [ "documents", "الوثائق والكتالوجات", admin_documents_path, :content ],
+       [ "content_lists", "القوائم والبلوكات", admin_content_lists_path, :content ],
+       [ "clients", "شعارات العملاء", admin_clients_path, :content ],
+       [ "departments", "الأقسام", admin_departments_path, :content ],
+       [ "translations", "نصوص الصفحات", admin_translations_path, :content ],
+       [ "settings", "الإعدادات", admin_settings_path, :settings ],
+       [ "users", "المستخدمون", admin_users_path, :users ]
+     ] %>
+  <nav class="adm-nav">
+    <% nav.each do |key, label, href, area, badge| %>
+      <% next if area && !can?(area) %>
+      <a href="<%= href %>" class="<%= 'active' if admin_section == key %>"><%= label %><% if badge.to_i.positive? %><span class="badge"><%= badge %></span><% end %></a>
+    <% end %>
+  </nav>
+  <div class="adm-user">
+    <div><strong><%= current_user.name %></strong><br><span><%= { "admin" => "مدير", "editor" => "محرر", "sales" => "مبيعات" }[current_user.role] %></span></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a href="<%= edit_admin_user_path(current_user) %>">حسابي</a><a href="<%= root_path %>" target="_blank" rel="noopener">الموقع ↗</a><%= button_to "خروج", admin_logout_path, method: :delete, class: "linkbtn" %></div>
+  </div>
+</aside>
+<main class="adm-main">
+  <% if notice %><div class="flash ok"><%= notice %></div><% end %>
+  <% if alert %><div class="flash err"><%= alert %></div><% end %>
+  <%= yield %>
+</main>
+<script src="/admin.js"></script>
+</body>
+</html>

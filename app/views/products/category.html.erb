@@ -1,0 +1,110 @@
+<% content_for :title, "#{@category[:name]} — #{t('brand')}" %>
+<% content_for :description, @category[:desc] %>
+<% content_for :nav_active, "b2c" %>
+<style>
+  /* Category page (prototype v2 flow) */
+  .cat-nav{position:sticky;top:77px;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid #E6E8EC;padding:16px 48px}
+  .cat-nav .tabs{justify-content:center}
+  .cat-card.active{box-shadow:0 0 0 2.5px #192C7B,0 18px 44px rgba(25,44,123,.14)}
+  .cat-card.active .card-link::before{content:'✓';display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:#192C7B;color:#fff;font-size:12px}
+  .results-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;color:#686B70;font-size:14.5px}
+  .results-head [data-product-count]{color:#192C7B;font-weight:800}
+  @media (max-width:960px){.cat-nav{top:66px;padding:12px 20px}}
+</style>
+
+<%# 01 — Fixed hero %>
+<%= render "shared/page_hero",
+      crumbs: [ [ t("nav.b2c"), products_path ], [ @category[:name], nil ] ],
+      label: t("b2c.hero.label"), h1: @category[:name], desc: @category[:desc],
+      primary: [ t("category.products_label"), "#products" ], secondary: :whatsapp,
+      image: @category[:image] %>
+
+<%# 02 — Category navigation %>
+<nav class="cat-nav" aria-label="<%= t("b2c.categories.label") %>">
+  <div class="wrap tabs">
+    <% @categories.each do |c| %>
+    <a href="<%= product_category_path(c[:slug]) %>" class="tab<%= ' active' if c[:slug] == @category[:slug] %>"<%= ' aria-current="page"'.html_safe if c[:slug] == @category[:slug] %>><%= c[:name] %></a>
+    <% end %>
+  </div>
+</nav>
+
+<%# 03 — Selected category %>
+<section class="section-pad-sm bg-white">
+  <div class="wrap" data-reveal style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+    <div style="width:112px;height:112px;border-radius:20px;overflow:hidden;flex-shrink:0;box-shadow:0 12px 30px rgba(25,44,123,.14)"><img src="<%= @category[:image] %>" alt="" class="cover"></div>
+    <div style="flex:1;min-width:260px">
+      <div class="product-cat" dir="ltr" style="text-align:end;margin-bottom:6px"><%= @category[:en] %></div>
+      <h2 style="margin:0 0 8px;color:#192C7B;font-size:28px;font-weight:900"><%= @category[:name] %></h2>
+      <p style="margin:0;color:#686B70;font-size:15.5px;line-height:1.8;max-width:720px"><%= @category[:b2c] %></p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span class="chip" style="background:#192C7B;color:#fff"><%= (rtl? ? @products.size.to_s.tr('0-9', '٠-٩') : @products.size) %> <%= t("category.products_label") %></span>
+      <% @category[:subcategories].each do |s| %><a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>" class="chip"><%= s[:name] %></a><% end %>
+    </div>
+  </div>
+</section>
+
+<%# 04 — Sub-categories %>
+<section id="subcategories" class="section-pad bg-soft" style="padding-top:70px">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("category.subcategories_label"), h2: t("category.subcategories_h2"), desc: t("category.subcategories_desc") %>
+    <div class="grid-3">
+      <% @category[:subcategories].each do |s| %>
+      <a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>" data-sub-filter="<%= s[:slug] %>" data-reveal class="cat-card card-hover<%= ' active' if @sub == s[:slug] %>">
+        <div class="cat-media"><div class="ph-slot"><%= s[:name] %></div></div>
+        <div class="cat-body">
+          <h3><%= s[:name] %></h3>
+          <span class="card-link"><%= t("category.view_sub", name: s[:name]) %> ←</span>
+        </div>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# 05 — Filters + product grid %>
+<section id="products" class="section-pad bg-white">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("category.products_label"), h2: t("category.products_h2"), desc: t("category.products_desc") %>
+    <div data-reveal class="filters">
+      <button type="button" class="filter<%= ' active' if @kind.blank? %>" data-kind-filter=""><%= t("common.all") %></button>
+      <button type="button" class="filter<%= ' active' if @kind == 'ready' %>" data-kind-filter="ready"><%= t("common.ready") %></button>
+      <button type="button" class="filter<%= ' active' if @kind == 'custom' %>" data-kind-filter="custom"><%= t("common.custom") %></button>
+      <% @category[:specs].each do |label| %>
+      <span class="filter soon" title="<%= t("common.soon") %>"><%= label %> ▾</span>
+      <% end %>
+    </div>
+    <div class="results-head">
+      <div data-product-count data-template="<%= t("category.count", count: "%{count}") %>"><%= t("category.count", count: (rtl? ? (rtl? ? @products.size.to_s.tr('0-9', '٠-٩') : @products.size) : @products.size)) %></div>
+      <span><%= t("category.results_hint") %></span>
+    </div>
+    <div class="grid-3" data-product-grid>
+      <% @products.each do |p| %><%= render "shared/product_card", product: p %><% end %>
+    </div>
+    <div data-product-empty hidden class="feature-card soft" style="text-align:center;align-items:center;padding:48px 28px;margin-top:8px">
+      <h3><%= t("category.empty_title") %></h3>
+      <p><%= t("category.empty_desc") %></p>
+    </div>
+  </div>
+</section>
+
+<%# 06 — Category catalog %>
+<section id="catalog" class="section-pad bg-soft" style="padding-bottom:40px">
+  <div data-reveal class="cta-band" style="background:#0D1744">
+    <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap">
+      <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="catalog-cover" style="width:150px;flex-shrink:0" aria-label="<%= @catalog[:title] %>">
+        <img src="/assets/logo-white.png" alt="">
+        <span><%= @catalog[:title] %></span>
+      </a>
+      <div style="max-width:560px">
+        <div class="kicker" style="margin-bottom:10px"><%= t("category.catalog_label") %></div>
+        <h2 style="margin:0 0 10px;color:#fff;font-size:30px;font-weight:900"><%= t("category.catalog_h2", name: @category[:name]) %></h2>
+        <p style="margin:0;color:rgba(255,255,255,.75);font-size:16.5px;line-height:1.8"><%= t("category.catalog_desc", name: @category[:name]) %></p>
+      </div>
+    </div>
+    <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="btn-white"><%= t("category.catalog_cta") %></a>
+  </div>
+</section>
+
+<%# 07 — Help CTA %>
+<%= render "shared/cta_band", label: t("category.help_label"), h2: t("category.help_h2"), desc: t("category.help_desc"), primary: [ t("common.contact_us"), contact_path ], secondary: :whatsapp %>

@@ -1,0 +1,59 @@
+<% content_for :title, "نصوص الصفحات" %>
+<div class="page-head">
+  <div><h1>نصوص الصفحات</h1><p>عدّل أي نص ثابت في الموقع (عربي / إنجليزي). النص الفارغ أو المطابق للافتراضي يرجع للملف الأصلي تلقائيًا.</p></div>
+</div>
+
+<%= form_with url: admin_translations_path, method: :get, local: true, class: "toolbar" do |f| %>
+  <%= f.hidden_field :page, value: @page %>
+  <%= f.search_field :q, value: @q, class: "field sm", placeholder: "ابحث في المفاتيح أو النصوص (كل الصفحات)…" %>
+  <%= f.submit "بحث", class: "btn-navy sm", name: nil %>
+  <% if @q.present? %><a href="<%= admin_translations_path(page: @page) %>" class="btn-outline sm">مسح البحث</a><% end %>
+<% end %>
+
+<div class="filters chips">
+  <% @pages.each do |key, label| %>
+    <a href="<%= admin_translations_path(page: key) %>" class="filter<%= ' active' if key == @page && @q.blank? %>"><%= label %><% if (n = @override_counts[key]).to_i.positive? %> · <%= n %> مُعدَّل<% end %></a>
+  <% end %>
+</div>
+
+<% if @keys.empty? %>
+  <div class="card" style="text-align:center"><p class="muted">لا توجد نصوص مطابقة.</p></div>
+<% else %>
+<%= form_with url: admin_translation_path(@q.present? ? "search" : @page), method: :patch, local: true do |f| %>
+  <%= hidden_field_tag :q, @q if @q.present? %>
+  <div class="section">
+    <h2><%= @q.present? ? "نتائج البحث: #{@q}" : @pages[@page] %></h2>
+    <p class="sub"><%= @keys.size %> نص. الأسطر المعلَّمة «مُعدَّل» عليها تعديل يختلف عن ملف اللغة الأصلي.</p>
+    <div class="stack" style="gap:18px">
+      <% @keys.each do |key, default| %>
+        <% ov = @overrides[key] || {} %>
+        <div style="border-top:1px solid var(--line);padding-top:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+            <div class="tr-key"><%= key %><% if @q.present? %> <span style="color:#9AA0A8">(<%= @pages[TranslationCatalog.page_of(key)] %>)</span><% end %></div>
+            <% if ov.any? %>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#B3261E;font-weight:700"><%= check_box_tag "revert[#{key}]", "1", false %> إرجاع الافتراضي</label>
+            <% end %>
+          </div>
+          <% if TranslationCatalog.array?(key) %>
+            <div class="hint">قائمة — يُعدَّل من ملف اللغة.</div>
+          <% else %>
+            <div class="bi">
+              <% %w[ar en].each do |loc| %>
+                <div class="<%= loc %>">
+                  <div class="lang"><span><%= loc == "ar" ? "عربي" : "ENGLISH" %></span><% if ov.key?(loc) %><span style="color:#8A5A00">مُعدَّل</span><% end %></div>
+                  <%= text_area_tag "translations[#{key}][#{loc}]", ov.fetch(loc, default[loc]), class: "field sm", rows: [ 1, (ov.fetch(loc, default[loc]).to_s.length / 70.0).ceil ].max + 1 %>
+                  <% if ov.key?(loc) %><div class="tr-default">الافتراضي: <%= default[loc] %></div><% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="sticky-actions">
+    <%= f.submit "حفظ النصوص", class: "btn-navy sm", name: nil %>
+    <a href="<%= admin_translations_path(page: @page) %>" class="btn-outline sm">إلغاء</a>
+  </div>
+<% end %>
+<% end %>

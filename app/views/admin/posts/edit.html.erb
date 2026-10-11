@@ -1,0 +1,9 @@
+<% content_for :title, "تعديل: #{@post.title_ar}" %>
+<div class="page-head">
+  <div><h1><%= @post.title_ar %></h1><p dir="ltr" style="text-align:end">/news/<%= @post.slug %></p></div>
+  <div class="head-actions">
+    <a href="<%= news_post_path(slug: @post.slug) %>" target="_blank" rel="noopener" class="btn-outline sm">عرض في الموقع ↗</a>
+    <a href="<%= admin_posts_path %>" class="btn-outline sm">← كل المنشورات</a>
+  </div>
+</div>
+<%= render "form", post: @post %>

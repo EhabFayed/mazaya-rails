@@ -1,0 +1,43 @@
+<% content_for :title, "الأخبار والمقالات" %>
+<% type_labels = { "news" => "خبر", "article" => "مقال" } %>
+<div class="page-head">
+  <div><h1>الأخبار والمقالات</h1><p><%= Post.count %> منشور · الأخبار تظهر في صفحة الأخبار والرئيسية، المقالات في مكتبة المقالات.</p></div>
+  <div class="head-actions"><a href="<%= new_admin_post_path(type: 'news') %>" class="btn-navy sm">+ خبر جديد</a><a href="<%= new_admin_post_path(type: 'article') %>" class="btn-outline sm">+ مقال جديد</a></div>
+</div>
+
+<div class="filters">
+  <a href="<%= admin_posts_path(topic: @topic) %>" class="filter<%= ' active' if @type.nil? %>">الكل (<%= @counts.values.sum %>)</a>
+  <% Post::TYPES.each do |ty| %>
+    <a href="<%= admin_posts_path(type: ty, topic: @topic) %>" class="filter<%= ' active' if @type == ty %>"><%= type_labels[ty] %> (<%= @counts[ty] || 0 %>)</a>
+  <% end %>
+</div>
+<div class="toolbar">
+  <%= form_with url: admin_posts_path, method: :get, local: true, class: "toolbar", html: { style: "margin:0" } do |f| %>
+    <%= hidden_field_tag :type, @type if @type %>
+    <%= select_tag :topic, options_for_select([ [ "كل المواضيع", "" ] ] + Post::TOPICS.map { |k| [ SiteData::TOPICS[k].to_s, k ] }, @topic), class: "field sm", onchange: "this.form.submit()" %>
+  <% end %>
+</div>
+
+<% if @posts.empty? %>
+  <div class="card" style="text-align:center;color:#686B70">لا توجد منشورات مطابقة.</div>
+<% else %>
+<table class="adm-table">
+  <thead><tr><th></th><th>العنوان</th><th>النوع</th><th>الموضوع</th><th>التاريخ</th><th>مميّز</th><th>قالب</th><th>الحالة</th><th></th></tr></thead>
+  <tbody>
+    <% @posts.each do |p| %>
+    <tr>
+      <td><%= thumb(p.image, p.title_ar) %></td>
+      <td><a href="<%= edit_admin_post_path(p) %>"><%= p.title_ar %></a><% if p.category_ar.present? %><div style="color:#686B70;font-size:12.5px"><%= p.category_ar %></div><% end %></td>
+      <td><span class="kind"><%= type_labels[p.post_type] %></span></td>
+      <td><%= SiteData::TOPICS[p.topic].to_s.presence || p.topic %></td>
+      <td dir="ltr" style="text-align:end;white-space:nowrap"><%= p.published_on&.strftime("%Y-%m-%d") || "—" %></td>
+      <td><%= p.featured ? "★" : "—" %></td>
+      <td><%= p.template ? '<span class="status status-new">قالب</span>'.html_safe : "—" %></td>
+      <td><%= yes_no(p.published) %></td>
+      <td><a href="<%= edit_admin_post_path(p) %>">تعديل</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= pagination_links(@page, @pages) %>
+<% end %>

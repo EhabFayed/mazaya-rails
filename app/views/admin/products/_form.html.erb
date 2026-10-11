@@ -1,0 +1,104 @@
+<% ar_digits = %w[١ ٢ ٣ ٤ ٥ ٦] %>
+<%= form_with model: [ :admin, @product ], local: true, id: "productForm" do |f| %>
+  <%= errors_for(@product) %>
+
+  <div class="section">
+    <h2>بيانات أساسية</h2>
+    <p class="sub">الاسم العربي إلزامي؛ الحقول الإنجليزية تُستخدم في النسخة الإنجليزية من الموقع.</p>
+    <div class="form-grid">
+      <div class="full"><%= bi_field f, :name, "الاسم", required: true %></div>
+      <div class="full"><%= bi_field f, :summary, "الوصف المختصر", type: :text_area, rows: 3 %></div>
+      <div><label class="field-label" for="product_code">الكود</label><%= f.text_field :code, class: "field sm", dir: "ltr", placeholder: "MML-000" %></div>
+      <div><label class="field-label" for="product_slug">الرابط (slug)</label><%= f.text_field :slug, class: "field sm", dir: "ltr", placeholder: "single-ladder", data: { slug_target: "" } %><div class="hint">يُولَّد تلقائيًا من الاسم الإنجليزي إن تُرك فارغًا. أحرف لاتينية صغيرة وأرقام وشرطات فقط.</div></div>
+      <div><label class="field-label" for="product_category_id">الفئة *</label><%= f.collection_select :category_id, @categories, :id, :name_ar, { include_blank: "— اختر الفئة —" }, class: "field sm", required: true %></div>
+      <div><label class="field-label" for="product_subcategory_id">الفئة الفرعية</label><%= f.select :subcategory_id, grouped_options_for_select(@subcategory_opts, @product.subcategory_id), { include_blank: "— بدون —" }, class: "field sm" %><div class="hint">يجب أن تنتمي للفئة المختارة أعلاه.</div></div>
+      <div>
+        <span class="field-label">النوع</span>
+        <div class="chips" style="margin-top:8px">
+          <% Admin::ProductsController::KIND_LABELS.each do |val, label| %>
+            <label class="chip" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px"><%= f.radio_button :kind, val %> <%= label %></label>
+          <% end %>
+        </div>
+      </div>
+      <div><label class="field-label" for="product_position">الترتيب</label><%= f.number_field :position, class: "field sm", dir: "ltr", step: 1 %></div>
+      <div class="full" style="display:flex;gap:26px;flex-wrap:wrap;font-size:14.5px;font-weight:700;color:#192C7B">
+        <label style="display:flex;align-items:center;gap:8px"><%= f.check_box :popular %> منتج مميز (يظهر في «الأكثر طلبًا»)</label>
+        <label style="display:flex;align-items:center;gap:8px"><%= f.check_box :published %> منشور على الموقع</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>الصور</h2>
+    <p class="sub">الصورة الأولى هي الصورة الرئيسية. أضف عنوانًا لكل صورة (مثل: واجهة، جانب، تفاصيل).</p>
+    <% if @product.images.attached? %>
+    <div class="images" style="margin-bottom:14px">
+      <% @product.images.each do |img| %>
+        <% labels = @product.image_labels[img.blob_id.to_s] || {} %>
+        <div class="img-card">
+          <% if img.representable? %><%= image_tag rails_representation_path(img.representation(resize_to_fill: [ 300, 220 ]), only_path: true), alt: "" %><% else %><div class="thumb ph" style="height:110px">—</div><% end %>
+          <div class="body">
+            <%= text_field_tag "product[image_labels][#{img.blob_id}][label_ar]", labels["label_ar"], class: "field sm", placeholder: "عنوان الصورة (عربي)" %>
+            <%= text_field_tag "product[image_labels][#{img.blob_id}][label_en]", labels["label_en"], class: "field sm", placeholder: "Label (EN)", dir: "ltr" %>
+            <%# submit button targets a standalone delete form rendered after the main form (nested forms are invalid HTML) %>
+            <%= button_tag "حذف الصورة", type: "submit", form: "purge-#{img.blob_id}", class: "btn-danger", style: "padding:7px 12px;font-size:13px", data: { confirm: "حذف هذه الصورة نهائيًا؟" } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <% end %>
+    <label class="field-label" for="product_images">إضافة صور</label>
+    <%= f.file_field :images, multiple: true, accept: "image/*", class: "field sm", data: { preview: "#imgPreview" } %>
+    <div id="imgPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+  </div>
+
+  <div class="section">
+    <h2>الملفات الفنية</h2>
+    <p class="sub">ملفات PDF تظهر في قسم «الوثائق الفنية» بصفحة المنتج.</p>
+    <div class="form-grid">
+      <div>
+        <label class="field-label" for="product_tds">نشرة المواصفات الفنية (TDS)</label>
+        <%= f.file_field :tds, accept: "application/pdf", class: "field sm" %>
+        <% if @product.tds.attached? %><div class="hint">الملف الحالي: <a href="<%= rails_blob_path(@product.tds, only_path: true, disposition: 'inline') %>" target="_blank" rel="noopener" dir="ltr"><%= @product.tds.filename %></a></div><% end %>
+      </div>
+      <div>
+        <label class="field-label" for="product_guide">دليل الاستخدام</label>
+        <%= f.file_field :guide, accept: "application/pdf", class: "field sm" %>
+        <% if @product.guide.attached? %><div class="hint">الملف الحالي: <a href="<%= rails_blob_path(@product.guide, only_path: true, disposition: 'inline') %>" target="_blank" rel="noopener" dir="ltr"><%= @product.guide.filename %></a></div><% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= rows_editor "product", :features, @product.features, [ [ "title_ar", "العنوان (عربي)", :text ], [ "title_en", "Title (EN)", :text ], [ "desc_ar", "الوصف", :textarea ], [ "desc_en", "Description", :textarea ] ], title: "أهم المميزات" %>
+  <%= rows_editor "product", :applications, @product.applications, [ [ "title_ar", "العنوان (عربي)", :text ], [ "title_en", "Title (EN)", :text ], [ "desc_ar", "الوصف", :textarea ], [ "desc_en", "Description", :textarea ] ], title: "مجالات الاستخدام" %>
+  <%= rows_editor "product", :specs, @product.specs, [ [ "label_ar", "المواصفة (عربي)", :text ], [ "label_en", "Spec (EN)", :text ], [ "value_ar", "القيمة (عربي)", :text ], [ "value_en", "Value (EN)", :text ] ], title: "المواصفات الفنية", hint: "إن تُركت فارغة تُعرض مواصفات الفئة كعناوين بانتظار القيم." %>
+  <%= rows_editor "product", :size_cols, @product.size_cols, [ [ "col_ar", "عنوان العمود (عربي)", :text ], [ "col_en", "Column (EN)", :text ] ], title: "أعمدة جدول المقاسات", hint: "مثال: الكود · المقاس · الحمولة. الافتراضي: الكود، المقاس، المواصفة الأساسية." %>
+  <%= rows_editor "product", :sizes, @product.sizes, (0..5).map { |i| [ "c#{i}", "خانة #{ar_digits[i]}", :text ] }, title: "المقاسات", hint: "كل صف مقاس واحد؛ الخانات تقابل أعمدة الجدول بالترتيب." %>
+  <%= rows_editor "product", :faq, @product.faq, [ [ "q_ar", "السؤال (عربي)", :text ], [ "q_en", "Question (EN)", :text ], [ "a_ar", "الإجابة (عربي)", :textarea ], [ "a_en", "Answer (EN)", :textarea ] ], title: "الأسئلة الشائعة" %>
+
+  <div class="section">
+    <h2>روابط</h2>
+    <div class="form-grid">
+      <div><label class="field-label" for="product_safety_slug">دليل السلامة المرتبط</label><%= f.select :safety_slug, options_from_collection_for_select(@safety_articles, :slug, :name_ar, @product.safety_slug), { include_blank: "— بدون —" }, class: "field sm" %></div>
+      <div><label class="field-label" for="product_related_slugs">منتجات مرتبطة</label><%= f.select :related_slugs, options_from_collection_for_select(@other_products, :slug, :name_ar, @product.related_slugs), {}, multiple: true, size: 6, class: "field sm" %><div class="hint">اضغط Ctrl/⌘ لاختيار أكثر من منتج.</div></div>
+    </div>
+  </div>
+
+  <div class="sticky-actions">
+    <%= f.submit "حفظ", class: "btn-navy sm", data: { disable_with: "جارٍ الحفظ…" } %>
+    <a href="<%= admin_products_path %>" class="btn-outline sm">إلغاء</a>
+    <% if @product.persisted? %>
+      <span style="flex:1"></span>
+      <%= button_tag "حذف المنتج", type: "submit", form: "deleteProduct", class: "btn-danger", data: { confirm: "حذف المنتج «#{@product.name_ar}» نهائيًا؟" } %>
+    <% end %>
+  </div>
+<% end %>
+
+<%# standalone forms targeted by the buttons above %>
+<% if @product.persisted? %>
+  <%= form_with url: admin_product_path(@product), method: :delete, local: true, id: "deleteProduct", html: { hidden: true } do %><% end %>
+  <% @product.images.each do |img| %>
+    <%= form_with url: purge_image_admin_product_path(@product, blob_id: img.blob_id), method: :delete, local: true, id: "purge-#{img.blob_id}", html: { hidden: true } do %><% end %>
+  <% end %>
+<% end %>
+<script>(function(){var n=document.getElementById('product_name_en');if(n)n.setAttribute('data-slug-source','');})();</script>
