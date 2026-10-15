@@ -28,17 +28,14 @@
 <%# 02 — Main catalog + viewer %>
 <section id="viewer" class="section-pad bg-white">
   <div class="wrap split">
-    <div data-reveal style="position:relative;background:#0D1744;border-radius:26px;overflow:hidden;min-height:540px;display:flex;align-items:center;justify-content:center;padding:48px 32px 84px;box-sizing:border-box;box-shadow:0 24px 60px rgba(13,23,68,.25)">
+    <div data-reveal style="position:relative;background:#0D1744;border-radius:26px;overflow:hidden;min-height:540px;display:flex;align-items:center;justify-content:center;padding:48px 32px;box-sizing:border-box;box-shadow:0 24px 60px rgba(13,23,68,.25)">
       <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 30%,rgba(185,198,242,.18),transparent 70%)"></div>
-      <object data="<%= @full[:file] %>#toolbar=0&navpanes=0&view=FitH" type="application/pdf" style="position:absolute;inset:0;width:100%;height:calc(100% - 64px);border:0;background:#fff" aria-label="<%= t("catalog.main.viewer") %>">
+      <object data="<%= @full[:file] %>#toolbar=0&navpanes=0&view=FitH" type="application/pdf" style="position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff" aria-label="<%= t("catalog.main.viewer") %>">
         <div class="catalog-cover" style="position:relative;max-width:260px;width:100%;padding:28px;font-size:18px;margin:60px auto">
           <img src="/assets/logo-white.png" alt="">
           <span><%= @full[:title] %></span>
         </div>
       </object>
-      <div style="position:absolute;bottom:0;inset-inline:0;padding:18px 28px;background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:13.5px;line-height:1.7">
-        <b style="color:#B9C6F2;font-weight:800"><%= t("catalog.main.viewer") %></b> — <%= t("catalog.main.viewer_note") %>
-      </div>
     </div>
     <div data-reveal>
       <div class="kicker-gray"><%= t("catalog.main.label") %></div>

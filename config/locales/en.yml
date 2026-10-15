@@ -264,7 +264,6 @@ en:
       updated: "Last Updated"
       pending: "[To be added]"
       viewer: "Catalog viewer"
-      viewer_note: "The catalog will be displayed here in-page once the final PDF is received."
     categories:
       label: "Browse by Category"
       h2: "Choose the Category You're Looking For."
