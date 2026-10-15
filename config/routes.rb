@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   get "/solutions", to: "solutions#index", as: :solutions
   get "/solutions/:slug", to: "solutions#show", as: :solution
   get "/catalog",   to: "pages#catalog",  as: :catalog
+  # Print source of the per-category PDF catalogs (script/build_catalogs.mjs) — not linked or indexed.
+  get "/catalog/:category/print", to: "pages#catalog_print", as: :catalog_print
   get "/rfq",       to: "pages#rfq",      as: :rfq
   get "/partners",  to: "pages#partners", as: :partners
   get "/projects",  to: "projects#index", as: :projects

@@ -44,3 +44,6 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# per-category catalog builder dependencies
+/script/catalogs/node_modules

@@ -31,3 +31,6 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 .claude/
+
+# per-category catalog builder (script/catalogs)
+/script/catalogs/node_modules

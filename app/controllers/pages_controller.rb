@@ -18,6 +18,15 @@ class PagesController < ApplicationController
     @by_category = site::CATEGORIES.map { |c| [ c, site.download(c[:catalog]) ] }
   end
 
+  # One category's catalog as printable A4 sheets: shared opening pages, then that category's
+  # products. script/build_catalogs.mjs prints it to PDF; bin/rails catalogs:attach stores the files.
+  def catalog_print
+    @category = site.category(params[:category]) or not_found!
+    @products = site.products_in(@category[:slug])
+    not_found! if @products.empty?
+    render layout: "print"
+  end
+
   def rfq
     @categories = site::CATEGORIES
     @solutions = site::SOLUTIONS

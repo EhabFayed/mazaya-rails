@@ -264,6 +264,17 @@ en:
       updated: "Last Updated"
       pending: "[To be added]"
       viewer: "Catalog viewer"
+    print:
+      label: "Product Catalog"
+      edition: "Edition 1 · %{year}"
+      about_label: "About Mazaya"
+      contents: "In This Catalog"
+      count: "Products: %{count}"
+      model: "Model"
+      page: "Page"
+      contact_h: "Get in Touch"
+      contact_desc: "For quotations, technical questions, and manufacturing to your project's requirements."
+      more: "Browse all Mazaya products and solutions on our website."
     categories:
       label: "Browse by Category"
       h2: "Choose the Category You're Looking For."

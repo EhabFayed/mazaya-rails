@@ -1,0 +1,9 @@
+{
+  "name": "mazaya-catalogs",
+  "private": true,
+  "type": "module",
+  "description": "Prints the per-category PDF catalogs from /catalog/:category/print (see build.mjs)",
+  "dependencies": {
+    "puppeteer-core": "23.11.1"
+  }
+}

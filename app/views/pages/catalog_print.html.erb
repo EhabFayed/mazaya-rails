@@ -1,0 +1,234 @@
+<%# One category's catalog as A4 sheets (the print source of the category PDFs):
+    cover → about Mazaya (shared by every category) → contents → one sheet per product → contact.
+    Printed to PDF by script/build_catalogs.mjs; numbers use the site's Western-digit font. %>
+<% c = @category %>
+<% year = Date.current.year %>
+<% first_product_page = 4 %>
+<% host = request.host %>
+<% content_for :title, "#{t("catalog.print.label")} — #{c[:name]}" %>
+<style>
+  @page{size:A4;margin:0}
+  html,body.print-doc{background:#D9DCE3;margin:0}
+  .sheet{position:relative;width:210mm;height:297mm;margin:0 auto 10mm;overflow:hidden;background:#fff;box-sizing:border-box;box-shadow:0 6px 30px rgba(13,23,68,.18);break-after:page;color:var(--ink)}
+  @media print{html,body.print-doc{background:#fff}.sheet{margin:0;box-shadow:none}}
+  .sheet img{display:block}
+  .pad{padding:20mm 18mm}
+  .navy{color:var(--navy)}
+  /* cover */
+  .cover{color:#fff;background:var(--navy-dark)}
+  .cover>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .cover::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,rgba(13,23,68,.96) 0%,rgba(13,23,68,.55) 55%,rgba(13,23,68,.35) 100%)}
+  .cover-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:22mm 20mm}
+  .cover-logo{height:22mm;width:auto;align-self:flex-start}
+  .cover .kick{color:var(--sky);font-size:15pt;font-weight:700;letter-spacing:2px;margin-bottom:5mm}
+  .cover h1{margin:0;color:#fff;font-size:40pt;font-weight:900;line-height:1.2}
+  .cover .sub{margin-top:4mm;color:rgba(255,255,255,.75);font-size:15pt}
+  .cover .ed{margin-top:12mm;display:inline-block;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:2.5mm 7mm;font-size:11pt;color:rgba(255,255,255,.85)}
+  /* running header/footer on inner sheets */
+  .run-h{display:flex;align-items:center;justify-content:space-between;padding:11mm 18mm 5mm;border-bottom:1.5px solid var(--navy)}
+  .run-h img{height:10mm;width:auto;flex:none}
+  .run-h span{color:var(--navy);font-size:10pt;font-weight:700}
+  .run-f{position:absolute;inset-inline:18mm;bottom:9mm;display:flex;justify-content:space-between;color:var(--gray);font-size:8.5pt;border-top:1px solid var(--line);padding-top:3mm}
+  .h2{margin:0 0 6mm;color:var(--navy);font-size:24pt;font-weight:900;line-height:1.3}
+  .lead{margin:0;color:var(--gray);font-size:11.5pt;line-height:1.9}
+  .label{color:var(--gray);font-size:10pt;font-weight:700;letter-spacing:1.5px;margin-bottom:3mm}
+  /* about */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin:12mm 0}
+  .stat{background:var(--soft);border-radius:4mm;padding:6mm 4mm;text-align:center}
+  .stat b{display:block;color:var(--navy);font-size:20pt;font-weight:900}
+  .stat span{color:var(--gray);font-size:9pt}
+  .why{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+  .why div{border:1px solid var(--line);border-radius:4mm;padding:6mm}
+  .why b{display:block;color:var(--navy);font-size:12pt;margin-bottom:2mm}
+  .why p{margin:0;color:var(--gray);font-size:10pt;line-height:1.8}
+  .about-img{width:100%;height:50mm;object-fit:cover;border-radius:5mm;margin-top:10mm}
+  /* contents */
+  .toc{margin-top:10mm;border-top:1px solid var(--line)}
+  .toc.two{columns:2;column-gap:9mm;border-top:none}
+  .toc.two div{break-inside:avoid;flex-wrap:wrap;row-gap:.5mm;padding:2.4mm 0;font-size:9.5pt}
+  .toc.two .code{order:4;flex-basis:100%;padding-inline-start:14mm;font-size:8pt}
+  .toc div{display:flex;align-items:baseline;gap:5mm;padding:3.6mm 0;border-bottom:1px solid var(--line);font-size:11pt}
+  .toc .n{color:var(--navy);font-weight:800;min-width:9mm}
+  .toc .t{flex:1;color:var(--ink)}
+  .toc .code{color:var(--gray);font-size:9.5pt;unicode-bidi:isolate}
+  .toc .pg{color:var(--navy);font-weight:700;min-width:10mm;text-align:end}
+  /* product */
+  .pr{padding:8mm 18mm 0}
+  .pr-top{display:flex;justify-content:space-between;align-items:start;gap:6mm;margin-bottom:5mm}
+  .pr-top h2{margin:0;color:var(--navy);font-size:21pt;font-weight:900;line-height:1.3}
+  .pr-code{flex-shrink:0;background:var(--navy);color:#fff;border-radius:2.5mm;padding:2mm 4mm;font-size:10pt;font-weight:700;unicode-bidi:isolate}
+  .pr-code small{display:block;color:var(--sky);font-size:7.5pt;font-weight:400}
+  .pr-gallery{display:grid;grid-template-columns:1fr;gap:3mm;height:86mm;margin-bottom:5mm}
+  .pr-gallery.multi{grid-template-columns:2.2fr 1fr}
+  .pr-main{width:100%;height:100%;min-height:0;object-fit:contain;background:var(--soft);border-radius:4mm}
+  .pr-thumbs{display:grid;gap:3mm;grid-auto-rows:minmax(0,1fr);height:86mm}
+  .pr-thumbs img{width:100%;height:100%;min-height:0;object-fit:contain;background:var(--soft);border-radius:3mm}
+  .pr-sum{margin:0 0 6mm;color:var(--ink);font-size:11pt;line-height:1.9}
+  .pr-cols{display:grid;grid-template-columns:1fr 1fr;gap:7mm}
+  .pr h3{margin:0 0 3mm;color:var(--navy);font-size:12pt;font-weight:800}
+  .pr ul{margin:0;padding-inline-start:5mm;color:var(--gray);font-size:10pt;line-height:1.8}
+  .pr table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  .pr th,.pr td{border:1px solid var(--line);padding:2mm 2.6mm;text-align:start;vertical-align:top}
+  .pr th{background:var(--soft);color:var(--navy);font-weight:700}
+  .spec th{width:42%}
+  .sizes{margin-top:6mm}
+  /* contact */
+  .back{color:#fff;background:var(--navy-dark)}
+  .back-in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20mm}
+  .back-in img{height:26mm;width:auto;margin-bottom:14mm;flex:none}
+  .back h2{margin:0 0 4mm;color:#fff;font-size:24pt;font-weight:900}
+  .back p{margin:0 0 12mm;color:rgba(255,255,255,.75);font-size:12pt;line-height:1.8;max-width:130mm}
+  .back dl{display:grid;grid-template-columns:auto auto;gap:4mm 10mm;margin:0;font-size:12pt}
+  .back dt{color:var(--sky)}
+  .back dd{margin:0;color:#fff;unicode-bidi:isolate}
+</style>
+
+<%# 1 — Cover %>
+<section class="sheet cover">
+  <img class="bg" src="<%= c[:image] %>" alt="">
+  <div class="cover-in">
+    <img class="cover-logo" src="/assets/logo-white.png" alt="Mazaya Aluminum">
+    <div>
+      <div class="kick"><%= t("catalog.print.label") %></div>
+      <h1><%= c[:name] %></h1>
+      <div class="sub"><%= c[:en] %></div>
+      <div class="ed"><%= t("catalog.print.edition", year: year) %></div>
+    </div>
+  </div>
+</section>
+
+<%# 2 — About Mazaya (identical in every category catalog) %>
+<section class="sheet">
+  <div class="run-h"><img src="/assets/logo.png" alt=""><span><%= t("catalog.print.about_label") %></span></div>
+  <div class="pad" style="padding-top:12mm">
+    <div class="label"><%= t("catalog.print.about_label") %></div>
+    <h2 class="h2"><%= t("home.hero.h1") %></h2>
+    <p class="lead"><%= t("home.hero.desc") %></p>
+    <div class="stats">
+      <% SiteData::STATS.first(4).each do |s| %>
+      <div class="stat"><b><%= s[:value] %><%= s[:suffix] %></b><span><%= s[:label] %></span></div>
+      <% end %>
+    </div>
+    <div class="label"><%= t("home.why.label") %></div>
+    <div class="why">
+      <% Array(t("home.why.cards")).first(4).each do |title, desc| %>
+      <div><b><%= title %></b><p><%= desc %></p></div>
+      <% end %>
+    </div>
+    <img class="about-img" src="/assets/hero.jpg" alt="">
+  </div>
+  <div class="run-f"><span><%= host %></span><span><%= t("catalog.print.page") %> 2</span></div>
+</section>
+
+<%# 3 — Category intro + contents %>
+<section class="sheet">
+  <div class="run-h"><img src="/assets/logo.png" alt=""><span><%= c[:name] %></span></div>
+  <div class="pad" style="padding-top:12mm">
+    <div class="label"><%= t("catalog.print.contents") %></div>
+    <h2 class="h2"><%= c[:name] %></h2>
+    <p class="lead"><%= c[:desc].presence || c[:about] %></p>
+    <div class="toc<%= ' two' if @products.size > 14 %>">
+      <% @products.each_with_index do |p, i| %>
+      <div><span class="n"><%= num(i + 1) %></span><span class="t"><%= p[:name] %></span><% if p[:code] %><span class="code" dir="ltr"><%= p[:code] %></span><% end %><span class="pg"><%= first_product_page + i %></span></div>
+      <% end %>
+    </div>
+    <p class="lead" style="margin-top:6mm;font-size:10pt"><%= t("catalog.print.count", count: @products.size) %></p>
+  </div>
+  <div class="run-f"><span><%= host %></span><span><%= t("catalog.print.page") %> 3</span></div>
+</section>
+
+<%# 4… — One sheet per product %>
+<% @products.each_with_index do |p, i| %>
+<% imgs = Array(p[:images]) %>
+<% size_cols = Array(p[:size_cols]) %>
+<section class="sheet">
+  <div class="run-h"><img src="/assets/logo.png" alt=""><span><%= c[:name] %></span></div>
+  <div class="pr">
+    <div class="pr-top">
+      <div><h2><%= p[:name] %></h2></div>
+      <% if p[:code] %><div class="pr-code" dir="ltr"><small><%= t("catalog.print.model") %></small><%= p[:code] %></div><% end %>
+    </div>
+    <% if imgs.any? %>
+    <div class="pr-gallery<%= ' multi' if imgs.size > 1 %>">
+      <img class="pr-main" src="<%= imgs.first[:src] %>" alt="<%= p[:name] %>">
+      <% if imgs.size > 1 %>
+      <div class="pr-thumbs"><% imgs.drop(1).first(3).each do |im| %><img src="<%= im[:src] %>" alt=""><% end %></div>
+      <% end %>
+    </div>
+    <% end %>
+    <% if p[:summary].present? %><p class="pr-sum"><%= p[:summary] %></p><% end %>
+    <div class="pr-cols">
+      <div>
+        <% if p[:features].present? %>
+        <h3><%= t("product.features_label") %></h3>
+        <ul><% p[:features].each do |(title, _desc)| %><li><%= title %></li><% end %></ul>
+        <% end %>
+        <% if p[:applications].present? %>
+        <h3 style="<%= 'margin-top:5mm' if p[:features].present? %>"><%= t("product.applications_label") %></h3>
+        <ul><% p[:applications].each do |(title, _desc)| %><li><%= title %></li><% end %></ul>
+        <% end %>
+      </div>
+      <% if p[:specs].present? %>
+      <div>
+        <h3><%= t("product.specs_label") %></h3>
+        <table class="spec"><% p[:specs].each do |label, value| %><tr><th scope="row"><%= label %></th><td><%= value.presence || "—" %></td></tr><% end %></table>
+      </div>
+      <% end %>
+    </div>
+    <% if size_cols.any? && p[:sizes].present? %>
+    <div class="sizes">
+      <h3><%= t("product.sizes_h2") %></h3>
+      <table>
+        <thead><tr><% size_cols.each do |col| %><th scope="col"><%= col %></th><% end %></tr></thead>
+        <tbody>
+          <% p[:sizes].each do |row| %>
+          <tr><% size_cols.each_with_index do |_col, k| %><td<% if k.zero? %> dir="ltr" style="unicode-bidi:isolate"<% end %>><%= (I18n.locale == :en ? nil : row["c#{k}_ar"]).presence || row["c#{k}"] %></td><% end %></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <% end %>
+  </div>
+  <div class="run-f"><span><%= host %></span><span><%= t("catalog.print.page") %> <%= first_product_page + i %></span></div>
+</section>
+<% end %>
+
+<%# Last — Contact %>
+<section class="sheet back">
+  <div class="back-in">
+    <img src="/assets/logo-white.png" alt="Mazaya Aluminum">
+    <h2><%= t("catalog.print.contact_h") %></h2>
+    <p><%= t("catalog.print.contact_desc") %></p>
+    <dl>
+      <% if (phone = SiteData::PHONE.presence || SiteData::WHATSAPP_DISPLAY.presence) %><dt><%= t("catalog.download.phone") %></dt><dd dir="ltr"><%= phone %></dd><% end %>
+      <% if SiteData::EMAIL.present? %><dt><%= t("catalog.download.email") %></dt><dd dir="ltr"><%= SiteData::EMAIL %></dd><% end %>
+      <% if SiteData::ADDRESS.present? %><dt><%= t("contact.location.label", default: "") %></dt><dd><%= SiteData::ADDRESS %></dd><% end %>
+      <dt>Web</dt><dd dir="ltr"><%= host %></dd>
+    </dl>
+    <p style="margin:12mm 0 0;font-size:10.5pt"><%= t("catalog.print.more") %></p>
+  </div>
+</section>
+
+<script>
+// Fit each product sheet: products with long specs/size tables would run into the footer, so
+// shrink that sheet's photo area (then its table text) step by step until the content clears it.
+(function () {
+  var MM = 96 / 25.4;
+  var fit = function () {
+    document.querySelectorAll('.sheet').forEach(function (sheet) {
+      var body = sheet.querySelector('.pr'), foot = sheet.querySelector('.run-f');
+      if (!body || !foot) return;
+      var gallery = body.querySelector('.pr-gallery'), thumbs = body.querySelector('.pr-thumbs');
+      var over = function () { return body.getBoundingClientRect().bottom - (foot.getBoundingClientRect().top - 3 * MM); };
+      for (var h = 86; over() > 0 && gallery && h > 46; h -= 4) {
+        gallery.style.height = h - 4 + 'mm'; if (thumbs) thumbs.style.height = h - 4 + 'mm';
+      }
+      for (var pt = 9.5; over() > 0 && pt > 7.5; pt -= .5) {
+        body.querySelectorAll('table,ul').forEach(function (el) { el.style.fontSize = pt - .5 + 'pt'; });
+      }
+    });
+  };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit); else window.addEventListener('load', fit);
+  window.addEventListener('load', fit);
+})();
+</script>
