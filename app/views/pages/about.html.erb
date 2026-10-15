@@ -82,7 +82,6 @@
     </div>
     <div style="display:grid;gap:10px;justify-items:center">
       <a data-gate="company-profile" data-gate-title="<%= profile[:title] %>" href="<%= download_path("company-profile") %>" class="btn-white"><%= t("about.profile.cta") %></a>
-      <span class="pending"><%= t("about.profile.meta") %></span>
     </div>
   </div>
 </section>
@@ -91,7 +90,7 @@
 <section id="what" class="section-pad bg-soft">
   <div class="wrap">
     <%= render "shared/section_head", label: t("about.what.label"), h2: t("about.what.h2"), desc: t("about.what.intro"), center: true %>
-    <div class="grid-2">
+    <div class="grid-2 expand-pair">
       <a href="<%= products_path %>" data-reveal class="cat-card card-hover-lg what-card">
         <div class="cat-media"><img src="/assets/cat-ladders.jpg" alt="" loading="lazy"><span class="tag tag-ready" style="position:absolute;top:16px;inset-inline-start:16px"><%= t("common.ready") %></span></div>
         <div class="cat-body" style="padding:30px 32px 34px">

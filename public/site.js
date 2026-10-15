@@ -47,6 +47,40 @@
   }, { threshold: 0.12 });
   reveals.forEach(function (el) { io.observe(el); });
 
+  // ---- hover-expanding card pairs (.expand-pair) ----
+  // Narrowing a card re-wraps its text and changes the row height; pin the row to its resting
+  // height while hovered so the content below does not jump. The resting height is recorded
+  // ahead of time: by the time pointerenter fires the hover styles already apply.
+  document.querySelectorAll('.expand-pair').forEach(function (pair) {
+    var rest = 0;
+    var record = function () { if (!pair.style.height && !pair.matches(':hover')) rest = pair.offsetHeight; };
+    record();
+    if (window.ResizeObserver) new ResizeObserver(record).observe(pair);
+    pair.addEventListener('pointerenter', function () { if (rest) pair.style.height = rest + 'px'; });
+    pair.addEventListener('pointerleave', function () { pair.style.height = ''; record(); });
+  });
+
+  // ---- row index with swapping background ([data-bg-index], about → product range) ----
+  // Hovering/focusing a row shows its photo as the section background and fills the caption.
+  document.querySelectorAll('[data-bg-index]').forEach(function (root) {
+    var items = root.querySelectorAll('[data-bg-item]');
+    var imgs = root.querySelectorAll('[data-bg-img]');
+    var name = root.querySelector('[data-bg-name]');
+    var about = root.querySelector('[data-bg-about]');
+    var cta = root.querySelector('[data-bg-cta]');
+    var activate = function (i) {
+      items.forEach(function (el, k) { el.classList.toggle('is-active', k === i); });
+      imgs.forEach(function (el, k) { el.classList.toggle('is-shown', k === i); });
+      if (name) name.textContent = items[i].dataset.name;
+      if (about) about.textContent = items[i].dataset.about;
+      if (cta) cta.setAttribute('href', items[i].getAttribute('href'));
+    };
+    items.forEach(function (el, i) {
+      el.addEventListener('mouseenter', function () { activate(i); });
+      el.addEventListener('focus', function () { activate(i); });
+    });
+  });
+
   // ---- counters ----
   var cio = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {

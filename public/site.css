@@ -236,6 +236,28 @@ body.ltr .ph-slot.video::after{content:'Video coming soon from the photoshoot'}
 .door h3{margin:0 0 14px;color:#fff;font-size:34px;font-weight:900;line-height:1.25}
 .door p{margin:0 0 24px;color:rgba(255,255,255,.8);font-size:16px;line-height:1.8;max-width:520px}
 .door.b2b h3{font-size:40px}
+/* Home paths: hovering (or focusing) one door widens it and narrows the other — desktop pointer only.
+   Animates the grid columns, not the doors: the scroll-reveal leaves an inline transform on each door. */
+@media (hover:hover) and (min-width:961px){
+  .doors{transition:grid-template-columns .6s cubic-bezier(.22,.8,.24,1)}
+  .doors:has(.door.b2b:hover,.door.b2b:focus-visible){grid-template-columns:1.4fr .6fr}
+  .doors:has(.door.b2c:hover,.door.b2c:focus-visible){grid-template-columns:.6fr 1.4fr}
+  .door::after{content:"";position:absolute;inset:0;background:rgba(13,23,68,.45);opacity:0;transition:opacity .45s;pointer-events:none}
+  .door p{max-height:12em;overflow:hidden;transition:opacity .35s,max-height .5s,margin .5s}
+  .doors:has(.door:hover,.door:focus-visible) .door:not(:hover):not(:focus-visible)::after{opacity:1}
+  .doors:has(.door:hover,.door:focus-visible) .door:not(:hover):not(:focus-visible) p{opacity:0;max-height:0;margin-bottom:0}
+}
+/* Same hover behaviour for any two-card grid marked .expand-pair (about → "What we do").
+   The narrowed card fades back with a filter: the scroll-reveal pins inline opacity on each card. */
+@media (hover:hover) and (min-width:961px){
+  .expand-pair{transition:grid-template-columns .6s cubic-bezier(.22,.8,.24,1)}
+  .expand-pair:has(> :first-child:hover,> :first-child:focus-visible){grid-template-columns:1.4fr .6fr}
+  .expand-pair:has(> :last-child:hover,> :last-child:focus-visible){grid-template-columns:.6fr 1.4fr}
+  .expand-pair > *{transition:filter .45s}
+  .expand-pair .cat-body p{max-height:12em;overflow:hidden;transition:opacity .35s,max-height .5s}
+  .expand-pair:has(> :hover,> :focus-visible) > :not(:hover):not(:focus-visible){filter:grayscale(.6) opacity(.7)}
+  .expand-pair:has(> :hover,> :focus-visible) > :not(:hover):not(:focus-visible) .cat-body p{opacity:0;max-height:0}
+}
 .cat-card{background:#fff;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;color:inherit}
 .cat-media{height:220px;position:relative;overflow:hidden;background:#E9EBF0}
 .cat-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
