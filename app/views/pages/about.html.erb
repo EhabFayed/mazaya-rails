@@ -6,12 +6,32 @@
   /* About page */
   .story-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
   .story-img{height:440px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(25,44,123,.18)}
-  .range-row{flex-direction:row;align-items:center;gap:22px;padding:22px 26px}
-  .range-row .range-thumb{width:76px;height:76px;border-radius:16px;overflow:hidden;flex-shrink:0}
-  .range-row h3{margin:0 0 4px}
-  .range-row .card-link{margin:0;white-space:nowrap}
+  /* Product range — numbered row list; the hovered category's photo fills the section
+     background (crossfade) and the caption shows its description + link. */
+  .range-bg{position:relative;overflow:hidden;isolation:isolate;background:var(--navy-dark)}
+  .range-bg-img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .8s ease,transform 1.6s ease}
+  .range-bg-img.is-shown{opacity:1;transform:none}
+  .range-bg::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(13,23,68,.9) 0%,rgba(13,23,68,.45) 50%,rgba(13,23,68,.72) 100%)}
+  .range-index{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:end}
+  .range-list{border-top:1px solid rgba(255,255,255,.18)}
+  .range-item{display:flex;align-items:baseline;gap:22px;padding:24px 4px;border-bottom:1px solid rgba(255,255,255,.18);transition:padding-inline-start .35s,background .35s}
+  .range-item:hover,.range-item:focus-visible,.range-item.is-active{padding-inline-start:18px;background:linear-gradient(270deg,rgba(127,183,255,.14),transparent)}
+  body.ltr .range-item:hover,body.ltr .range-item:focus-visible,body.ltr .range-item.is-active{background:linear-gradient(90deg,rgba(127,183,255,.14),transparent)}
+  .range-item .ix{color:var(--sky);font-size:13px;font-weight:800;letter-spacing:2px;min-width:34px}
+  .range-item h3{flex:1;margin:0;color:rgba(255,255,255,.62);font-size:28px;font-weight:800;line-height:1.35;transition:color .35s}
+  .range-item:hover h3,.range-item:focus-visible h3,.range-item.is-active h3{color:#fff}
+  .range-item .go{color:var(--sky);font-weight:800;opacity:0;transition:opacity .35s}
+  .range-item.is-active .go{opacity:1}
+  .range-item p{display:none}
+  .range-cap{padding:32px 34px;border-radius:24px;background:rgba(13,23,68,.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14)}
+  .range-cap-name{color:var(--sky);font-size:14px;font-weight:700;letter-spacing:2px;margin-bottom:12px}
+  .range-cap p{margin:0 0 24px;color:rgba(255,255,255,.88);font-size:18px;line-height:1.8}
+  .range-cap .card-link{color:#fff}
   .what-card .cat-media{height:280px}
-  @media (max-width:960px){.story-grid{grid-template-columns:1fr;gap:32px}.story-img{height:300px}.range-row{flex-wrap:wrap}}
+  @media (max-width:960px){.story-grid{grid-template-columns:1fr;gap:32px}.story-img{height:300px}
+    .range-index{grid-template-columns:1fr;gap:0}.range-cap{display:none}
+    .range-item,.range-item.is-active{flex-wrap:wrap;row-gap:6px;padding-inline-start:4px;background:none}.range-item h3{font-size:22px;color:#fff}.range-item .go{opacity:1}
+    .range-item p{display:block;flex-basis:100%;margin:0;padding-inline-start:56px;color:rgba(255,255,255,.75);font-size:15px;line-height:1.7}}
 </style>
 
 <%# 01 — Hero %>
@@ -112,22 +132,33 @@
 </section>
 
 <%# 07 — Product range %>
-<section id="range" class="section-pad bg-white">
+<%# Hovering/focusing a row swaps the background photo + caption (site.js, [data-bg-index]).
+    Without JS the first photo shows and every row still links to its category. %>
+<section id="range" class="section-pad range-bg" data-bg-index>
+  <% @categories.each_with_index do |c, i| %>
+  <img src="<%= c[:image] %>" alt="" class="range-bg-img<%= ' is-shown' if i.zero? %>" data-bg-img<%= ' loading="lazy"'.html_safe unless i.zero? %>>
+  <% end %>
   <div class="wrap">
-    <%= render "shared/section_head", label: t("about.range.label"), h2: t("about.range.h2"), link: [ t("about.range.cta"), products_path ] %>
-    <div style="display:grid;gap:14px">
-      <% @categories.each do |c| %>
-      <a href="<%= product_category_path(c[:slug]) %>" data-reveal class="feature-card soft card-hover range-row">
-        <div class="range-thumb"><img src="<%= c[:image] %>" alt="" class="cover" loading="lazy"></div>
-        <div style="flex:1;min-width:220px">
+    <%= render "shared/section_head", dark: true, label: t("about.range.label"), h2: t("about.range.h2"), link: [ t("about.range.cta"), products_path ] %>
+    <div class="range-index">
+      <div data-reveal class="range-list">
+        <% @categories.each_with_index do |c, i| %>
+        <a href="<%= product_category_path(c[:slug]) %>" data-bg-item data-name="<%= c[:name] %>" data-about="<%= c[:about] %>" class="range-item<%= ' is-active' if i.zero? %>">
+          <span class="ix"><%= format("%02d", i + 1) %></span>
           <h3><%= c[:name] %></h3>
+          <span class="go">←</span>
           <p><%= c[:about] %></p>
-        </div>
-        <span class="card-link"><%= t("common.explore_category") %> ←</span>
-      </a>
-      <% end %>
+        </a>
+        <% end %>
+      </div>
+      <% first = @categories.first %>
+      <div data-reveal class="range-cap">
+        <div class="range-cap-name" data-bg-name><%= first&.dig(:name) %></div>
+        <p data-bg-about><%= first&.dig(:about) %></p>
+        <a href="<%= first ? product_category_path(first[:slug]) : products_path %>" class="card-link" data-bg-cta><%= t("common.explore_category") %> ←</a>
+      </div>
     </div>
-    <div data-reveal style="text-align:center;margin-top:40px"><a href="<%= products_path %>" class="btn-outline"><%= t("about.range.cta") %> ←</a></div>
+    <div data-reveal style="text-align:center;margin-top:48px"><a href="<%= products_path %>" class="btn-white"><%= t("about.range.cta") %> ←</a></div>
   </div>
 </section>
 
