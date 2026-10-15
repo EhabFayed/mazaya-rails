@@ -5,7 +5,7 @@
   'use strict';
 
   var body = document.body;
-  var LOCALE = document.documentElement.lang === 'en' ? 'en' : 'ar-EG';
+  var LOCALE = 'en'; // Western digits everywhere (client request); Arabic text is unaffected
   var WA_DISPLAY = body.getAttribute('data-whatsapp-display') || '+966 50 000 0000';
   var WA_HREF = body.getAttribute('data-whatsapp-href') || ('https://wa.me/' + WA_DISPLAY.replace(/[^0-9]/g, ''));
   window.MAZAYA_WA = { display: WA_DISPLAY, href: WA_HREF };

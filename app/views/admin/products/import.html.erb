@@ -46,13 +46,13 @@
     <li>يتم التعرف على المنتج بالكود <code dir="ltr">code</code>؛ إن كان الكود فارغًا يُستخدم الاسم العربي. المنتج الموجود يُحدَّث، وغير الموجود يُضاف.</li>
     <li>الفئة والفئة الفرعية تُطابَق بالاسم العربي وتُنشأ تلقائيًا إن لم تكن موجودة (الرابط من الاسم الإنجليزي).</li>
     <li><code dir="ltr">kind</code>: <code dir="ltr">ready</code> / جاهز أو <code dir="ltr">custom</code> / حسب الطلب. <code dir="ltr">popular</code>: yes / no أو نعم / لا.</li>
-    <li>المواصفات: حتى ٨ مجموعات <code dir="ltr">spec_N_label_ar, spec_N_label_en, spec_N_value_ar, spec_N_value_en</code> (أو «مواصفة N»، «مواصفة N (إنجليزي)»، «قيمة N»، «قيمة N (إنجليزي)»). تُستبدل مواصفات المنتج كاملة عند وجود أي مجموعة.</li>
+    <li>المواصفات: حتى 8 مجموعات <code dir="ltr">spec_N_label_ar, spec_N_label_en, spec_N_value_ar, spec_N_value_en</code> (أو «مواصفة N»، «مواصفة N (إنجليزي)»، «قيمة N»، «قيمة N (إنجليزي)»). تُستبدل مواصفات المنتج كاملة عند وجود أي مجموعة.</li>
     <li>الأعمدة الفارغة لا تمسح القيم الحالية للمنتجات الموجودة.</li>
   </ul>
   <div style="overflow-x:auto;margin-top:14px">
     <table class="adm-table" style="font-size:12.5px">
       <thead><tr><% ProductImporter::BASE_HEADERS.each do |h| %><th dir="ltr"><%= h %></th><% end %><th dir="ltr">spec_1_label_ar …</th></tr></thead>
-      <tbody><tr><td>سلالم</td><td dir="ltr">Ladders</td><td>سلم مفرد</td><td dir="ltr">Single Ladder</td><td dir="ltr">MML-100</td><td>سلم مفرد ٣ م</td><td dir="ltr">Single Ladder 3m</td><td>سلم ألومنيوم…</td><td dir="ltr">Aluminium…</td><td dir="ltr">ready</td><td dir="ltr">yes</td><td>الخامة</td></tr></tbody>
+      <tbody><tr><td>سلالم</td><td dir="ltr">Ladders</td><td>سلم مفرد</td><td dir="ltr">Single Ladder</td><td dir="ltr">MML-100</td><td>سلم مفرد 3 م</td><td dir="ltr">Single Ladder 3m</td><td>سلم ألومنيوم…</td><td dir="ltr">Aluminium…</td><td dir="ltr">ready</td><td dir="ltr">yes</td><td>الخامة</td></tr></tbody>
     </table>
   </div>
 </div>

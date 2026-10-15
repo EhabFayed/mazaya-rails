@@ -32,7 +32,7 @@
 
   <div class="section">
     <h2>كلمة المرور</h2>
-    <p class="sub"><%= user.persisted? ? "اتركها فارغة للإبقاء على كلمة المرور الحالية." : "٨ أحرف على الأقل." %></p>
+    <p class="sub"><%= user.persisted? ? "اتركها فارغة للإبقاء على كلمة المرور الحالية." : "8 أحرف على الأقل." %></p>
     <div class="form-grid">
       <div>
         <%= f.label :password, "كلمة المرور#{' *' unless user.persisted?}", class: "field-label" %>

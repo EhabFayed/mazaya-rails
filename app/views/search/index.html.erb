@@ -40,7 +40,7 @@
       </div>
     <% else %>
       <div data-reveal class="section-head" style="margin-bottom:32px">
-        <div><div class="kicker-gray"><%= t("search.h1") %></div><h2 style="font-size:30px"><%= t("search.results", count: (rtl? ? @results.size.to_s.tr('0-9', '٠-٩') : @results.size), query: @query) %></h2></div>
+        <div><div class="kicker-gray"><%= t("search.h1") %></div><h2 style="font-size:30px"><%= t("search.results", count: @results.size, query: @query) %></h2></div>
       </div>
       <div class="grid-2">
         <% @results.each do |r| %>

@@ -6,7 +6,7 @@
 
 <div class="kpis">
   <div class="kpi"><div class="kpi-num"><%= @leads_today %></div><div class="kpi-label">طلبات اليوم</div></div>
-  <div class="kpi"><div class="kpi-num"><%= @leads_week %></div><div class="kpi-label">آخر ٧ أيام</div></div>
+  <div class="kpi"><div class="kpi-num"><%= @leads_week %></div><div class="kpi-label">آخر 7 أيام</div></div>
   <div class="kpi"><div class="kpi-num"><%= @lead_counts["new"] || 0 %></div><div class="kpi-label">بانتظار التواصل</div></div>
   <div class="kpi"><div class="kpi-num"><%= @lead_counts["won"] || 0 %></div><div class="kpi-label">تم إغلاقها (won)</div></div>
 </div>
@@ -24,7 +24,7 @@
       </tbody>
     </table>
     <% end %>
-    <div class="chips" style="margin-top:14px"><% @leads_by_kind.each do |k, n| %><span class="chip"><%= LeadMailer::KIND_LABELS[k] %>: <%= n %> (٣٠ يوم)</span><% end %></div>
+    <div class="chips" style="margin-top:14px"><% @leads_by_kind.each do |k, n| %><span class="chip"><%= LeadMailer::KIND_LABELS[k] %>: <%= n %> (30 يوم)</span><% end %></div>
   </div>
 
   <div style="display:grid;gap:22px">

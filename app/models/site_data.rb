@@ -157,7 +157,7 @@ module SiteData
       rows = SafetyArticle.published.ordered.to_a
       return Defaults::SAFETY if rows.empty?
       rows.each_with_index.map do |a, i|
-        h = { slug: a.slug, name: a.name, step: format("%02d", i + 1).tr("0-9", "٠-٩"), summary: a.summary, products: a.related_slugs }
+        h = { slug: a.slug, name: a.name, step: format("%02d", i + 1), summary: a.summary, products: a.related_slugs }
         h[:points] = a.points_bi if a.points.any?
         h[:checklist] = a.checklist_bi if a.checklist.any?
         h

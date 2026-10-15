@@ -38,7 +38,7 @@
       <p style="margin:0;color:#686B70;font-size:15.5px;line-height:1.8;max-width:720px"><%= @category[:b2c] %></p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <span class="chip" style="background:#192C7B;color:#fff"><%= (rtl? ? @products.size.to_s.tr('0-9', '٠-٩') : @products.size) %> <%= t("category.products_label") %></span>
+      <span class="chip" style="background:#192C7B;color:#fff"><%= @products.size %> <%= t("category.products_label") %></span>
       <% @category[:subcategories].each do |s| %><a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>" class="chip"><%= s[:name] %></a><% end %>
     </div>
   </div>
@@ -75,7 +75,7 @@
       <% end %>
     </div>
     <div class="results-head">
-      <div data-product-count data-template="<%= t("category.count", count: "%{count}") %>"><%= t("category.count", count: (rtl? ? (rtl? ? @products.size.to_s.tr('0-9', '٠-٩') : @products.size) : @products.size)) %></div>
+      <div data-product-count data-template="<%= t("category.count", count: "%{count}") %>"><%= t("category.count", count: @products.size) %></div>
       <span><%= t("category.results_hint") %></span>
     </div>
     <div class="grid-3" data-product-grid>

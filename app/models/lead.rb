@@ -40,7 +40,7 @@ class Lead < ApplicationRecord
     return unless files.attached?
     errors.add(:files, "الحد الأقصى #{MAX_FILES} ملفات") if files.size > MAX_FILES
     files.each do |f|
-      errors.add(:files, "#{f.filename}: الحد الأقصى ١٥ ميجابايت") if f.byte_size > MAX_FILE_SIZE
+      errors.add(:files, "#{f.filename}: الحد الأقصى 15 ميجابايت") if f.byte_size > MAX_FILE_SIZE
       errors.add(:files, "#{f.filename}: نوع ملف غير مسموح") unless ALLOWED_TYPES.include?(f.content_type)
     end
   end

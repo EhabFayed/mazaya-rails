@@ -136,7 +136,7 @@
               <% if sizes.any? %>
                 <% sizes.each do |row| %>
                 <% row = row.to_h.stringify_keys %>
-                <tr><% size_cols.each_with_index do |_col, i| %><td<% if i.zero? %> dir="ltr" style="unicode-bidi:isolate"<% end %>><%= row["c#{i}"] %></td><% end %></tr>
+                <tr><% size_cols.each_with_index do |_col, i| %><td<% if i.zero? %> dir="ltr" style="unicode-bidi:isolate"<% end %>><%= (I18n.locale == :en ? nil : row["c#{i}_ar"]).presence || row["c#{i}"] %></td><% end %></tr>
                 <% end %>
               <% else %>
                 <% 2.times do %>
