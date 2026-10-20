@@ -7,3 +7,7 @@ db/schema.rb linguist-generated
 vendor/* linguist-vendored
 config/credentials/*.yml.enc diff=rails_credentials
 config/credentials.yml.enc diff=rails_credentials
+
+# Scripts run inside Linux containers; CRLF breaks their shebang lines.
+bin/* text eol=lf
+*.sh text eol=lf
