@@ -59,7 +59,7 @@
     <%= render "shared/section_head", label: t("catalog.categories.label"), h2: t("catalog.categories.h2"), desc: t("catalog.categories.desc"), center: true %>
     <div class="grid-32">
       <% @by_category.each do |c, d| %>
-      <div data-reveal class="cat-card card-hover">
+      <div data-reveal class="cat-card cat-overlay card-hover">
         <a href="<%= product_category_path(c[:slug]) %>" class="cat-media" style="display:block"><img src="<%= c[:image] %>" alt="<%= c[:name] %>" loading="lazy"></a>
         <div class="cat-body">
           <div class="product-cat" dir="ltr" style="text-align:end"><%= c[:en] %></div>
@@ -67,7 +67,7 @@
           <p><%= c[:desc] %></p>
           <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:auto;padding-top:6px">
             <a href="<%= product_category_path(c[:slug]) %>" class="card-link"><%= t("catalog.categories.cta") %> ←</a>
-            <a data-gate="<%= c[:catalog] %>" data-gate-title="<%= d[:title] %>" href="<%= download_path(c[:catalog]) %>" class="card-link" style="color:#686B70">↓ <%= t("catalog.categories.download") %></a>
+            <a data-gate="<%= c[:catalog] %>" data-gate-title="<%= d[:title] %>" href="<%= download_path(c[:catalog]) %>" class="card-link" style="color:rgba(255,255,255,.7)">↓ <%= t("catalog.categories.download") %></a>
           </div>
         </div>
       </div>

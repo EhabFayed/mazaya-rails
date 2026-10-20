@@ -1,0 +1,10 @@
+<%# locals: category, desc, cta — photo card with the copy over a navy scrim (.cat-overlay) %>
+<a href="<%= product_category_path(category[:slug]) %>" data-reveal class="cat-card cat-overlay card-hover">
+  <div class="cat-media"><img src="<%= category[:image] %>" alt="<%= category[:name] %>" loading="lazy"></div>
+  <div class="cat-body">
+    <div class="product-cat" dir="ltr" style="text-align:end"><%= category[:en] %></div>
+    <h3><%= category[:name] %></h3>
+    <p><%= desc %></p>
+    <span class="card-link"><%= cta %> ←</span>
+  </div>
+</a>

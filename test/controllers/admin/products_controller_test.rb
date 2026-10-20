@@ -28,6 +28,32 @@ class Admin::ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "عربة نقل"
   end
 
+  test "index filters by subcategory, featured and missing images, with facet counts and chips" do
+    Product.create!(category: @category, name_ar: "سلم مميز", code: "MML-300", popular: true)
+    @product.images.attach(io: File.open(IMAGE), filename: "front.jpg", content_type: "image/jpeg")
+
+    get admin_products_path(category_id: @category.id, subcategory_id: @sub.id)
+    assert_includes response.body, "سلم مفرد ٣ م"
+    assert_not_includes response.body, "سلم مميز"
+    assert_select "select[name=subcategory_id] option[selected]", text: "سلم مفرد"
+    assert_select ".pf-chip", text: /سلم مفرد/
+
+    get admin_products_path(popular: "1")
+    assert_includes response.body, "سلم مميز"
+    assert_not_includes response.body, "سلم مفرد ٣ م"
+    assert_select ".pf-toggle.on", text: /مميز/
+
+    get admin_products_path(no_image: "1")
+    assert_includes response.body, "سلم مميز"
+    assert_not_includes response.body, "سلم مفرد ٣ م"
+    # the featured count respects the other active filters
+    assert_select ".pf-toggle", text: /مميز\s*1/
+
+    get admin_products_path(sort: "code", q: "%")
+    assert_response :success
+    assert_select ".pf-count strong", text: "0"
+  end
+
   test "new and edit render the form" do
     get new_admin_product_path
     assert_response :success

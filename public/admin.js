@@ -35,6 +35,30 @@
     if (!slug.value) slug.value = nameEn.value.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   });
 
+  // Filter forms submit themselves: selects on change, search after a pause in typing.
+  document.querySelectorAll('form[data-autofilter]').forEach(function (form) {
+    document.documentElement.classList.add('js');
+    var panel = form.closest('.pf'), timer;
+    function go() { if (panel) panel.classList.add('is-loading'); form.requestSubmit ? form.requestSubmit() : form.submit(); }
+    form.querySelectorAll('select').forEach(function (sel) {
+      sel.addEventListener('change', function () {
+        var dep = sel.getAttribute('data-resets'), other = dep && form.elements[dep];
+        if (other) other.value = '';
+        go();
+      });
+    });
+    var q = form.querySelector('input[type=search]');
+    if (q) {
+      var last = q.value;
+      if (q.autofocus) { var n = q.value.length; q.setSelectionRange(n, n); }
+      q.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () { if (q.value.trim() !== last.trim()) go(); }, 450);
+      });
+      q.addEventListener('keydown', function (e) { if (e.key === 'Escape' && q.value) { q.value = ''; go(); } });
+    }
+  });
+
   // preview selected images before upload
   document.querySelectorAll('input[type=file][data-preview]').forEach(function (inp) {
     inp.addEventListener('change', function () {

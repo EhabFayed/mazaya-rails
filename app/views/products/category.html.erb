@@ -1,6 +1,10 @@
 <% content_for :title, "#{@category[:name]} — #{t('brand')}" %>
 <% content_for :description, @category[:desc] %>
 <% content_for :nav_active, "b2c" %>
+<%
+  sub_counts = @products.map { |p| p[:subcategory] }.compact.tally
+  subs = @category[:subcategories].select { |s| sub_counts[s[:slug]].to_i.positive? } # hide empty sub-types: no dead-end filters
+%>
 <style>
   /* Category page (prototype v2 flow) */
   .cat-nav{position:sticky;top:77px;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid #E6E8EC;padding:16px 48px}
@@ -9,7 +13,59 @@
   .cat-card.active .card-link::before{content:'✓';display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:#192C7B;color:#fff;font-size:12px}
   .results-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;color:#686B70;font-size:14.5px}
   .results-head [data-product-count]{color:#192C7B;font-weight:800}
+  [data-product-empty] .btn-navy{border:none;font-family:inherit;cursor:pointer}
+  .pfx-more{display:flex;justify-content:center;margin-top:34px}
+  .pfx-more .btn-outline{font-family:inherit;cursor:pointer;background:#fff;gap:10px}
+  .pfx-more .btn-outline[hidden]{display:none}
+  .pfx-more span{font-size:13px;font-weight:700;opacity:.65}
+  .chip[data-sub-filter]{transition:background var(--hover-t) var(--hover-ease),color var(--hover-t) var(--hover-ease)}
+  .chip[data-sub-filter]:hover,.chip[data-sub-filter].active{background:#192C7B;color:#fff}
+  /* Product filter bar */
+  .pfx{background:#fff;border:1px solid #E6E8EC;border-radius:20px;box-shadow:0 10px 30px rgba(25,44,123,.06);margin-bottom:22px}
+  .pfx-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px}
+  .pfx-search{flex:1 1 260px;display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border:1.5px solid #E0E3E9;border-radius:14px;background:#FAFBFC;color:#9AA0A8;transition:border-color var(--hover-t) var(--hover-ease),background var(--hover-t) var(--hover-ease),color var(--hover-t) var(--hover-ease)}
+  .pfx-search:focus-within{border-color:#192C7B;background:#fff;color:#192C7B}
+  .pfx-search input{flex:1;min-width:0;height:100%;border:none;outline:none;background:none;font:inherit;font-size:15px;color:#1A1C20}
+  .pfx-seg{display:inline-flex;gap:3px;background:#F4F5F7;border-radius:14px}
+  .pfx-seg button,.pfx-scroll button{display:inline-flex;align-items:center;gap:7px;border:none;background:none;font:inherit;font-size:14px;font-weight:700;color:#686B70;padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;transition:background var(--hover-t) var(--hover-ease),color var(--hover-t) var(--hover-ease),box-shadow var(--hover-t) var(--hover-ease)}
+  .pfx-seg button:hover{color:#192C7B}
+  .pfx-seg button.active{background:#fff;color:#192C7B;box-shadow:0 1px 4px rgba(13,23,68,.14)}
+  .pfx b{font-size:12px;font-weight:800;min-width:22px;padding:1px 7px;border-radius:999px;background:rgba(25,44,123,.07);color:#9AA0A8;text-align:center}
+  .pfx .active b{color:#192C7B;background:#F0F2F8}
+  .pfx [data-empty-facet]{opacity:.45}
+  .pfx-sort{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:#9AA0A8}
+  .pfx-sort select{height:48px;border:1.5px solid #E0E3E9;border-radius:14px;background:#FAFBFC;font:inherit;font-size:14px;font-weight:700;color:#192C7B;padding:0 14px;cursor:pointer;outline:none}
+  .pfx-sort select:focus{border-color:#192C7B}
+  .pfx-subs{display:flex;align-items:center;gap:12px;border-top:1px solid #E6E8EC;padding:10px 14px}
+  .pfx-subs-label{font-size:12.5px;font-weight:800;color:#9AA0A8;white-space:nowrap}
+  .pfx-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+  .pfx-scroll::-webkit-scrollbar{display:none}
+  .pfx-scroll button{border:1.5px solid #D9DEEA;background:#fff;border-radius:999px;padding:7px 14px}
+  .pfx-scroll button:hover{border-color:#192C7B;color:#192C7B}
+  .pfx-scroll button.active{background:#192C7B;border-color:#192C7B;color:#fff}
+  .pfx-scroll button.active b{background:rgba(255,255,255,.18);color:#fff}
+  .pfx-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .pfx-chips{display:contents}
+  .pfx-chip{display:inline-flex;align-items:center;gap:6px;border:none;background:#F0F2F8;color:#192C7B;font:inherit;font-size:13px;font-weight:700;border-radius:999px;padding:5px 7px 5px 12px;cursor:pointer}
+  [dir=rtl] .pfx-chip{padding:5px 12px 5px 7px}
+  .pfx-chip i{font-style:normal;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(25,44,123,.12);font-size:13px;line-height:1;transition:background var(--hover-t) var(--hover-ease),color var(--hover-t) var(--hover-ease)}
+  .pfx-chip:hover i{background:#192C7B;color:#fff}
+  .pfx-clear{border:none;background:none;font:inherit;font-size:13px;font-weight:700;color:#B3261E;cursor:pointer;padding:4px}
+  .pfx-clear:hover{text-decoration:underline}
+  .pfx-hint{font-size:13.5px}
   @media (max-width:960px){.cat-nav{top:66px;padding:12px 20px}}
+  @media (max-width:720px){
+    /* one swipeable row instead of a 5-row sticky stack; edges fade to hint at more */
+    .cat-nav{padding:10px 0}
+    .cat-nav .tabs{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding-inline:16px;padding:2px 16px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+    .cat-nav .tabs::-webkit-scrollbar{display:none}
+    .cat-nav .tab{flex:0 0 auto;white-space:nowrap;scroll-snap-align:start;border-radius:999px;padding:9px 16px;font-size:13.5px}
+    .pfx-top{padding:12px}
+    .pfx-seg{flex:1 1 100%}.pfx-seg button{flex:1;justify-content:center;padding:9px 8px}
+    .pfx-sort{flex:1 1 100%}.pfx-sort select{flex:1}
+    .pfx-subs{flex-direction:column;align-items:stretch;gap:8px}
+    .pfx-hint{display:none}
+  }
 </style>
 
 <%# 01 — Fixed hero %>
@@ -39,57 +95,75 @@
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <span class="chip" style="background:#192C7B;color:#fff"><%= @products.size %> <%= t("category.products_label") %></span>
-      <% @category[:subcategories].each do |s| %><a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>" class="chip"><%= s[:name] %></a><% end %>
+      <% subs.each do |s| %><a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>#products" class="chip" data-sub-filter="<%= s[:slug] %>" data-jump><%= s[:name] %></a><% end %>
     </div>
   </div>
 </section>
 
-<%# 04 — Sub-categories %>
-<section id="subcategories" class="section-pad bg-soft" style="padding-top:70px">
-  <div class="wrap">
-    <%= render "shared/section_head", label: t("category.subcategories_label"), h2: t("category.subcategories_h2"), desc: t("category.subcategories_desc") %>
-    <div class="grid-3">
-      <% @category[:subcategories].each do |s| %>
-      <a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>" data-sub-filter="<%= s[:slug] %>" data-reveal class="cat-card card-hover<%= ' active' if @sub == s[:slug] %>">
-        <div class="cat-media"><div class="ph-slot"><%= s[:name] %></div></div>
-        <div class="cat-body">
-          <h3><%= s[:name] %></h3>
-          <span class="card-link"><%= t("category.view_sub", name: s[:name]) %> ←</span>
-        </div>
-      </a>
-      <% end %>
-    </div>
-  </div>
-</section>
-
-<%# 05 — Filters + product grid %>
-<section id="products" class="section-pad bg-white">
+<%# 04 — Filters + product grid %>
+<section id="products" class="section-pad bg-soft">
   <div class="wrap">
     <%= render "shared/section_head", label: t("category.products_label"), h2: t("category.products_h2"), desc: t("category.products_desc") %>
-    <div data-reveal class="filters">
-      <button type="button" class="filter<%= ' active' if @kind.blank? %>" data-kind-filter=""><%= t("common.all") %></button>
-      <button type="button" class="filter<%= ' active' if @kind == 'ready' %>" data-kind-filter="ready"><%= t("common.ready") %></button>
-      <button type="button" class="filter<%= ' active' if @kind == 'custom' %>" data-kind-filter="custom"><%= t("common.custom") %></button>
-      <% @category[:specs].each do |label| %>
-      <span class="filter soon" title="<%= t("common.soon") %>"><%= label %> ▾</span>
+
+    <div class="pfx" data-reveal data-product-filters>
+      <div class="pfx-top">
+        <label class="pfx-search">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" data-filter-q value="<%= @q %>" placeholder="<%= t("category.search_placeholder") %>" aria-label="<%= t("category.search_placeholder") %>" autocomplete="off">
+        </label>
+        <div class="pfx-seg" role="group" aria-label="<%= t("category.kind_label") %>">
+          <% [ [ "", t("common.all") ], [ "ready", t("common.ready") ], [ "custom", t("common.custom") ] ].each do |val, label| %>
+          <button type="button" data-kind-filter="<%= val %>" data-label="<%= label %>" class="<%= 'active' if @kind.to_s == val %>" aria-pressed="<%= @kind.to_s == val %>"><%= label %> <b data-facet><%= val.empty? ? @products.size : @products.count { |p| p[:kind].to_s == val } %></b></button>
+          <% end %>
+        </div>
+        <label class="pfx-sort">
+          <span><%= t("category.sort_label") %></span>
+          <select data-filter-sort>
+            <option value=""><%= t("category.sort_default") %></option>
+            <option value="name"<%= ' selected' if @sort == "name" %>><%= t("category.sort_name") %></option>
+          </select>
+        </label>
+      </div>
+      <% if subs.any? %>
+      <div class="pfx-subs" role="group" aria-label="<%= t("category.subcategories_label") %>">
+        <span class="pfx-subs-label"><%= t("category.subcategories_label") %></span>
+        <div class="pfx-scroll">
+          <button type="button" data-sub-filter="" class="<%= 'active' if @sub.blank? %>" aria-pressed="<%= @sub.blank? %>"><%= t("common.all") %> <b data-facet><%= @products.size %></b></button>
+          <% subs.each do |s| %>
+          <button type="button" data-sub-filter="<%= s[:slug] %>" data-label="<%= s[:name] %>" class="<%= 'active' if @sub == s[:slug] %>" aria-pressed="<%= @sub == s[:slug] %>"><%= s[:name] %> <b data-facet><%= sub_counts[s[:slug]] %></b></button>
+          <% end %>
+        </div>
+      </div>
       <% end %>
     </div>
+
     <div class="results-head">
-      <div data-product-count data-template="<%= t("category.count", count: "%{count}") %>"><%= t("category.count", count: @products.size) %></div>
-      <span><%= t("category.results_hint") %></span>
+      <div class="pfx-status">
+        <span data-product-count data-template="<%= t("category.count", count: "%{count}") %>"><%= t("category.count", count: @products.size) %></span>
+        <span class="pfx-chips" data-active-filters data-remove-label="<%= t("category.remove_filter") %>"></span>
+        <button type="button" class="pfx-clear" data-filter-reset hidden><%= t("category.clear_filters") %></button>
+      </div>
+      <span class="pfx-hint"><%= t("category.results_hint") %></span>
     </div>
     <div class="grid-3" data-product-grid>
       <% @products.each do |p| %><%= render "shared/product_card", product: p %><% end %>
     </div>
-    <div data-product-empty hidden class="feature-card soft" style="text-align:center;align-items:center;padding:48px 28px;margin-top:8px">
+    <div class="pfx-more">
+      <button type="button" class="btn-outline" data-load-more<%= ' hidden' if @products.size <= 9 %>>
+        <%= t("category.load_more") %>
+        <span data-load-more-label data-template="<%= t("category.load_more_remaining", count: "%{count}") %>"><%= t("category.load_more_remaining", count: [ @products.size - 9, 0 ].max) %></span>
+      </button>
+    </div>
+    <div data-product-empty<%= ' hidden' if @products.any? %> class="feature-card" style="text-align:center;align-items:center;padding:48px 28px;margin-top:8px">
       <h3><%= t("category.empty_title") %></h3>
       <p><%= t("category.empty_desc") %></p>
+      <button type="button" class="btn-navy" data-filter-reset style="margin-top:6px"><%= t("category.clear_filters") %></button>
     </div>
   </div>
 </section>
 
-<%# 06 — Category catalog %>
-<section id="catalog" class="section-pad bg-soft" style="padding-bottom:40px">
+<%# 05 — Category catalog %>
+<section id="catalog" class="section-pad bg-white" style="padding-bottom:40px">
   <div data-reveal class="cta-band" style="background:#0D1744">
     <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap">
       <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="catalog-cover" style="width:150px;flex-shrink:0" aria-label="<%= @catalog[:title] %>">
@@ -106,5 +180,5 @@
   </div>
 </section>
 
-<%# 07 — Help CTA %>
+<%# 06 — Help CTA %>
 <%= render "shared/cta_band", label: t("category.help_label"), h2: t("category.help_h2"), desc: t("category.help_desc"), primary: [ t("common.contact_us"), contact_path ], secondary: :whatsapp %>

@@ -487,6 +487,15 @@ ar:
     help_desc: "شاركنا احتياجك وطبيعة الاستخدام، وسيساعدك فريق مزايا في الوصول إلى الخيار المناسب."
     results_hint: "زر «عرض المنتج» يفتح صفحة المنتج التفصيلية."
     view_sub: "عرض %{name}"
+    search_placeholder: "ابحث بالاسم أو الكود…"
+    kind_label: "النوع"
+    sort_label: "الترتيب"
+    sort_default: "المقترح"
+    sort_name: "الاسم (أ ← ي)"
+    clear_filters: "مسح الفلاتر"
+    remove_filter: "إزالة الفلتر"
+    load_more: "عرض المزيد"
+    load_more_remaining: "(%{count} متبقي)"
 
   product:
     specs_h2: "المواصفات والمقاسات"

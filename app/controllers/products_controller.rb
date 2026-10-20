@@ -10,7 +10,9 @@ class ProductsController < ApplicationController
     @categories = site::CATEGORIES
     @sub = params[:sub].presence
     @kind = params[:kind].presence
-    @products = site.products_in(@category[:slug]) # filtering is client-side; ?sub= & ?kind= pre-select
+    @q = params[:q].to_s.strip.presence
+    @sort = params[:sort].presence
+    @products = site.products_in(@category[:slug]) # filtering is client-side; ?sub= ?kind= ?q= ?sort= pre-select
     @catalog = site.download(@category[:catalog])
   end
 

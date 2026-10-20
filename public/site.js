@@ -42,7 +42,15 @@
   });
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
-      if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; io.unobserve(en.target); }
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      el.style.opacity = '1'; el.style.transform = 'none'; io.unobserve(el);
+      // Once revealed, drop the inline styles so class hover transitions (.card-hover lift + shadow) apply again
+      el.addEventListener('transitionend', function done(e) {
+        if (e.target !== el || e.propertyName !== 'transform') return;
+        el.removeEventListener('transitionend', done);
+        el.style.removeProperty('opacity'); el.style.removeProperty('transform'); el.style.removeProperty('transition');
+      });
     });
   }, { threshold: 0.12 });
   reveals.forEach(function (el) { io.observe(el); });
@@ -198,33 +206,145 @@
     });
   }
 
-  // ---- category page: sub-category + ready/custom filters ----
+  // ---- category nav: on mobile it is a swipe row, so bring the current category into view ----
+  // Relative delta keeps it correct in both RTL and LTR scroll coordinates.
+  document.querySelectorAll('.cat-nav .tab.active').forEach(function (tab) {
+    var row = tab.parentElement;
+    if (row.scrollWidth <= row.clientWidth) return;
+    var t = tab.getBoundingClientRect(), r = row.getBoundingClientRect();
+    row.scrollLeft += (t.left + t.width / 2) - (r.left + r.width / 2);
+  });
+
+  // ---- category page: search + ready/custom + sub-category filters, sort ----
+  // Facet counts on each button follow the other active filters, so they always
+  // say how many products clicking would show. State lives in the URL (?q ?kind ?sub ?sort).
   var grid = document.querySelector('[data-product-grid]');
   if (grid) {
     var cards = Array.prototype.slice.call(grid.querySelectorAll('.product-card'));
     var count = document.querySelector('[data-product-count]');
     var empty = document.querySelector('[data-product-empty]');
-    var state = { sub: (new URLSearchParams(location.search)).get('sub') || '', kind: (new URLSearchParams(location.search)).get('kind') || '' };
-    function apply() {
-      var n = 0;
-      cards.forEach(function (c) {
-        var ok = (!state.sub || c.getAttribute('data-sub') === state.sub) && (!state.kind || c.getAttribute('data-kind') === state.kind);
-        c.classList.toggle('hidden', !ok); if (ok) n++;
+    var qInput = document.querySelector('[data-filter-q]');
+    var sortSel = document.querySelector('[data-filter-sort]');
+    var chips = document.querySelector('[data-active-filters]');
+    var resets = document.querySelectorAll('[data-filter-reset]');
+    var bar = document.querySelector('[data-product-filters]');
+    var params = new URLSearchParams(location.search);
+    var state = { sub: params.get('sub') || '', kind: params.get('kind') || '', q: params.get('q') || '', sort: params.get('sort') || '' };
+    if (qInput) qInput.value = state.q;
+    if (sortSel) sortSel.value = state.sort;
+    cards.forEach(function (c, i) { c._i = i; });
+
+    function norm(s) { return (s || '').toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').trim(); }
+    function matches(c, skip) {
+      var q = norm(state.q);
+      return (skip === 'sub' || !state.sub || c.getAttribute('data-sub') === state.sub) &&
+             (skip === 'kind' || !state.kind || c.getAttribute('data-kind') === state.kind) &&
+             (!q || norm(c.getAttribute('data-search')).indexOf(q) > -1);
+    }
+    function facet(btn, n) {
+      var b = btn.querySelector('[data-facet]'); if (b) b.textContent = n.toLocaleString(LOCALE);
+      btn.toggleAttribute('data-empty-facet', n === 0 && !btn.classList.contains('active'));
+    }
+    function labelFor(sel, fallback) { var b = document.querySelector(sel + '[data-label]'); return b ? b.getAttribute('data-label') : fallback; }
+    function chip(text, clear) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'pfx-chip';
+      b.setAttribute('aria-label', (chips.getAttribute('data-remove-label') || '×') + ': ' + text);
+      b.textContent = text;
+      var x = document.createElement('i'); x.setAttribute('aria-hidden', 'true'); x.textContent = '×'; b.appendChild(x);
+      b.addEventListener('click', function () { clear(); apply(); });
+      chips.appendChild(b);
+    }
+
+    // Show PAGE cards at a time; any filter change starts again from the first page.
+    var PAGE = 9, limit = PAGE;
+    var more = document.querySelector('[data-load-more]');
+    function apply(keepLimit) {
+      if (keepLimit !== true) limit = PAGE;
+      var order = cards.slice();
+      if (state.sort === 'name') order.sort(function (a, b) { return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'), document.documentElement.lang || 'ar'); });
+      else order.sort(function (a, b) { return a._i - b._i; });
+
+      var n = 0, shown = 0;
+      order.forEach(function (c) {
+        grid.appendChild(c);
+        var ok = matches(c), show = ok && shown < limit;
+        c.classList.toggle('hidden', !show);
+        if (ok) n++;
+        if (show) shown++;
       });
+      if (more) {
+        more.hidden = shown >= n;
+        var label = more.querySelector('[data-load-more-label]');
+        if (label) label.textContent = (label.getAttribute('data-template') || '%{count}').replace('%{count}', (n - shown).toLocaleString(LOCALE));
+      }
+
+      document.querySelectorAll('[data-kind-filter]').forEach(function (b) {
+        var v = b.getAttribute('data-kind-filter'), on = v === state.kind;
+        b.classList.toggle('active', on); b.setAttribute('aria-pressed', on);
+        facet(b, cards.filter(function (c) { return matches(c, 'kind') && (!v || c.getAttribute('data-kind') === v); }).length);
+      });
+      document.querySelectorAll('[data-sub-filter]').forEach(function (b) {
+        var v = b.getAttribute('data-sub-filter'), on = v === state.sub;
+        b.classList.toggle('active', on); if (b.tagName === 'BUTTON') b.setAttribute('aria-pressed', on);
+        facet(b, cards.filter(function (c) { return matches(c, 'sub') && (!v || c.getAttribute('data-sub') === v); }).length);
+      });
+
       if (count) count.textContent = (count.getAttribute('data-template') || '%{count} منتجات ظاهرة').replace('%{count}', n.toLocaleString(LOCALE));
       if (empty) empty.hidden = n > 0;
-      document.querySelectorAll('[data-sub-filter]').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-sub-filter') === state.sub); });
-      document.querySelectorAll('[data-kind-filter]').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-kind-filter') === state.kind); });
-      var qs = new URLSearchParams(); if (state.sub) qs.set('sub', state.sub); if (state.kind) qs.set('kind', state.kind);
-      history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : ''));
+      if (chips) {
+        chips.innerHTML = '';
+        if (state.q) chip('«' + state.q + '»', function () { state.q = ''; if (qInput) qInput.value = ''; });
+        if (state.kind) chip(labelFor('[data-kind-filter="' + state.kind + '"]', state.kind), function () { state.kind = ''; });
+        if (state.sub) chip(labelFor('button[data-sub-filter="' + state.sub + '"]', state.sub), function () { state.sub = ''; });
+      }
+      var any = !!(state.q || state.kind || state.sub);
+      resets.forEach(function (r) { if (!r.closest('[data-product-empty]')) r.hidden = !any; });
     }
+    function reset() {
+      state.sub = state.kind = state.q = state.sort = '';
+      if (qInput) qInput.value = '';
+      if (sortSel) sortSel.value = '';
+      apply();
+    }
+
     document.querySelectorAll('[data-sub-filter]').forEach(function (b) {
-      b.addEventListener('click', function (e) { e.preventDefault(); var v = b.getAttribute('data-sub-filter'); state.sub = state.sub === v ? '' : v; apply(); });
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        var v = b.getAttribute('data-sub-filter');
+        state.sub = (b.tagName !== 'BUTTON' && state.sub === v) ? '' : v; // header chips toggle; bar buttons select
+        apply();
+        if (b.hasAttribute('data-jump') && bar) bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
     });
     document.querySelectorAll('[data-kind-filter]').forEach(function (b) {
       b.addEventListener('click', function () { state.kind = b.getAttribute('data-kind-filter'); apply(); });
     });
+    if (qInput) {
+      var t;
+      qInput.addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { state.q = qInput.value.trim(); apply(); }, 180); });
+      qInput.addEventListener('keydown', function (e) { if (e.key === 'Escape') { qInput.value = ''; state.q = ''; apply(); } });
+    }
+    if (sortSel) sortSel.addEventListener('change', function () { state.sort = sortSel.value; apply(); });
+    resets.forEach(function (r) {
+      r.addEventListener('click', function () {
+        state.sub = state.kind = state.q = ''; if (qInput) qInput.value = '';
+        apply(); if (qInput) qInput.focus({ preventScroll: true });
+      });
+    });
+    if (more) more.addEventListener('click', function () {
+      var first = grid.querySelectorAll('.product-card:not(.hidden)').length;
+      limit += PAGE; apply(true);
+      var next = grid.querySelectorAll('.product-card:not(.hidden)')[first];
+      if (next) next.focus({ preventScroll: true }); // keyboard users land on the first new card
+    });
     apply();
+    // Filters last only while on the page: links may preset them (?sub= ?kind= ?q= ?sort=), but the
+    // URL is cleaned right away, and coming Back (bfcache or a restored form) starts unfiltered.
+    if (location.search) history.replaceState(null, '', location.pathname + location.hash);
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted || (performance.getEntriesByType('navigation')[0] || {}).type === 'back_forward') reset();
+    });
   }
 
   // ---- product gallery thumbs ----

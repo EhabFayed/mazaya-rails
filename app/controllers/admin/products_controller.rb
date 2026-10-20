@@ -10,18 +10,40 @@ module Admin
 
     def admin_section = "products"
 
+    SORTS = {
+      "position" => [ "الترتيب اليدوي", nil ],
+      "recent"   => [ "آخر تعديل", { updated_at: :desc } ],
+      "newest"   => [ "الأحدث إضافة", { created_at: :desc } ],
+      "name"     => [ "الاسم (أ ← ي)", { name_ar: :asc } ],
+      "code"     => [ "الكود", { code: :asc } ]
+    }.freeze
+
     def index
-      @q           = params[:q].to_s.strip
-      @category_id = params[:category_id].presence
-      @kind        = Product::KINDS.include?(params[:kind]) ? params[:kind] : nil
-      @published   = %w[1 0].include?(params[:published]) ? params[:published] : nil
-      scope = Product.ordered.includes(:category, :subcategory, images_attachments: :blob)
-      scope = scope.where("products.name_ar ILIKE :q OR products.name_en ILIKE :q OR products.code ILIKE :q", q: "%#{@q}%") if @q.present?
-      scope = scope.where(category_id: @category_id) if @category_id
-      scope = scope.where(kind: @kind) if @kind
-      scope = scope.where(published: @published == "1") if @published
+      @f = {
+        q:              params[:q].to_s.strip.presence,
+        category_id:    params[:category_id].presence&.to_i,
+        subcategory_id: params[:subcategory_id].presence&.to_i,
+        kind:           (params[:kind] if Product::KINDS.include?(params[:kind])),
+        published:      (params[:published] if %w[1 0].include?(params[:published])),
+        popular:        (params[:popular] == "1" ? "1" : nil),
+        no_image:       (params[:no_image] == "1" ? "1" : nil)
+      }
+      @sort = SORTS.key?(params[:sort]) ? params[:sort] : "position"
+
+      # Facet counts: each group counts against every other active filter, so the
+      # numbers on the tabs always match what clicking them would show.
+      @counts = {
+        published: filtered(except: :published).group(:published).count,
+        kind:      filtered(except: :kind).group(:kind).count,
+        popular:   filtered(except: :popular).where(popular: true).count,
+        no_image:  filtered(except: :no_image).merge(without_images).count
+      }
+
+      scope = filtered.includes(:category, :subcategory, images_attachments: :blob)
+      scope = (order = SORTS[@sort][1]) ? scope.reorder(order) : scope.ordered
+      @total = scope.count
       @products, @page, @pages = helpers.paginate(scope)
-      @categories = Category.ordered
+      @categories = Category.ordered.includes(:subcategories)
     end
 
     def new
@@ -99,6 +121,24 @@ module Admin
     private
 
     def set_product = @product = Product.find(params[:id])
+
+    # Products matching the index filters in @f, optionally ignoring one of them.
+    def filtered(except: nil)
+      f = @f.except(except)
+      scope = Product.all
+      scope = scope.where("products.name_ar ILIKE :q OR products.name_en ILIKE :q OR products.code ILIKE :q", q: "%#{Product.sanitize_sql_like(f[:q])}%") if f[:q]
+      scope = scope.where(category_id: f[:category_id]) if f[:category_id]
+      scope = scope.where(subcategory_id: f[:subcategory_id]) if f[:subcategory_id]
+      scope = scope.where(kind: f[:kind]) if f[:kind]
+      scope = scope.where(published: f[:published] == "1") if f[:published]
+      scope = scope.where(popular: true) if f[:popular]
+      scope = scope.merge(without_images) if f[:no_image]
+      scope
+    end
+
+    def without_images
+      Product.where.not(id: ActiveStorage::Attachment.where(record_type: "Product", name: "images").select(:record_id))
+    end
 
     def load_form
       @categories       = Category.ordered.includes(:subcategories)

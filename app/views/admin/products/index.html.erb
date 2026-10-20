@@ -7,17 +7,83 @@
   </div>
 </div>
 
-<%= form_with url: admin_products_path, method: :get, local: true, class: "toolbar" do |f| %>
-  <%= f.text_field :q, value: @q, class: "field sm", placeholder: "بحث بالاسم أو الكود" %>
-  <%= f.select :category_id, options_from_collection_for_select(@categories, :id, :name_ar, @category_id), { include_blank: "كل الفئات" }, class: "field sm" %>
-  <%= f.select :kind, options_for_select(Admin::ProductsController::KIND_LABELS.invert, @kind), { include_blank: "كل الأنواع" }, class: "field sm" %>
-  <%= f.select :published, options_for_select([ [ "منشور", "1" ], [ "مسودة", "0" ] ], @published), { include_blank: "منشور ومسودة" }, class: "field sm" %>
-  <button type="submit" class="btn-navy sm">تصفية</button>
-  <% if @q.present? || @category_id || @kind || @published %><a href="<%= admin_products_path %>" class="btn-outline sm">مسح</a><% end %>
-<% end %>
+<%
+  sort_param = (@sort unless @sort == "position")
+  # URL for the current filters with some of them changed (nil removes one); always back to page 1.
+  url_with = ->(changes = {}) { admin_products_path(@f.merge(sort: sort_param).merge(changes).compact) }
+  category = @categories.find { |c| c.id == @f[:category_id] }
+  subcategory = category&.subcategories&.find { |s| s.id == @f[:subcategory_id] }
+  pub = @counts[:published]
+  kinds = @counts[:kind]
+  active = []
+  active << [ "بحث: «#{@f[:q]}»", { q: nil } ] if @f[:q]
+  active << [ category.name_ar, { category_id: nil, subcategory_id: nil } ] if category
+  active << [ subcategory.name_ar, { subcategory_id: nil } ] if subcategory
+  active << [ Admin::ProductsController::KIND_LABELS[@f[:kind]], { kind: nil } ] if @f[:kind]
+  active << [ @f[:published] == "1" ? "منشور" : "مسودة", { published: nil } ] if @f[:published]
+  active << [ "مميز", { popular: nil } ] if @f[:popular]
+  active << [ "بدون صور", { no_image: nil } ] if @f[:no_image]
+%>
+<section class="pf">
+  <%= form_with url: admin_products_path, method: :get, local: true, class: "pf-main", data: { autofilter: true } do |f| %>
+    <% @f.slice(:kind, :published, :popular, :no_image).compact.each do |k, v| %><%= hidden_field_tag k, v %><% end %>
+    <label class="pf-search">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <%= f.search_field :q, value: @f[:q], placeholder: "ابحث بالاسم العربي أو الإنجليزي أو الكود…", autocomplete: "off", "aria-label": "بحث", autofocus: @f[:q].present? %>
+    </label>
+    <div class="pf-select">
+      <span>الفئة</span>
+      <%= f.select :category_id, options_from_collection_for_select(@categories, :id, :name_ar, @f[:category_id]), { include_blank: "كل الفئات" }, data: { resets: "subcategory_id" } %>
+    </div>
+    <div class="pf-select<%= ' is-disabled' unless category&.subcategories&.any? %>">
+      <span>الفئة الفرعية</span>
+      <%= f.select :subcategory_id, options_from_collection_for_select(category ? category.subcategories : [], :id, :name_ar, @f[:subcategory_id]), { include_blank: category ? "الكل" : "اختر فئة أولًا" }, disabled: !category&.subcategories&.any? %>
+    </div>
+    <div class="pf-select">
+      <span>الترتيب</span>
+      <%= f.select :sort, options_for_select(Admin::ProductsController::SORTS.map { |k, (label, _)| [ label, k ] }, @sort) %>
+    </div>
+    <button type="submit" class="btn-navy sm pf-apply">تطبيق</button>
+  <% end %>
+
+  <div class="pf-facets">
+    <div class="pf-group" role="group" aria-label="الحالة">
+      <a href="<%= url_with.(published: nil) %>" class="<%= 'on' unless @f[:published] %>">الكل <b><%= pub.values.sum %></b></a>
+      <a href="<%= url_with.(published: "1") %>" class="<%= 'on' if @f[:published] == "1" %>"><i class="dot ok"></i>منشور <b><%= pub[true] || 0 %></b></a>
+      <a href="<%= url_with.(published: "0") %>" class="<%= 'on' if @f[:published] == "0" %>"><i class="dot draft"></i>مسودة <b><%= pub[false] || 0 %></b></a>
+    </div>
+    <div class="pf-group" role="group" aria-label="النوع">
+      <a href="<%= url_with.(kind: nil) %>" class="<%= 'on' unless @f[:kind] %>">كل الأنواع <b><%= kinds.values.sum %></b></a>
+      <% Admin::ProductsController::KIND_LABELS.each do |k, label| %>
+        <a href="<%= url_with.(kind: k) %>" class="<%= 'on' if @f[:kind] == k %>"><%= label %> <b><%= kinds[k] || 0 %></b></a>
+      <% end %>
+    </div>
+    <div class="pf-toggles">
+      <a href="<%= url_with.(popular: (@f[:popular] ? nil : "1")) %>" class="pf-toggle<%= ' on' if @f[:popular] %>" aria-pressed="<%= @f[:popular].present? %>">★ مميز <b><%= @counts[:popular] %></b></a>
+      <a href="<%= url_with.(no_image: (@f[:no_image] ? nil : "1")) %>" class="pf-toggle warn<%= ' on' if @f[:no_image] %>" aria-pressed="<%= @f[:no_image].present? %>">بدون صور <b><%= @counts[:no_image] %></b></a>
+    </div>
+  </div>
+
+  <div class="pf-foot">
+    <span class="pf-count">
+      <% if active.any? %><strong><%= @total %></strong> نتيجة من <%= Product.count %><% else %>كل المنتجات · <strong><%= @total %></strong><% end %>
+    </span>
+    <% if active.any? %>
+      <div class="pf-chips">
+        <% active.each do |label, change| %>
+          <a href="<%= url_with.(change) %>" class="pf-chip" title="إزالة هذا الفلتر"><%= label %><span aria-hidden="true">×</span></a>
+        <% end %>
+        <a href="<%= admin_products_path(sort: sort_param) %>" class="pf-clear">مسح الكل</a>
+      </div>
+    <% end %>
+  </div>
+</section>
 
 <% if @products.empty? %>
-  <div class="card" style="text-align:center;color:#686B70">لا توجد منتجات مطابقة. <a href="<%= new_admin_product_path %>">أضف منتجًا</a> أو <a href="<%= import_admin_products_path %>">استورد من Excel</a>.</div>
+  <div class="card" style="text-align:center;color:#686B70">
+    <% if active.any? %>لا توجد منتجات تطابق هذه الفلاتر. <a href="<%= admin_products_path %>">مسح الفلاتر</a>
+    <% else %>لا توجد منتجات بعد. <a href="<%= new_admin_product_path %>">أضف منتجًا</a> أو <a href="<%= import_admin_products_path %>">استورد من Excel</a>.<% end %>
+  </div>
 <% else %>
 <table class="adm-table">
   <thead><tr><th></th><th>الاسم</th><th>الكود</th><th>الفئة</th><th>النوع</th><th>مميز</th><th>الحالة</th><th>الترتيب</th></tr></thead>

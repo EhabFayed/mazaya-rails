@@ -23,15 +23,7 @@
     <%= render "shared/section_head", label: t("b2b.solutions.label"), h2: t("b2b.solutions.h2"), desc: t("b2b.solutions.desc"), center: true %>
     <div class="grid-32">
       <% @categories.each do |c| %>
-      <a href="<%= product_category_path(c[:slug]) %>" data-reveal class="cat-card card-hover">
-        <div class="cat-media"><img src="<%= c[:image] %>" alt="<%= c[:name] %>" loading="lazy"></div>
-        <div class="cat-body">
-          <div class="product-cat" dir="ltr" style="text-align:end"><%= c[:en] %></div>
-          <h3><%= c[:name] %></h3>
-          <p><%= c[:b2b] %></p>
-          <span class="card-link"><%= t("common.explore_solutions") %> ←</span>
-        </div>
-      </a>
+      <%= render "shared/category_card", category: c, desc: c[:b2b], cta: t("common.explore_solutions") %>
       <% end %>
     </div>
   </div>

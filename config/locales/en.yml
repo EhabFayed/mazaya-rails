@@ -464,6 +464,15 @@ en:
     help_desc: "Share your needs and intended use, and the Mazaya team will help you reach the right option."
     results_hint: "“View Product” opens the detailed product page."
     view_sub: "View %{name}"
+    search_placeholder: "Search by name or code…"
+    kind_label: "Type"
+    sort_label: "Sort"
+    sort_default: "Recommended"
+    sort_name: "Name (A–Z)"
+    clear_filters: "Clear filters"
+    remove_filter: "Remove filter"
+    load_more: "Load more"
+    load_more_remaining: "(%{count} more)"
 
   product:
     specs_h2: "Specifications & Dimensions"

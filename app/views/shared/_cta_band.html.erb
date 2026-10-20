@@ -1,5 +1,5 @@
 <%# Reusable final-CTA band. locals: label (optional), h2, desc, primary: [text, href], secondary: [text, href] or :whatsapp %>
-<section class="section-pad" style="padding-top:0;background:<%= local_assigns.fetch(:bg, '#F4F5F7') %>">
+<section class="section-pad" style="background:<%= local_assigns.fetch(:bg, '#F4F5F7') %>">
   <div data-reveal class="cta-band">
     <div>
       <% if local_assigns[:label] %><div class="kicker" style="margin-bottom:10px"><%= label %></div><% end %>
