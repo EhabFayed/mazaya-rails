@@ -199,7 +199,7 @@ class MazayaMasterImport
       code: code, category: category, subcategory: sub,
       name_en: g[:name_en], name_ar: name_ar.presence || g[:name_en],
       summary_en: overview, summary_ar: MazayaArabic.overview(slug) || overview,
-      kind: custom?(loads.first) ? "custom" : "ready",
+      kind: kind_for(g[:rows], loads),
       popular: position_is_first_in_sheet?(g, position), published: true, position: position,
       specs: specs_for(first, multi: multi, loads: loads),
       applications: applications_for(g[:rows]),
@@ -252,6 +252,20 @@ class MazayaMasterImport
   end
 
   def custom?(load) = load.blank? || load !~ /\d/
+
+  # The sheet's "B2B / B2C" column decides: B2C = ready (stock), B2B = custom. Older
+  # files without the column fall back to "no numeric load capacity means made to order".
+  # Codes whose "B2B / B2C" cell is blank in the sheet, as confirmed by the client.
+  KIND_OVERRIDES = { "YP267" => "ready" }.freeze # Rolling Shelf Ladder: B2C
+
+  def kind_for(rows, loads)
+    override = rows.filter_map { |r| KIND_OVERRIDES[primary_code(r["Product Code"])] }.first
+    return override if override
+    segments = rows.map { |r| r["B2B / B2C"].to_s.strip.upcase }
+    return "ready" if segments.include?("B2C")
+    return "custom" if segments.include?("B2B")
+    custom?(loads.first) ? "custom" : "ready"
+  end
 
   def position_is_first_in_sheet?(g, position)
     @first_positions ||= {}

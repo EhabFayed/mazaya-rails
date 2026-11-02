@@ -47,8 +47,8 @@
           <% SiteData::CATEGORIES.each_slice(2) do |pair| %>
           <div class="mega-col">
             <% pair.each do |c| %>
-            <div class="mega-head"><a href="<%= product_category_path(c[:slug]) %>"><%= c[:name] %></a></div>
-            <% c[:subcategories].each do |s| %><a href="<%= product_category_path(c[:slug], sub: s[:slug]) %>"><%= s[:name] %></a><% end %>
+            <div class="mega-head"><a href="<%= product_category_path(c[:slug], kind: "ready") %>"><%= c[:name] %></a></div>
+            <% c[:subcategories].each do |s| %><a href="<%= product_category_path(c[:slug], sub: s[:slug], kind: "ready") %>"><%= s[:name] %></a><% end %>
             <% end %>
           </div>
           <% end %>
@@ -147,7 +147,7 @@
   </details>
   <details<%= ' open' if active == 'b2c' %>><summary><%= t("nav.b2c") %></summary>
     <a href="<%= products_path %>"><%= t("nav.b2c_hub") %></a>
-    <% SiteData::CATEGORIES.each do |c| %><a href="<%= product_category_path(c[:slug]) %>"><%= c[:name] %></a><% end %>
+    <% SiteData::CATEGORIES.each do |c| %><a href="<%= product_category_path(c[:slug], kind: "ready") %>"><%= c[:name] %></a><% end %>
   </details>
   <details<%= ' open' if active == 'quality' %>><summary><%= t("nav.quality") %></summary>
     <a href="<%= quality_path %>"><%= t("nav.quality_page") %></a>

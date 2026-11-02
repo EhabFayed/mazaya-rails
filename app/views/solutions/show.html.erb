@@ -17,7 +17,7 @@
     <div data-reveal style="display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap">
       <span class="tag tag-custom"><%= t("common.custom") %></span>
       <span class="chip" dir="ltr" style="unicode-bidi:isolate"><%= @solution[:en] %></span>
-      <a href="<%= product_category_path(@category[:slug]) %>" class="chip" style="color:#192C7B"><%= @category[:name] %></a>
+      <a href="<%= product_category_path(@category[:slug], kind: "custom") %>" class="chip" style="color:#192C7B"><%= @category[:name] %></a>
     </div>
     <%= render "shared/section_head", label: t("solutions.capabilities.label"), h2: t("solutions.capabilities.h2"), desc: t("solutions.capabilities.desc") %>
     <div class="grid-5">

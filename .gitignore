@@ -34,3 +34,6 @@
 
 # per-category catalog builder (script/catalogs)
 /script/catalogs/node_modules
+
+# Catalogue master spreadsheet (>100 MB, too big for GitHub)
+/db/data/mazaya_catalogue_master.xlsx

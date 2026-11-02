@@ -32,7 +32,7 @@
     <%= render "shared/section_head", label: t("b2c.categories.label"), h2: t("b2c.categories.h2"), desc: t("b2c.categories.desc"), center: true %>
     <div class="cat-grid">
       <% @categories.each do |c| %>
-      <%= render "shared/category_card", category: c, desc: c[:b2c], cta: t("common.explore_category") %>
+      <%= render "shared/category_card", category: c, desc: c[:b2c], cta: t("common.explore_category"), kind: "ready" %>
       <% end %>
     </div>
   </div>
@@ -47,7 +47,7 @@
         <legend class="finder-label" style="padding:0;margin-bottom:12px"><%= num(1) %> — <%= t("b2c.finder.q1") %></legend>
         <div class="chips">
           <% @categories.each_with_index do |c, i| %>
-          <label class="chip-opt"><input type="radio" name="q1" value="<%= product_category_path(c[:slug]) %>"<%= ' required' if i.zero? %>><span><%= c[:finder] %></span></label>
+          <label class="chip-opt"><input type="radio" name="q1" value="<%= product_category_path(c[:slug], kind: "ready") %>"<%= ' required' if i.zero? %>><span><%= c[:finder] %></span></label>
           <% end %>
         </div>
       </fieldset>

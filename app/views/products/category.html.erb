@@ -79,7 +79,7 @@
 <nav class="cat-nav" aria-label="<%= t("b2c.categories.label") %>">
   <div class="wrap tabs">
     <% @categories.each do |c| %>
-    <a href="<%= product_category_path(c[:slug]) %>" class="tab<%= ' active' if c[:slug] == @category[:slug] %>"<%= ' aria-current="page"'.html_safe if c[:slug] == @category[:slug] %>><%= c[:name] %></a>
+    <a href="<%= product_category_path(c[:slug], kind: kind_scope) %>" class="tab<%= ' active' if c[:slug] == @category[:slug] %>"<%= ' aria-current="page"'.html_safe if c[:slug] == @category[:slug] %>><%= c[:name] %></a>
     <% end %>
   </div>
 </nav>
@@ -95,7 +95,7 @@
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <span class="chip" style="background:#192C7B;color:#fff"><%= @products.size %> <%= t("category.products_label") %></span>
-      <% subs.each do |s| %><a href="<%= product_category_path(@category[:slug], sub: s[:slug]) %>#products" class="chip" data-sub-filter="<%= s[:slug] %>" data-jump><%= s[:name] %></a><% end %>
+      <% subs.each do |s| %><a href="<%= product_category_path(@category[:slug], sub: s[:slug], kind: kind_scope) %>#products" class="chip" data-sub-filter="<%= s[:slug] %>" data-jump><%= s[:name] %></a><% end %>
     </div>
   </div>
 </section>
@@ -113,7 +113,7 @@
         </label>
         <div class="pfx-seg" role="group" aria-label="<%= t("category.kind_label") %>">
           <% [ [ "", t("common.all") ], [ "ready", t("common.ready") ], [ "custom", t("common.custom") ] ].each do |val, label| %>
-          <button type="button" data-kind-filter="<%= val %>" data-label="<%= label %>" class="<%= 'active' if @kind.to_s == val %>" aria-pressed="<%= @kind.to_s == val %>"><%= label %> <b data-facet><%= val.empty? ? @products.size : @products.count { |p| p[:kind].to_s == val } %></b></button>
+          <button type="button" data-kind-filter="<%= val %>" data-label="<%= label %>" class="<%= 'active' if @kind.to_s == val %>" aria-pressed="<%= @kind.to_s == val %>"><%= label %> <b data-facet><%= val == "ready" ? @products.count { |p| p[:kind].to_s == "ready" } : @products.size %></b></button>
           <% end %>
         </div>
         <label class="pfx-sort">

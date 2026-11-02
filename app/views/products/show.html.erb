@@ -35,8 +35,8 @@
     <div class="crumb" style="margin:0">
       <a href="<%= root_path %>"><%= t("common.home") %></a>
       <span class="crumb-sep">/</span><a href="<%= products_path %>"><%= t("nav.b2c") %></a>
-      <span class="crumb-sep">/</span><a href="<%= product_category_path(@category[:slug]) %>"><%= @category[:name] %></a>
-      <% if @subcategory %><span class="crumb-sep">/</span><a href="<%= product_category_path(@category[:slug], sub: @subcategory[:slug]) %>"><%= @subcategory[:name] %></a><% end %>
+      <span class="crumb-sep">/</span><a href="<%= product_category_path(@category[:slug], kind: kind_scope) %>"><%= @category[:name] %></a>
+      <% if @subcategory %><span class="crumb-sep">/</span><a href="<%= product_category_path(@category[:slug], sub: @subcategory[:slug], kind: kind_scope) %>"><%= @subcategory[:name] %></a><% end %>
       <span class="crumb-sep">/</span><span style="color:#fff"><%= @product[:code] || @product[:name] %></span>
     </div>
   </div>
@@ -63,7 +63,7 @@
       <% end %>
     </div>
     <div data-reveal>
-      <a href="<%= product_category_path(@category[:slug]) %>" class="product-cat" style="display:inline-block"><%= @category[:name] %></a>
+      <a href="<%= product_category_path(@category[:slug], kind: kind_scope) %>" class="product-cat" style="display:inline-block"><%= @category[:name] %></a>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px">
         <span class="tag tag-<%= @product[:kind] %>"><%= SiteData.kind_label(@product[:kind]) %></span>
         <% if @product[:code] %><span class="chip" dir="ltr"><%= @product[:code] %></span><% end %>
@@ -76,8 +76,8 @@
         <span class="btn-disabled" aria-disabled="true"><%= t("product.buy_soon") %></span>
       </div>
       <div class="pd-chips">
-        <a href="<%= product_category_path(@category[:slug]) %>" class="chip"><%= @category[:name] %></a>
-        <% if @subcategory %><a href="<%= product_category_path(@category[:slug], sub: @subcategory[:slug]) %>" class="chip"><%= @subcategory[:name] %></a><% end %>
+        <a href="<%= product_category_path(@category[:slug], kind: kind_scope) %>" class="chip"><%= @category[:name] %></a>
+        <% if @subcategory %><a href="<%= product_category_path(@category[:slug], sub: @subcategory[:slug], kind: kind_scope) %>" class="chip"><%= @subcategory[:name] %></a><% end %>
         <span class="chip"><%= SiteData.kind_label(@product[:kind]) %></span>
       </div>
     </div>
@@ -232,7 +232,7 @@
 <%# 08 — Related products %>
 <section id="related" class="section-pad bg-white">
   <div class="wrap">
-    <%= render "shared/section_head", label: t("product.related_label"), h2: t("product.related_h2b"), link: [ t("common.explore_category"), product_category_path(@category[:slug]) ] %>
+    <%= render "shared/section_head", label: t("product.related_label"), h2: t("product.related_h2b"), link: [ t("common.explore_category"), product_category_path(@category[:slug], kind: kind_scope) ] %>
     <div class="grid-3">
       <% @related.each do |p| %><%= render "shared/product_card", product: p %><% end %>
     </div>

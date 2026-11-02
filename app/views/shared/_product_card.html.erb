@@ -1,6 +1,6 @@
 <%# locals: product %>
 <% category = SiteData.category(product[:category]) %>
-<a href="<%= product_path(product[:category], product[:slug]) %>" data-reveal class="card-hover product-card" data-kind="<%= product[:kind] %>" data-sub="<%= product[:subcategory] %>" data-name="<%= product[:name] %>" data-search="<%= [ product[:name], product[:code], product[:summary] ].compact.join(" ").downcase %>">
+<a href="<%= product_path(product[:category], product[:slug], kind: kind_scope) %>" data-reveal class="card-hover product-card" data-kind="<%= product[:kind] %>" data-sub="<%= product[:subcategory] %>" data-name="<%= product[:name] %>" data-search="<%= [ product[:name], product[:code], product[:summary] ].compact.flat_map { |f| f.is_a?(Bilingual) ? [ f.ar, f.en ] : [ f ] }.uniq.join(" ").downcase %>">
   <div class="product-media">
     <% if product[:images].present? %><img src="<%= product[:images].first[:src] %>" alt="<%= product[:name] %>" class="cover" loading="lazy"><% else %><div class="ph-slot"><%= product[:name] %></div><% end %>
     <span class="tag tag-<%= product[:kind] %>"><%= SiteData.kind_label(product[:kind]) %></span>

@@ -217,7 +217,8 @@ module SiteData
   def products_in(category_slug, subcategory: nil, kind: nil)
     list = PRODUCTS.select { |p| p[:category] == category_slug }
     list = list.select { |p| p[:subcategory] == subcategory } if subcategory.present?
-    list = list.select { |p| p[:kind].to_s == kind.to_s } if kind.present?
+    # "custom" covers every product; "ready" is only the stock (B2C) ones
+    list = list.select { |p| p[:kind].to_s == "ready" } if kind.to_s == "ready"
     list
   end
 
@@ -232,7 +233,8 @@ module SiteData
   def search(query, prefix: "")
     q = query.to_s.strip
     return [] if q.length < 2
-    norm = ->(s) { s.to_s.tr("أإآ", "ااا").tr("ة", "ه").tr("ى", "ي").downcase }
+    # Arabic and English both match whatever the page locale; diacritics and tatweel are ignored
+    norm = ->(s) { s.to_s.gsub(/[ً-ٰٟـ]/, "").tr("أإآ", "ااا").tr("ة", "ه").tr("ى", "ي").downcase }
     nq = norm.call(q)
     hit = ->(*fields) { fields.flatten.compact.any? { |f| f.is_a?(Bilingual) ? [ f.ar, f.en ].any? { |v| norm.call(v).include?(nq) } : norm.call(f).include?(nq) } }
     out = []

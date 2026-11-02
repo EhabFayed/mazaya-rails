@@ -229,16 +229,21 @@
     var resets = document.querySelectorAll('[data-filter-reset]');
     var bar = document.querySelector('[data-product-filters]');
     var params = new URLSearchParams(location.search);
-    var state = { sub: params.get('sub') || '', kind: params.get('kind') || '', q: params.get('q') || '', sort: params.get('sort') || '' };
+    // ?kind= is the entry mode (ready from المنتجات الجاهزة, custom from B2B): it survives reloads and
+    // every reset goes back to it rather than to "all"
+    var entryKind = /^(ready|custom)$/.test(params.get('kind')) ? params.get('kind') : '';
+    var state = { sub: params.get('sub') || '', kind: entryKind, q: params.get('q') || '', sort: params.get('sort') || '' };
     if (qInput) qInput.value = state.q;
     if (sortSel) sortSel.value = state.sort;
     cards.forEach(function (c, i) { c._i = i; });
 
-    function norm(s) { return (s || '').toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').trim(); }
+    function norm(s) { return (s || '').toLowerCase().replace(/[ً-ٰٟـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').trim(); }
+    // "custom" covers every product (anything can be made to order); "ready" is only the stock (B2C) ones
+    function kindOk(c, k) { return !k || k === 'custom' || c.getAttribute('data-kind') === k; }
     function matches(c, skip) {
       var q = norm(state.q);
       return (skip === 'sub' || !state.sub || c.getAttribute('data-sub') === state.sub) &&
-             (skip === 'kind' || !state.kind || c.getAttribute('data-kind') === state.kind) &&
+             (skip === 'kind' || kindOk(c, state.kind)) &&
              (!q || norm(c.getAttribute('data-search')).indexOf(q) > -1);
     }
     function facet(btn, n) {
@@ -282,7 +287,7 @@
       document.querySelectorAll('[data-kind-filter]').forEach(function (b) {
         var v = b.getAttribute('data-kind-filter'), on = v === state.kind;
         b.classList.toggle('active', on); b.setAttribute('aria-pressed', on);
-        facet(b, cards.filter(function (c) { return matches(c, 'kind') && (!v || c.getAttribute('data-kind') === v); }).length);
+        facet(b, cards.filter(function (c) { return matches(c, 'kind') && kindOk(c, v); }).length);
       });
       document.querySelectorAll('[data-sub-filter]').forEach(function (b) {
         var v = b.getAttribute('data-sub-filter'), on = v === state.sub;
@@ -295,14 +300,14 @@
       if (chips) {
         chips.innerHTML = '';
         if (state.q) chip('«' + state.q + '»', function () { state.q = ''; if (qInput) qInput.value = ''; });
-        if (state.kind) chip(labelFor('[data-kind-filter="' + state.kind + '"]', state.kind), function () { state.kind = ''; });
+        if (state.kind && state.kind !== entryKind) chip(labelFor('[data-kind-filter="' + state.kind + '"]', state.kind), function () { state.kind = entryKind; });
         if (state.sub) chip(labelFor('button[data-sub-filter="' + state.sub + '"]', state.sub), function () { state.sub = ''; });
       }
-      var any = !!(state.q || state.kind || state.sub);
+      var any = !!(state.q || state.kind !== entryKind || state.sub);
       resets.forEach(function (r) { if (!r.closest('[data-product-empty]')) r.hidden = !any; });
     }
     function reset() {
-      state.sub = state.kind = state.q = state.sort = '';
+      state.sub = state.q = state.sort = ''; state.kind = entryKind;
       if (qInput) qInput.value = '';
       if (sortSel) sortSel.value = '';
       apply();
@@ -328,7 +333,7 @@
     if (sortSel) sortSel.addEventListener('change', function () { state.sort = sortSel.value; apply(); });
     resets.forEach(function (r) {
       r.addEventListener('click', function () {
-        state.sub = state.kind = state.q = ''; if (qInput) qInput.value = '';
+        state.sub = state.q = ''; state.kind = entryKind; if (qInput) qInput.value = '';
         apply(); if (qInput) qInput.focus({ preventScroll: true });
       });
     });
@@ -340,8 +345,8 @@
     });
     apply();
     // Filters last only while on the page: links may preset them (?sub= ?kind= ?q= ?sort=), but the
-    // URL is cleaned right away, and coming Back (bfcache or a restored form) starts unfiltered.
-    if (location.search) history.replaceState(null, '', location.pathname + location.hash);
+    // URL is cleaned right away (except the ?kind= entry mode), and coming Back starts from that mode.
+    if (location.search) history.replaceState(null, '', location.pathname + (entryKind ? '?kind=' + entryKind : '') + location.hash);
     window.addEventListener('pageshow', function (e) {
       if (e.persisted || (performance.getEntriesByType('navigation')[0] || {}).type === 'back_forward') reset();
     });
@@ -365,13 +370,10 @@
   if (finder) {
     finder.addEventListener('submit', function (e) {
       e.preventDefault();
+      // the finder lives on المنتجات الجاهزة, so every answer lands on the ready (B2C) list;
+      // the category options already carry ?kind=ready
       var cat = finder.querySelector('[name=q1]:checked');
-      var use = finder.querySelector('[name=q3]:checked');
-      var url = cat ? cat.value : '/products';
-      var qs = [];
-      if (use && use.value === 'commercial') qs.push('kind=custom');
-      if (use && use.value !== 'commercial') qs.push('kind=ready');
-      location.href = url + (qs.length ? (url.indexOf('?') > -1 ? '&' : '?') + qs.join('&') : '');
+      location.href = cat ? cat.value : '/products';
     });
   }
 
@@ -381,7 +383,7 @@
     var q = lib.querySelector('[data-guide-search]'), sel = lib.querySelector('[data-guide-filter]');
     var items = Array.prototype.slice.call(lib.querySelectorAll('[data-guide]'));
     var none = lib.querySelector('[data-guide-empty]');
-    var norm = function (s) { return (s || '').toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي'); };
+    var norm = function (s) { return (s || '').toLowerCase().replace(/[ً-ٰٟـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي'); };
     function run() {
       var text = norm(q.value), cat = sel.value, n = 0;
       items.forEach(function (it) {
