@@ -4,7 +4,7 @@ module ApplicationHelper
 
   def rtl? = I18n.locale != :en
 
-  # Product listing mode carried in ?kind=: "ready" when browsing from المنتجات الجاهزة (B2C only),
-  # "custom" when coming from the B2B pages (every product). Links inside the catalogue pass it on.
-  def kind_scope = params[:kind].presence_in(Product::KINDS)
+  # Product listing mode carried in ?kind=: "custom" when browsing from منتجات حسب الطلب (B2C);
+  # the B2B pages pass none (every product). Links inside the catalogue pass it on.
+  def kind_scope = params[:kind].presence_in(%w[ready custom])
 end

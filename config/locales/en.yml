@@ -45,7 +45,7 @@ en:
     company: "Company"
     contact: "Contact Us"
     b2b_intro: "For contractors, businesses and projects: custom solutions, technical catalog, request a quote, and distribution partnership."
-    b2c_intro: "Ready-made products for everyday and professional use, with multiple options, sizes and specifications."
+    b2c_intro: "Made-to-order products for everyday and professional use, with multiple options, sizes and specifications."
     custom_solutions: "Custom Solutions"
     projects: "Projects"
     ecatalog: "E-Catalog"
@@ -111,8 +111,8 @@ en:
       b2b_desc: "From industrial products to access solutions, work platforms, and custom manufacturing, we develop solutions around your project requirements and technical specifications."
       b2b_cta: "Explore Business Solutions"
       b2c_label: "For Everyday & Professional Use"
-      b2c_title: "Ready-Made Products"
-      b2c_desc: "Explore Mazaya's ready-made products and compare available options, sizes, and specifications to find the right product for your needs."
+      b2c_title: "Made-to-Order Products"
+      b2c_desc: "Explore Mazaya's made-to-order products and compare available options, sizes, and specifications to find the right product for your needs."
       b2c_cta: "Browse Products"
     numbers:
       h2: "Experience Measured by What We've Achieved"
@@ -402,12 +402,12 @@ en:
       secondary: "Contact Us"
 
   b2c:
-    title: "Ready-Made Products — Mazaya Aluminum"
-    description: "Explore Mazaya's ready-made products for a wide range of applications, and compare available options and specifications to find the right fit for your needs."
+    title: "Made-to-Order Products — Mazaya Aluminum"
+    description: "Explore Mazaya's made-to-order products for a wide range of applications, and compare available options and specifications to find the right fit for your needs."
     hero:
       label: "Mazaya Products"
       h1: "The Right Product Starts with Your Needs."
-      desc: "Explore Mazaya's ready-made products for a wide range of applications, and compare available options and specifications to find the right fit for your needs."
+      desc: "Explore Mazaya's made-to-order products for a wide range of applications, and compare available options and specifications to find the right fit for your needs."
       primary: "Browse Products"
     categories:
       label: "Browse by Category"
@@ -496,6 +496,11 @@ en:
     quote_cta: "Request a Quote for This Product"
     custom_cta: "Request a Custom Solution Consultation"
     gallery_note: "Product images from multiple angles"
+    gallery_open: "View image full screen"
+    wa_message: "Hello, I'd like to ask about this product: %{name}%{code}\n%{url}"
+    gallery_close: "Close"
+    gallery_prev: "Previous image"
+    gallery_next: "Next image"
     custom_band_h3: "Need a custom version of this product?"
     features_label: "Key Features"
     features_h2: "More Flexibility Across More Uses."

@@ -2165,7 +2165,80 @@ body.ltr .ph-slot.video::after {
 .pd-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #fff;
+  padding: 4px 4px 22px;
+}
+.pd-zoom {
+  position: absolute;
+  top: 14px;
+  inset-inline-end: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(25, 44, 123, 0.88);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(25, 44, 123, 0.25);
+  transition: transform var(--hover-t) var(--hover-ease), background var(--hover-t) var(--hover-ease);
+}
+.pd-zoom:hover { background: var(--navy); transform: scale(1.06); }
+.pd-zoom:focus-visible, .lb button:focus-visible { outline: 3px solid #8fa2f0; outline-offset: 2px; }
+
+/* full-screen image viewer */
+.lb {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(8, 12, 32, 0.94);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+}
+.lb.open { display: flex; animation: lb-in 0.18s ease-out; }
+@keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+.lb-img {
+  max-width: calc(100vw - 160px);
+  max-height: calc(100vh - 140px);
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  user-select: none;
+}
+.lb button {
+  position: absolute;
+  border: 0;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.lb button:hover { background: rgba(255, 255, 255, 0.24); }
+.lb-close { top: 18px; inset-inline-end: 18px; width: 48px; height: 48px; }
+.lb-prev, .lb-next { top: 50%; transform: translateY(-50%); width: 56px; height: 56px; }
+.lb-prev { inset-inline-start: 22px; }
+.lb-next { inset-inline-end: 22px; }
+[dir="rtl"] .lb-prev svg, [dir="rtl"] .lb-next svg { transform: scaleX(-1); }
+.lb-bar {
+  position: absolute;
+  bottom: 20px;
+  inset-inline: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+}
+.lb-bar b { color: #fff; margin-inline-end: 10px; font-weight: 700; }
+body.lb-lock { overflow: hidden; }
+@media (max-width: 700px) {
+  .lb-img { max-width: calc(100vw - 24px); max-height: calc(100vh - 150px); }
+  .lb-prev, .lb-next { top: auto; bottom: 56px; transform: none; width: 48px; height: 48px; }
 }
 .pd-thumb span {
   position: absolute;

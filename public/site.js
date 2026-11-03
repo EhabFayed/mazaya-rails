@@ -10,7 +10,12 @@
   var WA_HREF = body.getAttribute('data-whatsapp-href') || ('https://wa.me/' + WA_DISPLAY.replace(/[^0-9]/g, ''));
   window.MAZAYA_WA = { display: WA_DISPLAY, href: WA_HREF };
 
-  document.querySelectorAll('[data-wa]').forEach(function (a) { a.href = WA_HREF; a.target = '_blank'; a.rel = 'noopener'; });
+  // data-wa-text="..." pre-fills the chat (e.g. the product's name and link on product pages)
+  document.querySelectorAll('[data-wa]').forEach(function (a) {
+    var text = a.getAttribute('data-wa-text');
+    a.href = text ? WA_HREF + (WA_HREF.indexOf('?') > -1 ? '&' : '?') + 'text=' + encodeURIComponent(text) : WA_HREF;
+    a.target = '_blank'; a.rel = 'noopener';
+  });
   document.querySelectorAll('[data-wa-display]:not(body)').forEach(function (el) { el.textContent = WA_DISPLAY; });
 
   // ---- LTR: flip the RTL arrow glyphs used in link text ----
@@ -229,17 +234,18 @@
     var resets = document.querySelectorAll('[data-filter-reset]');
     var bar = document.querySelector('[data-product-filters]');
     var params = new URLSearchParams(location.search);
-    // ?kind= is the entry mode (ready from المنتجات الجاهزة, custom from B2B): it survives reloads and
-    // every reset goes back to it rather than to "all"
+    // ?kind= is the entry mode (custom from منتجات حسب الطلب; B2B pages pass none and land on "all"):
+    // it survives reloads and every reset goes back to it rather than to "all"
     var entryKind = /^(ready|custom)$/.test(params.get('kind')) ? params.get('kind') : '';
-    var state = { sub: params.get('sub') || '', kind: entryKind, q: params.get('q') || '', sort: params.get('sort') || '' };
+    var defaultKind = entryKind;
+    var state = { sub: params.get('sub') || '', kind: defaultKind, q: params.get('q') || '', sort: params.get('sort') || '' };
     if (qInput) qInput.value = state.q;
     if (sortSel) sortSel.value = state.sort;
     cards.forEach(function (c, i) { c._i = i; });
 
     function norm(s) { return (s || '').toLowerCase().replace(/[ً-ٰٟـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').trim(); }
-    // "custom" covers every product (anything can be made to order); "ready" is only the stock (B2C) ones
-    function kindOk(c, k) { return !k || k === 'custom' || c.getAttribute('data-kind') === k; }
+    // each kind button shows only its own products; "general" ones carry no label and show under both
+    function kindOk(c, k) { var ck = c.getAttribute('data-kind'); return !k || ck === k || ck === 'general'; }
     function matches(c, skip) {
       var q = norm(state.q);
       return (skip === 'sub' || !state.sub || c.getAttribute('data-sub') === state.sub) &&
@@ -300,14 +306,14 @@
       if (chips) {
         chips.innerHTML = '';
         if (state.q) chip('«' + state.q + '»', function () { state.q = ''; if (qInput) qInput.value = ''; });
-        if (state.kind && state.kind !== entryKind) chip(labelFor('[data-kind-filter="' + state.kind + '"]', state.kind), function () { state.kind = entryKind; });
+        if (state.kind && state.kind !== defaultKind) chip(labelFor('[data-kind-filter="' + state.kind + '"]', state.kind), function () { state.kind = defaultKind; });
         if (state.sub) chip(labelFor('button[data-sub-filter="' + state.sub + '"]', state.sub), function () { state.sub = ''; });
       }
-      var any = !!(state.q || state.kind !== entryKind || state.sub);
+      var any = !!(state.q || state.kind !== defaultKind || state.sub);
       resets.forEach(function (r) { if (!r.closest('[data-product-empty]')) r.hidden = !any; });
     }
     function reset() {
-      state.sub = state.q = state.sort = ''; state.kind = entryKind;
+      state.sub = state.q = state.sort = ''; state.kind = defaultKind;
       if (qInput) qInput.value = '';
       if (sortSel) sortSel.value = '';
       apply();
@@ -333,7 +339,7 @@
     if (sortSel) sortSel.addEventListener('change', function () { state.sort = sortSel.value; apply(); });
     resets.forEach(function (r) {
       r.addEventListener('click', function () {
-        state.sub = state.q = ''; state.kind = entryKind; if (qInput) qInput.value = '';
+        state.sub = state.q = ''; state.kind = defaultKind; if (qInput) qInput.value = '';
         apply(); if (qInput) qInput.focus({ preventScroll: true });
       });
     });
@@ -352,16 +358,96 @@
     });
   }
 
-  // ---- product gallery thumbs ----
+  // ---- product gallery: thumbs + full-screen viewer ----
   document.querySelectorAll('[data-gallery]').forEach(function (g) {
     var main = g.querySelector('[data-gallery-main]'), cap = g.querySelector('[data-gallery-caption]');
-    g.querySelectorAll('[data-gallery-thumb]').forEach(function (t) {
-      t.addEventListener('click', function () {
-        g.querySelectorAll('[data-gallery-thumb]').forEach(function (x) { x.classList.remove('active'); });
-        t.classList.add('active');
-        main.src = t.getAttribute('data-src'); main.alt = t.getAttribute('data-label');
-        if (cap) cap.textContent = t.getAttribute('data-label');
-      });
+    var thumbs = Array.prototype.slice.call(g.querySelectorAll('[data-gallery-thumb]'));
+    if (!main) return;
+    var current = 0;
+
+    function show(i) {
+      current = i;
+      var t = thumbs[i];
+      if (!t) return;
+      thumbs.forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      main.src = t.getAttribute('data-src'); main.alt = t.getAttribute('data-label');
+      if (cap) cap.textContent = t.getAttribute('data-label');
+    }
+    thumbs.forEach(function (t, i) {
+      t.addEventListener('click', function () { show(i); });
+      t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(i); } });
+    });
+
+    var chev = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
+    var lb = document.createElement('div');
+    lb.className = 'lb';
+    lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
+    lb.innerHTML =
+      '<img class="lb-img" alt="">' +
+      '<button type="button" class="lb-close" aria-label="' + (g.dataset.labelClose || 'Close') + '"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>' +
+      '<button type="button" class="lb-prev" aria-label="' + (g.dataset.labelPrev || 'Previous') + '">' + chev + '</button>' +
+      '<button type="button" class="lb-next" aria-label="' + (g.dataset.labelNext || 'Next') + '">' + chev.replace('M15 18l-6-6 6-6', 'M9 18l6-6-6-6') + '</button>' +
+      '<div class="lb-bar"><b></b><span></span></div>';
+    document.body.appendChild(lb);
+    var lbImg = lb.querySelector('.lb-img'), lbCount = lb.querySelector('.lb-bar b'), lbCap = lb.querySelector('.lb-bar span');
+    var prevBtn = lb.querySelector('.lb-prev'), nextBtn = lb.querySelector('.lb-next'), lastFocus = null;
+    var many = thumbs.length > 1;
+    prevBtn.hidden = nextBtn.hidden = !many;
+
+    function render() {
+      var t = thumbs[current];
+      lbImg.src = t ? t.getAttribute('data-src') : main.src;
+      lbImg.alt = t ? t.getAttribute('data-label') : main.alt;
+      lbCap.textContent = lbImg.alt;
+      lbCount.textContent = many ? (current + 1) + ' / ' + thumbs.length : '';
+    }
+    function step(d) {
+      if (!many) return;
+      show((current + d + thumbs.length) % thumbs.length);
+      render();
+    }
+    function open() {
+      lastFocus = document.activeElement;
+      render();
+      lb.classList.add('open');
+      document.body.classList.add('lb-lock');
+      lb.querySelector('.lb-close').focus();
+    }
+    function close() {
+      lb.classList.remove('open');
+      document.body.classList.remove('lb-lock');
+      if (lastFocus) lastFocus.focus();
+    }
+
+    main.addEventListener('click', open);
+    var openBtn = g.querySelector('[data-gallery-open]');
+    if (openBtn) openBtn.addEventListener('click', open);
+    lb.querySelector('.lb-close').addEventListener('click', close);
+    prevBtn.addEventListener('click', function () { step(-1); });
+    nextBtn.addEventListener('click', function () { step(1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+
+    var rtl = document.documentElement.dir === 'rtl';
+    document.addEventListener('keydown', function (e) {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowRight') step(rtl ? -1 : 1);
+      else if (e.key === 'ArrowLeft') step(rtl ? 1 : -1);
+      else if (e.key === 'Tab') { // keep focus inside the dialog
+        var f = Array.prototype.filter.call(lb.querySelectorAll('button'), function (b) { return !b.hidden; });
+        var i = f.indexOf(document.activeElement);
+        e.preventDefault();
+        f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+      }
+    });
+
+    var x0 = null;
+    lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 45) step((dx < 0) !== rtl ? 1 : -1);
     });
   });
 
@@ -370,8 +456,8 @@
   if (finder) {
     finder.addEventListener('submit', function (e) {
       e.preventDefault();
-      // the finder lives on المنتجات الجاهزة, so every answer lands on the ready (B2C) list;
-      // the category options already carry ?kind=ready
+      // the finder lives on منتجات حسب الطلب, so every answer lands on the custom (B2C) list;
+      // the category options already carry ?kind=custom
       var cat = finder.querySelector('[name=q1]:checked');
       location.href = cat ? cat.value : '/products';
     });

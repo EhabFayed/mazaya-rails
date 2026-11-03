@@ -195,7 +195,9 @@ module SiteData
 
     def image_path(att)
       return blob_path(att) unless att.blob.image? && att.blob.variable?
-      U.rails_representation_path(att.variant(resize_to_limit: [ 1600, 1600 ], saver: { quality: 82 }), only_path: true)
+      w, h = att.blob.metadata.values_at("width", "height")
+      return blob_path(att) if w && h && w <= 2000 && h <= 2000 # already web-sized: re-encoding only loses detail
+      U.rails_representation_path(att.variant(resize_to_limit: [ 2000, 2000 ], saver: { quality: 90 }), only_path: true)
     end
   end
 
@@ -217,8 +219,8 @@ module SiteData
   def products_in(category_slug, subcategory: nil, kind: nil)
     list = PRODUCTS.select { |p| p[:category] == category_slug }
     list = list.select { |p| p[:subcategory] == subcategory } if subcategory.present?
-    # "custom" covers every product; "ready" is only the stock (B2C) ones
-    list = list.select { |p| p[:kind].to_s == "ready" } if kind.to_s == "ready"
+    # "custom" covers every product; "ready" is the stock ones (sheet: B2B) plus unlabelled "general" ones
+    list = list.select { |p| Product::LISTED_AS_READY.include?(p[:kind].to_s) } if kind.to_s == "ready"
     list
   end
 
@@ -228,7 +230,12 @@ module SiteData
   def solutions_for_project(project) = project[:products].filter_map { |s| solution(s) }
   def subcategory(category, slug) = category[:subcategories].find { |s| s[:slug] == slug }
 
-  def kind_label(kind) = I18n.t(kind.to_sym == :ready ? "common.ready" : "common.custom")
+  def kind_label(kind)
+    case kind.to_sym
+    when :ready  then I18n.t("common.ready")
+    when :custom then I18n.t("common.custom")
+    end # :general -> nil, rendered without a badge
+  end
 
   def search(query, prefix: "")
     q = query.to_s.strip

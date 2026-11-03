@@ -1,6 +1,8 @@
 class Product < ApplicationRecord
   include ContentRecord
-  KINDS = %w[ready custom].freeze
+  # general = plain product, no ready/custom label; listed under both tracks (e.g. trolleys)
+  KINDS = %w[ready custom general].freeze
+  LISTED_AS_READY = %w[ready general].freeze
   localized :name, :summary
   sluggable
 

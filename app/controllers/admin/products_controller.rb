@@ -2,7 +2,7 @@
 # image gallery with labels, technical files, and Excel/CSV import.
 module Admin
   class ProductsController < BaseController
-    KIND_LABELS = { "ready" => "جاهز", "custom" => "حسب الطلب" }.freeze
+    KIND_LABELS = { "ready" => "جاهز", "custom" => "حسب الطلب", "general" => "منتج فقط (يظهر في الاتنين)" }.freeze
     ROW_FIELDS  = %i[features applications specs size_cols sizes faq].freeze
 
     before_action :require_content!

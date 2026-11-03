@@ -112,8 +112,9 @@
           <input type="search" data-filter-q value="<%= @q %>" placeholder="<%= t("category.search_placeholder") %>" aria-label="<%= t("category.search_placeholder") %>" autocomplete="off">
         </label>
         <div class="pfx-seg" role="group" aria-label="<%= t("category.kind_label") %>">
+          <% active_kind = @kind.to_s.presence_in(%w[ready custom]).to_s %>
           <% [ [ "", t("common.all") ], [ "ready", t("common.ready") ], [ "custom", t("common.custom") ] ].each do |val, label| %>
-          <button type="button" data-kind-filter="<%= val %>" data-label="<%= label %>" class="<%= 'active' if @kind.to_s == val %>" aria-pressed="<%= @kind.to_s == val %>"><%= label %> <b data-facet><%= val == "ready" ? @products.count { |p| p[:kind].to_s == "ready" } : @products.size %></b></button>
+          <button type="button" data-kind-filter="<%= val %>" data-label="<%= label %>" class="<%= 'active' if active_kind == val %>" aria-pressed="<%= active_kind == val %>"><%= label %> <b data-facet><%= val.empty? ? @products.size : @products.count { |p| [ val, "general" ].include?(p[:kind].to_s) } %></b></button>
           <% end %>
         </div>
         <label class="pfx-sort">

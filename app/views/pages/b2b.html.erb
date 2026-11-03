@@ -23,7 +23,7 @@
     <%= render "shared/section_head", label: t("b2b.solutions.label"), h2: t("b2b.solutions.h2"), desc: t("b2b.solutions.desc"), center: true %>
     <div class="grid-32">
       <% @categories.each do |c| %>
-      <%= render "shared/category_card", category: c, desc: c[:b2b], cta: t("common.explore_solutions"), kind: "custom" %>
+      <%= render "shared/category_card", category: c, desc: c[:b2b], cta: t("common.explore_solutions") %>
       <% end %>
     </div>
   </div>

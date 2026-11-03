@@ -199,7 +199,7 @@ class MazayaMasterImport
       code: code, category: category, subcategory: sub,
       name_en: g[:name_en], name_ar: name_ar.presence || g[:name_en],
       summary_en: overview, summary_ar: MazayaArabic.overview(slug) || overview,
-      kind: kind_for(g[:rows], loads),
+      kind: CATEGORY_KINDS[category.slug] || kind_for(g[:rows], loads),
       popular: position_is_first_in_sheet?(g, position), published: true, position: position,
       specs: specs_for(first, multi: multi, loads: loads),
       applications: applications_for(g[:rows]),
@@ -253,17 +253,25 @@ class MazayaMasterImport
 
   def custom?(load) = load.blank? || load !~ /\d/
 
-  # The sheet's "B2B / B2C" column decides: B2C = ready (stock), B2B = custom. Older
+  # The sheet's "B2B / B2C" column decides: B2B = ready (stock), B2C = custom (made to order). Older
   # files without the column fall back to "no numeric load capacity means made to order".
   # Codes whose "B2B / B2C" cell is blank in the sheet, as confirmed by the client.
-  KIND_OVERRIDES = { "YP267" => "ready" }.freeze # Rolling Shelf Ladder: B2C
+  # Whole categories with a fixed kind, as confirmed by the client (beats the sheet column).
+  # trolleys: no ready/custom split, "general" lists under both tracks. flooring: all B2C.
+  CATEGORY_KINDS = { "trolleys" => "general", "flooring" => "custom" }.freeze
+  KIND_OVERRIDES = {
+    "YP267"         => "custom", # Rolling Shelf Ladder: B2C (blank in sheet)
+    "MAZ-ACP-25-30" => "custom", # Aluminium wall access panel: B2C
+    "MAZ-RHD-001"   => "custom", # Aluminium roof hatch door: B2C
+    "ACP-15-030"    => "custom"  # Ceiling maintenance hatch: B2C
+  }.freeze
 
   def kind_for(rows, loads)
     override = rows.filter_map { |r| KIND_OVERRIDES[primary_code(r["Product Code"])] }.first
     return override if override
     segments = rows.map { |r| r["B2B / B2C"].to_s.strip.upcase }
-    return "ready" if segments.include?("B2C")
-    return "custom" if segments.include?("B2B")
+    return "ready" if segments.include?("B2B")
+    return "custom" if segments.include?("B2C")
     custom?(loads.first) ? "custom" : "ready"
   end
 
