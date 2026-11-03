@@ -1,3 +1,4 @@
+# Fallback used by db/seeds.rb only when db/seeds/content/ is absent.
 # Imports SiteData::Defaults (the client copy deck + prototypes) into the
 # admin-managed tables. Idempotent: existing rows (matched by slug/key) are
 # left untouched so admin edits survive re-seeding.
@@ -141,13 +142,3 @@ else
   puts "   db/data/mazaya_products.xlsx not found — keeping prototype products"
 end
 
-puts "== Admin user"
-if User.none?
-  email = ENV.fetch("ADMIN_EMAIL", "admin@mazaya.local")
-  password = ENV.fetch("ADMIN_PASSWORD", "mazaya-admin-2026")
-  User.create!(name: "Admin", email: email, password: password, role: "admin")
-  puts "   created #{email} / #{password}  (change it from /admin/users)"
-end
-
-Setting.bump_content_version!
-puts "== Done"
