@@ -18,8 +18,8 @@ ContentSeed.table "settings", [
     rfq_response_en: "Within 24 hours",
     notify_emails: nil,
     founded: 1991,
-    content_version: 256,
+    content_version: 332,
     created_at: "2026-10-19T08:54:35.062257Z",
-    updated_at: "2026-10-19T08:54:35.101182Z",
+    updated_at: "2026-11-03T15:26:59.089341Z",
   },
 ]
