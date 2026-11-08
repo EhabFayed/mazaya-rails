@@ -8,6 +8,8 @@ en:
   tagline: "The Original. The Trusted Name."
   common:
     request_quote: "Request a Quote"
+    prev: "Previous"
+    next: "Next"
     whatsapp: "Contact Us on WhatsApp"
     whatsapp_direct: "WhatsApp"
     contact_us: "Contact Us"
@@ -126,6 +128,11 @@ en:
         - ["Custom Solutions", "Designs, dimensions, thicknesses, load requirements, and finishes can be customized to meet project requirements."]
         - ["Wide Distribution Network", "A broad distributor network serving customers across Saudi Arabia and international markets."]
       cta: "Learn More About Mazaya"
+    certifications:
+      label: "Certifications & Approvals"
+      h2: "Quality Backed by Certifications and Approvals."
+      desc: "Mazaya products are supported by certifications, approvals, and test reports related to quality, safety, and Saudi standards."
+      cta: "Explore Our Quality Framework"
     original:
       label: "Choose the Original"
       h2: "Looking Similar Doesn't Mean Performing the Same."
@@ -706,6 +713,11 @@ en:
       h2: "Certificates and Reports in One Place."
       desc: "Explore the available documentation related to quality, certifications, approvals, and product testing."
       pending: "The document will be uploaded here once approved"
+      view: "View document"
+      close: "Close"
+      prev: "Previous document"
+      next: "Next document"
+      counter_of: "of"
     products:
       label: "Quality Across Our Products"
       h2: "Review the Specifications Before Choosing Your Product."

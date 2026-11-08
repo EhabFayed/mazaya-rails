@@ -28,5 +28,12 @@ module App
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = false
+
+    # Logos (clients, partners) are often SVG. Rails serves SVG blobs as
+    # application/octet-stream by default, which with `nosniff` breaks them in <img>.
+    # Keep the real type; SVG stays out of content_types_allowed_inline, so it is still
+    # sent with Content-Disposition: attachment (opening the URL directly downloads it,
+    # so any script inside never runs on our origin).
+    config.active_storage.content_types_to_serve_as_binary -= [ "image/svg+xml" ]
   end
 end

@@ -92,6 +92,30 @@
   </div>
 </section>
 
+<%# 04b — Certifications (same list as the quality page, editable from admin content lists) %>
+<section id="certifications" class="section-pad bg-soft">
+  <div class="wrap">
+    <%= render "shared/section_head", label: t("home.certifications.label"), h2: t("home.certifications.h2"), desc: t("home.certifications.desc"), center: true %>
+    <div class="grid-4">
+      <% SiteData::CERTIFICATIONS.each do |c| %>
+      <a data-reveal href="<%= quality_path %>#certifications" class="feature-card card-hover">
+        <% if c[:image] %>
+        <div class="cert-logo"><img src="<%= c[:image] %>" alt="<%= c[:name] %>" loading="lazy"></div>
+        <% else %>
+        <div class="num-badge soft" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/><path d="m9.5 8 1.7 1.7L14.5 6.5"/></svg>
+        </div>
+        <% end %>
+        <h3><%= c[:name] %></h3>
+        <p style="margin-bottom:18px"><%= c[:desc] %></p>
+        <span class="card-link"><%= c[:cta] %> ←</span>
+      </a>
+      <% end %>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:44px"><a href="<%= quality_path %>" class="btn-outline"><%= t("home.certifications.cta") %> ←</a></div>
+  </div>
+</section>
+
 <%# 05 — Original vs counterfeit teaser %>
 <section id="original" class="section-pad bg-dark" style="position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 15% 50%,rgba(185,198,242,.14),transparent 70%)"></div>
@@ -147,7 +171,7 @@
     </div>
     <div data-reveal style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px" id="social">
       <span style="align-self:center;color:#686B70;font-weight:700;font-size:15px"><%= t("home.news.cta") %></span>
-      <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" style="background:#192C7B" title="<%= s[:label] %>" target="_blank" rel="noopener"><%= s[:abbr] %></a><% end %>
+      <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" style="background:#192C7B" title="<%= s[:label] %>" aria-label="<%= s[:label] %>" target="_blank" rel="noopener"><%= social_icon(s) %></a><% end %>
     </div>
   </div>
 </section>
@@ -155,7 +179,17 @@
 <%# trust strip %>
 <section style="background:#fff;padding:0 0 64px;overflow:hidden">
   <div data-reveal class="kicker-gray" style="text-align:center;margin-bottom:36px"><%= t("footer.trust") %></div>
-  <div id="marqueeRow" class="marquee-row" data-clients="<%= SiteData::CLIENTS.to_json %>"></div>
+  <div class="wrap">
+    <div class="clients-carousel" data-carousel>
+      <button type="button" class="cc-nav prev" data-cc-step="-1" aria-label="<%= t("common.prev") %>"></button>
+      <div class="cc-track" data-cc-track tabindex="0" aria-label="<%= t("footer.trust") %>">
+        <% SiteData::CLIENTS.each do |c| %>
+        <div class="cc-logo" style="background:<%= c[:bg] %>" title="<%= c[:name] %>"><img src="<%= c[:logo] %>" alt="<%= c[:name] %>" loading="lazy" draggable="false"></div>
+        <% end %>
+      </div>
+      <button type="button" class="cc-nav next" data-cc-step="1" aria-label="<%= t("common.next") %>"></button>
+    </div>
+  </div>
 </section>
 
 <%# 09 — Final CTA %>

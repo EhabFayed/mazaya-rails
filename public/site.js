@@ -490,22 +490,59 @@
     });
   });
 
-  // ---- trust marquee ----
-  var row = document.getElementById('marqueeRow');
-  if (row) {
-    var clients = JSON.parse(row.getAttribute('data-clients') || '[]');
-    for (var g = 0; g < 2; g++) {
-      var group = document.createElement('div'); group.className = 'marquee-group';
-      clients.concat(clients).forEach(function (c) {
-        var item = document.createElement('div'); item.className = 'marquee-item';
-        var tile = document.createElement('div'); tile.className = 'marquee-logo'; tile.style.background = c.bg;
-        var img = document.createElement('img'); img.src = c.logo; img.alt = c.name; img.loading = 'lazy'; tile.appendChild(img);
-        var label = document.createElement('div'); label.className = 'marquee-label'; label.textContent = c.name;
-        item.appendChild(tile); item.appendChild(label); group.appendChild(item);
-      });
-      row.appendChild(group);
-    }
-  }
+  // ---- clients carousel: arrows (one page), swipe / mouse drag, autoplay (one logo) ----
+  document.querySelectorAll('[data-carousel]').forEach(function (car) {
+    var track = car.querySelector('[data-cc-track]');
+    if (!track || !track.children.length) return;
+    // modern browsers report RTL scrollLeft as 0 → negative; work in "distance from start"
+    var sign = getComputedStyle(track).direction === 'rtl' ? -1 : 1;
+    var pos = function () { return Math.abs(track.scrollLeft); };
+    var max = function () { return track.scrollWidth - track.clientWidth; };
+    var tileW = function () {
+      var a = track.children[0], b = track.children[1];
+      return b ? Math.abs(b.offsetLeft - a.offsetLeft) : a.offsetWidth;
+    };
+    var go = function (dist) { track.scrollTo({ left: sign * Math.min(Math.max(dist, 0), max()) }); };
+    var step = function (tiles) {
+      if (tiles > 0 && pos() >= max() - 2) return go(0);            // loop: end → start
+      if (tiles < 0 && pos() <= 2) return go(max());                 // loop: start → end
+      go(Math.round((pos() + tiles * tileW()) / tileW()) * tileW());
+    };
+    var page = function () { return Math.max(1, Math.round(track.clientWidth / tileW())); };
+
+    // autoplay; pauses on hover / focus / interaction, resumes after a short idle
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var timer = null, hold = false, idle = null;
+    var play = function () { if (!reduce && !timer) timer = setInterval(function () { if (!hold && !document.hidden) step(1); }, 3000); };
+    var stop = function () { clearInterval(timer); timer = null; };
+    var nudge = function () { stop(); clearTimeout(idle); idle = setTimeout(play, 6000); };
+    car.addEventListener('mouseenter', function () { hold = true; });
+    car.addEventListener('mouseleave', function () { hold = false; });
+    car.addEventListener('focusin', function () { hold = true; });
+    car.addEventListener('focusout', function () { hold = false; });
+    track.addEventListener('touchstart', nudge, { passive: true });
+    track.addEventListener('wheel', nudge, { passive: true });
+
+    car.querySelectorAll('[data-cc-step]').forEach(function (b) {
+      b.addEventListener('click', function () { nudge(); step(parseInt(b.getAttribute('data-cc-step'), 10) * page()); });
+    });
+
+    // mouse drag (touch already scrolls natively)
+    track.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      var x0 = e.clientX, s0 = track.scrollLeft;
+      nudge(); track.classList.add('dragging');
+      var move = function (ev) { track.scrollLeft = s0 - (ev.clientX - x0); };
+      var up = function () {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up);
+        track.classList.remove('dragging');
+        go(Math.round(pos() / tileW()) * tileW());                   // settle on a logo
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up);
+    });
+
+    play();
+  });
 
   // ---- original vs counterfeit comparison slider ----
   var box = document.getElementById('cmp'), real = document.getElementById('cmpReal'), handle = document.getElementById('cmpHandle');

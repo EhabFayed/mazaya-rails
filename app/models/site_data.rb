@@ -65,7 +65,7 @@ module SiteData
     def guide_docs       = list("guide_docs", Defaults::GUIDE_DOCS) { |r| bi(r, "x") }
     def project_fields   = list("project_fields", Defaults::PROJECT_FIELDS) { |r| bi(r, "x") }
     def comparison       = list("comparison", Defaults::COMPARISON) { |r| [ bi(r, "original"), bi(r, "counterfeit") ] }
-    def certifications   = list("certifications", Defaults::CERTIFICATIONS) { |r| { key: r["key"], name: bi(r, "title"), desc: bi(r, "desc"), cta: bi(r, "cta") } }
+    def certifications   = list("certifications", Defaults::CERTIFICATIONS) { |r| { key: r["key"], name: bi(r, "title"), desc: bi(r, "desc"), cta: bi(r, "cta"), image: r["image"].presence } }
     def topics           = list("topics", nil)&.to_h { |r| [ r["key"], bi(r, "x") ] } || Defaults::TOPICS
 
     def clients

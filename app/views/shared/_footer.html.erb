@@ -1,19 +1,12 @@
 <%# Extended footer (copy deck §10): full sitemap, catalog entry, contact by department, social. %>
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="trust-strip">
-      <span class="trust-label"><%= t("footer.trust") %></span>
-      <% SiteData::CLIENTS.each do |c| %>
-      <span class="trust-item"><span class="trust-logo" style="background:<%= c[:bg] %>"><img src="<%= c[:logo] %>" alt="<%= c[:name] %>"></span><%= c[:name] %></span>
-      <% end %>
-    </div>
-
     <div class="footer-grid footer-grid-6">
       <div class="footer-brand">
         <img src="/assets/logo-white.png" alt="<%= t("brand") %>">
         <p><%= t("footer.about_blurb") %></p>
         <div class="social-row">
-          <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" title="<%= s[:label] %>" aria-label="<%= s[:label] %>" target="_blank" rel="noopener"><%= s[:abbr] %></a><% end %>
+          <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" title="<%= s[:label] %>" aria-label="<%= s[:label] %>" target="_blank" rel="noopener"><%= social_icon(s) %></a><% end %>
         </div>
       </div>
 

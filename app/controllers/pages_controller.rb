@@ -50,6 +50,7 @@ class PagesController < ApplicationController
     @certifications = site::CERTIFICATIONS
     @documents = site::DOCUMENTS
     @steps = site::QUALITY_STEPS
+    @certificate_scans = site::Defaults::CERTIFICATE_SCANS
   end
 
   def contact

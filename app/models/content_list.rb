@@ -9,7 +9,7 @@ class ContentList < ApplicationRecord
     "org_types"           => { label: "أنواع الجهة (نماذج التحميل)", fields: %w[key ar en] },
     "custom_features"     => { label: "إمكانيات التخصيص",         fields: %w[title_ar title_en desc_ar desc_en] },
     "custom_steps"        => { label: "خطوات التصنيع حسب الطلب",   fields: %w[title_ar title_en desc_ar desc_en] },
-    "certifications"      => { label: "كروت الشهادات (الجودة)",    fields: %w[key title_ar title_en desc_ar desc_en cta_ar cta_en] },
+    "certifications"      => { label: "كروت الشهادات (الجودة)",    fields: %w[key title_ar title_en desc_ar desc_en cta_ar cta_en image] },
     "quality_steps"       => { label: "خطوات الجودة في التصنيع",   fields: %w[title_ar title_en desc_ar desc_en] },
     "safety_choose"       => { label: "السلامة: اختر المنتج",      fields: %w[title_ar title_en desc_ar desc_en] },
     "safety_checklist"    => { label: "السلامة: قائمة الفحص",      fields: %w[text_ar text_en] },

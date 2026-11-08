@@ -10,7 +10,7 @@ module Admin
       "title" => "العنوان", "desc" => "الوصف", "text" => "النص", "label" => "التسمية", "sub" => "وصف فرعي",
       "original" => "الأصلي", "counterfeit" => "المقلد", "cta" => "نص الزر", "q" => "السؤال", "a" => "الجواب",
       "value" => "القيمة", "suffix" => "اللاحقة (+ / %)", "key" => "المفتاح", "url" => "الرابط", "abbr" => "اختصار",
-      "ar" => "عربي", "en" => "English"
+      "ar" => "عربي", "en" => "English", "image" => "مسار الصورة (مثال: /assets/certificates/iso.png)"
     }.freeze
     TEXTAREA_FIELDS = %w[desc text original counterfeit a].freeze
 

@@ -21,7 +21,7 @@ lists = {
   "org_types"           => D::ORG_TYPES.map { |k, v| { "key" => k, "ar" => ar(v), "en" => en(v) } },
   "custom_features"     => pair_rows(D::CUSTOM_FEATURES),
   "custom_steps"        => pair_rows(D::CUSTOM_STEPS),
-  "certifications"      => D::CERTIFICATIONS.map { |c| { "key" => c[:key], "title_ar" => ar(c[:name]), "title_en" => en(c[:name]), "desc_ar" => ar(c[:desc]), "desc_en" => en(c[:desc]), "cta_ar" => ar(c[:cta]), "cta_en" => en(c[:cta]) } },
+  "certifications"      => D::CERTIFICATIONS.map { |c| { "key" => c[:key], "title_ar" => ar(c[:name]), "title_en" => en(c[:name]), "desc_ar" => ar(c[:desc]), "desc_en" => en(c[:desc]), "cta_ar" => ar(c[:cta]), "cta_en" => en(c[:cta]), "image" => c[:image] } },
   "quality_steps"       => pair_rows(D::QUALITY_STEPS),
   "safety_choose"       => pair_rows(D::SAFETY_CHOOSE),
   "safety_checklist"    => D::SAFETY_CHECKLIST.map { |v| { "text_ar" => ar(v), "text_en" => en(v) } },

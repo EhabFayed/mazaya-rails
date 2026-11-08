@@ -273,16 +273,30 @@ module SiteData::Defaults
   # NOTE: source material cites ISO 9001:2008; publish "ISO" only until the
   # current certificate/version is confirmed.
   CERTIFICATIONS = [
-    { key: "iso",     name: "ISO",                                                   desc: bi("شهادات مرتبطة بنظام إدارة الجودة.", "Certification related to quality management systems."),                              cta: bi("عرض الشهادة", "View Certificate") },
-    { key: "saso",    name: "SASO",                                                  desc: bi("اعتمادات مرتبطة بالمواصفات والمقاييس السعودية.", "Approvals related to Saudi standards and specifications."),                 cta: bi("عرض الاعتماد", "View Approval") },
-    { key: "tests",   name: bi("تقارير الاختبار", "Test Reports"),                   desc: bi("تقارير توثق اختبارات المنتجات وفق المتطلبات ذات الصلة.", "Reports documenting product testing according to relevant requirements."), cta: bi("عرض التقارير", "View Reports") },
-    { key: "quality", name: bi("شهادات الجودة والسلامة", "Quality & Safety Certificates"), desc: bi("وثائق وشهادات مرتبطة بالجودة والسلامة ضمن منظومة مزايا.", "Documents and certificates related to quality and safety within Mazaya's quality framework."), cta: bi("عرض الشهادات", "View Certificates") }
+    { key: "iso",        name: "ISO 9001:2015",                    desc: bi("شهادة نظام إدارة الجودة وفق المواصفة الدولية ISO 9001:2015.", "Quality management system certification to the international ISO 9001:2015 standard."), cta: bi("عرض الشهادة", "View Certificate"), image: "/assets/certificates/iso.png" },
+    { key: "sgs",        name: "SGS",                              desc: bi("اعتماد نظام إدارة الجودة ISO 9001 من SGS، إحدى الجهات الدولية الرائدة في الفحص والاعتماد.", "ISO 9001 quality management certification from SGS, a leading international inspection and certification body."), cta: bi("عرض الشهادة", "View Certificate"), image: "/assets/certificates/sgs.png" },
+    { key: "saso",       name: "SASO",                             desc: bi("اعتمادات مرتبطة بالمواصفات والمقاييس السعودية.", "Approvals related to Saudi standards and specifications."), cta: bi("عرض الاعتماد", "View Approval"), image: "/assets/certificates/saso.png" },
+    { key: "saudi_made", name: bi("صناعة سعودية", "Saudi Made"),   desc: bi("منتجات مصنّعة محليًا ضمن برنامج صناعة سعودية.", "Locally manufactured products under the Saudi Made program."), cta: bi("اعرف المزيد", "Learn More"), image: "/assets/certificates/saudi-made.png" }
   ].freeze
 
   DOCUMENTS = [
     [ "ISO", bi("عرض الشهادة", "View Certificate") ], [ "SASO", bi("عرض الاعتماد", "View Approval") ], [ bi("تقارير اختبارات الأحمال", "Load Testing Reports"), bi("عرض التقارير", "View Reports") ],
     [ bi("تقارير الاختبار", "Test Reports"), bi("عرض التقارير", "View Reports") ], [ bi("شهادات الجودة", "Quality Certificates"), bi("عرض الشهادات", "View Certificates") ], [ bi("شهادات السلامة", "Safety Certificates"), bi("عرض الشهادات", "View Certificates") ]
   ].freeze
+
+  # Scans of the quality-certificate pages from the company profile (pages 25-33).
+  # Images live in public/assets/certificates/docs/.
+  CERTIFICATE_SCANS = [
+    { key: "iso-9001-2019",     title: bi("شهادة ISO 9001:2015 — SGS (تجديد)", "ISO 9001:2015 Certificate — SGS (renewal)") },
+    { key: "iso-9001-2016",     title: bi("شهادة ISO 9001:2015 — SGS", "ISO 9001:2015 Certificate — SGS") },
+    { key: "saso-quality-mark", title: bi("ترخيص علامة الجودة السعودية — SASO", "Saudi Quality Mark License — SASO") },
+    { key: "quality-policy",    title: bi("سياسة الجودة", "Quality Policy") },
+    { key: "warranty",          title: bi("ضمان مزايا للألمنيوم", "Mazaya Aluminium Warranty") },
+    { key: "sgs-test-report-1", title: bi("تقرير اختبار SGS — صفحة 1", "SGS Test Report — Page 1") },
+    { key: "sgs-test-report-2", title: bi("تقرير اختبار SGS — صفحة 2", "SGS Test Report — Page 2") },
+    { key: "sgs-test-report-3", title: bi("تقرير اختبار SGS — صفحة 3", "SGS Test Report — Page 3") },
+    { key: "sgs-test-report-4", title: bi("تقرير اختبار SGS — صفحة 4", "SGS Test Report — Page 4") }
+  ].map { |d| d.merge(image: "/assets/certificates/docs/#{d[:key]}.webp") }.freeze
 
   QUALITY_STEPS = [
     [ bi("التصنيع", "Manufacturing"),               bi("تنفيذ المنتج وفق متطلباته ومواصفاته المحددة.", "Products are manufactured according to their defined requirements and specifications.") ],
