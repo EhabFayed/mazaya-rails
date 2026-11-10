@@ -49,7 +49,15 @@
   .bg-dark .cert-pager button:hover{border-color:#B9C6F2}
   .bg-dark .cert-pager button.active{background:#fff;border-color:#fff;color:#192C7B}
   @media (max-width:1024px){.cert-grid{grid-template-columns:repeat(3,1fr)}}
-  @media (max-width:640px){.cert-grid{grid-template-columns:repeat(2,1fr);gap:20px 14px}.cert-doc figcaption{font-size:13.5px}}
+  /* phones: one swipeable row (native scroll + snap), no pager */
+  @media (max-width:640px){
+    .cert-grid,.cert-grid.compact{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-inline:16px;scrollbar-width:none;margin-inline:-16px;padding:6px 16px 10px;-webkit-overflow-scrolling:touch}
+    .cert-grid::-webkit-scrollbar{display:none}
+    .cert-doc{flex:0 0 64%;scroll-snap-align:start;animation:none}
+    .cert-grid.compact .cert-doc{flex-basis:56%}
+    .cert-doc figcaption{font-size:13.5px}
+    .cert-pager{display:none!important}
+  }
   .cert-open{display:block;width:100%;padding:0;border:1px solid #E3E6EC;background:#fff;border-radius:14px;overflow:hidden;cursor:zoom-in;position:relative;box-shadow:0 6px 22px rgba(25,44,123,.07);transition:box-shadow .25s,transform .25s,border-color .25s}
   .cert-open:hover,.cert-open:focus-visible{transform:translateY(-4px);border-color:#C3CBE6;box-shadow:0 16px 40px rgba(25,44,123,.17);outline:none}
   .cert-open img{display:block;width:100%;height:auto;aspect-ratio:580/683;object-fit:cover;object-position:top center;background:#F4F5F8}
@@ -76,7 +84,7 @@
   body.ltr .cert-nav.next::before{transform:rotate(135deg);margin-right:0;margin-left:4px}
   .cert-close{position:absolute;top:clamp(10px,2.4vw,26px);inset-inline-end:clamp(10px,2.4vw,26px);width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:26px;line-height:1;cursor:pointer;transition:background .2s}
   .cert-close:hover{background:rgba(255,255,255,.22)}
-  @media (max-width:640px){.cert-nav{width:42px;height:42px}.cert-lb img{max-height:66vh}}
+  @media (max-width:640px){.cert-nav{display:none}.cert-lb img{max-height:72vh}}
   @media (prefers-reduced-motion:reduce){.cert-open,.cert-open::after{transition:none}.cert-open:hover{transform:none}}
 </style>
 
@@ -98,20 +106,23 @@
     var OF = <%= t("quality.documents.counter_of").to_json.html_safe %>;
     var PAGE = <%= t("quality.documents.page").to_json.html_safe %>;
     var PREV = <%= t("common.prev").to_json.html_safe %>, NEXT = <%= t("common.next").to_json.html_safe %>;
+    var mobile = matchMedia("(max-width:640px)");
 
     // ---- per grid: type filter (optional) + pagination over the cards that pass the filter ----
     function setup(grid) {
       var pager = grid.nextElementSibling;
       var bar = grid.previousElementSibling && grid.previousElementSibling.classList.contains("cert-filters") ? grid.previousElementSibling : null;
-      var cards = [].slice.call(grid.children), per = parseInt(grid.dataset.perPage, 10) || 8;
+      var cards = [].slice.call(grid.children), perDesk = parseInt(grid.dataset.perPage, 10) || 8;
       var list = cards, cur = 0;
-      var pages = function () { return Math.ceil(list.length / per); };
+      // phones: no pages, every listed card sits in one swipeable row (see CSS)
+      var per = function () { return mobile.matches ? Infinity : perDesk; };
+      var pages = function () { return Math.max(1, Math.ceil(list.length / per())); };
 
       function goPage(p, scroll) {
         cur = Math.min(Math.max(p, 0), Math.max(pages() - 1, 0));
         cards.forEach(function (c) {
           var n = list.indexOf(c);
-          c.hidden = n < 0 || Math.floor(n / per) !== cur;
+          c.hidden = n < 0 || Math.floor(n / per()) !== cur;
         });
         pager.querySelectorAll("[data-page]").forEach(function (b) {
           var on = +b.dataset.page === cur;
@@ -152,14 +163,21 @@
           list = g ? cards.filter(function (c) { return c.dataset.group === g; }) : cards;
           buildPager();
           goPage(0, false);
+          grid.scrollLeft = 0;
         });
       }
       buildPager();
       goPage(0, false);
+      mobile.addEventListener("change", function () { buildPager(); goPage(0, false); });
 
       var s = {
         list: function () { return list; },
-        showCard: function (card) { var n = list.indexOf(card); if (n >= 0) goPage(Math.floor(n / per), false); }
+        showCard: function (card) {
+          var n = list.indexOf(card);
+          if (n < 0) return;
+          if (mobile.matches) card.scrollIntoView({ inline: "start", block: "nearest" });
+          else goPage(Math.floor(n / per()), false);
+        }
       };
       cards.forEach(function (c) { c.querySelector(".cert-open").addEventListener("click", function () { open(s, c); }); });
       return s;
@@ -221,6 +239,18 @@
       if (e.target === lb || e.target.closest("[data-cert-close]")) return close();
       var step = e.target.closest("[data-cert-step]");
       if (step) show(i + parseInt(step.dataset.certStep, 10));
+    });
+    // swipe between pages in the lightbox (the arrow buttons are hidden on phones)
+    var sx = null, sy = 0;
+    lb.addEventListener("touchstart", function (e) { if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } }, { passive: true });
+    lb.addEventListener("touchend", function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      sx = null;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      var rtl = document.body.classList.contains("rtl");
+      // next page = swipe left in LTR, swipe right in RTL (content flows the other way)
+      show(i + ((dx < 0) !== rtl ? 1 : -1));
     });
     document.addEventListener("keydown", function (e) {
       if (lb.hidden) return;
