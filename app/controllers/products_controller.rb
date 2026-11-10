@@ -24,5 +24,7 @@ class ProductsController < ApplicationController
     @related = @product[:related].filter_map { |slug| site.product(slug) }
     @safety = @product[:safety] && site.safety(@product[:safety])
     @solutions = site::SOLUTIONS.select { |s| s[:category] == @category[:slug] }
+    # load-test reports / data sheets tagged with this product (quality page, section 04)
+    @load_tests = site::Defaults::LOAD_TESTS.select { |d| d[:product] == "#{@category[:slug]}/#{@product[:slug]}" }
   end
 end

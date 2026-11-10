@@ -51,6 +51,9 @@ class PagesController < ApplicationController
     @documents = site::DOCUMENTS
     @steps = site::QUALITY_STEPS
     @certificate_scans = site::Defaults::CERTIFICATE_SCANS
+    @load_tests = site::Defaults::LOAD_TESTS
+    # "category/slug" of published products: a data sheet links to its product only while it is live
+    @live_products = Product.where(published: true).joins(:category).pluck("categories.slug", :slug).map { |c, s| "#{c}/#{s}" }.to_set
   end
 
   def contact

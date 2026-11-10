@@ -24,7 +24,7 @@ module SiteData::Defaults
   private_class_method :bi
 
   FOUNDED = 1991
-  WHATSAPP_DISPLAY = "+966 50 000 0000" # TODO(client): approved WhatsApp number
+  WHATSAPP_DISPLAY = "+966 55 688 7963"
   WHATSAPP_HREF = "https://wa.me/#{WHATSAPP_DISPLAY.delete('^0-9')}"
   EMAIL = PENDING          # [البريد الإلكتروني المعتمد]
   PHONE = PENDING          # [رقم التواصل المعتمد]
@@ -284,19 +284,68 @@ module SiteData::Defaults
     [ bi("تقارير الاختبار", "Test Reports"), bi("عرض التقارير", "View Reports") ], [ bi("شهادات الجودة", "Quality Certificates"), bi("عرض الشهادات", "View Certificates") ], [ bi("شهادات السلامة", "Safety Certificates"), bi("عرض الشهادات", "View Certificates") ]
   ].freeze
 
-  # Scans of the quality-certificate pages from the company profile (pages 25-33).
-  # Images live in public/assets/certificates/docs/.
-  CERTIFICATE_SCANS = [
+  # Quality-page documents shown as image cards + lightbox. A document may span several pages (images):
+  # `pages` lists files in public/assets/certificates/<dir>/; without it the single page is <dir>/<key>.webp.
+  def self.scan_docs(dir, docs)
+    docs.map do |d|
+      pages = (d[:pages] || [ "#{d[:key]}.webp" ]).map { |f| "/assets/certificates/#{ERB::Util.url_encode(dir)}/#{ERB::Util.url_encode(f)}" }
+      d.except(:pages).merge(pages: pages, image: pages.first)
+    end.freeze
+  end
+  private_class_method :scan_docs
+
+  # 06 — Documents: certificates, policies and the SGS report (public/assets/certificates/docs/)
+  CERTIFICATE_SCANS = scan_docs("docs", [
     { key: "iso-9001-2019",     title: bi("شهادة ISO 9001:2015 — SGS (تجديد)", "ISO 9001:2015 Certificate — SGS (renewal)") },
     { key: "iso-9001-2016",     title: bi("شهادة ISO 9001:2015 — SGS", "ISO 9001:2015 Certificate — SGS") },
     { key: "saso-quality-mark", title: bi("ترخيص علامة الجودة السعودية — SASO", "Saudi Quality Mark License — SASO") },
     { key: "quality-policy",    title: bi("سياسة الجودة", "Quality Policy") },
     { key: "warranty",          title: bi("ضمان مزايا للألمنيوم", "Mazaya Aluminium Warranty") },
-    { key: "sgs-test-report-1", title: bi("تقرير اختبار SGS — صفحة 1", "SGS Test Report — Page 1") },
-    { key: "sgs-test-report-2", title: bi("تقرير اختبار SGS — صفحة 2", "SGS Test Report — Page 2") },
-    { key: "sgs-test-report-3", title: bi("تقرير اختبار SGS — صفحة 3", "SGS Test Report — Page 3") },
-    { key: "sgs-test-report-4", title: bi("تقرير اختبار SGS — صفحة 4", "SGS Test Report — Page 4") }
-  ].map { |d| d.merge(image: "/assets/certificates/docs/#{d[:key]}.webp") }.freeze
+    { key: "sgs-test-report",   title: bi("تقرير اختبار SGS", "SGS Test Report"), pages: (1..4).map { |i| "sgs-test-report-#{i}.webp" } }
+  ])
+
+  # 04 — Load testing: load-test reports and product data sheets (public/assets/certificates/اختبارات الاحمال/)
+  LOAD_TESTS = scan_docs("اختبارات الاحمال", [
+    # test reports
+    { key: "ladder-test-report", group: "reports", product: "ladders/step-ladder", title: bi("تقرير اختبار SGS — سلم 7 درجات", "SGS Test Report — 7-Step Ladder"),
+      pages: (1..10).map { |i| format("LADDER  TEST REPORT-07 STEPS-%02d.webp", i) } },
+    { key: "manhole-load-test", group: "reports", product: "covers/manhole-cover", title: bi("تقرير اختبار تحمّل أغطية المناهل الألومنيوم", "Aluminium Manhole Cover Load Test Report"),
+      pages: [ "Manhole Cover (Aluminum) Test-MAT-S-26-03798-MAT-O-26-02092-24-09-2026-1.webp" ] },
+    # product data sheets
+    { key: "a-type-ladder", group: "ladders", product: "ladders/construction-ladder",     title: bi("نشرة فنية — سلم على شكل A", "Data Sheet — A-Type Ladder"), pages: [ "1. A-TYPE LADDER (1)-1.webp" ] },
+    { key: "single-ladder", group: "ladders", product: "ladders/single-ladder",     title: bi("نشرة فنية — سلم مفرد SLD-D", "Data Sheet — Single Ladder (SLD-D)"),
+      pages: [ "SLD - SINGLE LADDER-D-1.webp", "SLD - SINGLE LADDER-D-2.webp" ] },
+    { key: "warehouse-ladder", group: "ladders", product: "ladders/warehouse-ladder",  title: bi("نشرة فنية — سلم المستودعات القابل للطي", "Data Sheet — Foldable Warehouse Ladder"),
+      pages: [ "WAREHOUSE FOLDABLE LADDER-1.webp", "WAREHOUSE FOLDABLE LADDER-2.webp" ] },
+    { key: "platform-ladder", group: "ladders", product: "ladders/mobile-platform-ladder",   title: bi("نشرة فنية — سلم بمنصة وصول", "Data Sheet — Access Platform Ladder"), pages: [ "LADDER PLATFORM DATA (1)-1.webp" ] },
+    { key: "roof-ladder", group: "ladders", product: "ladders/rooftop-ladder",       title: bi("نشرة فنية — سلم الوصول للسطح", "Data Sheet — Roof Access Ladder"), pages: [ "ROOF LADDER DATA-1.webp" ] },
+    { key: "mobile-scaffolding", group: "scaffolding", product: "ladders/mobile-aluminum-scaffolding", title: bi("نشرة فنية — السقالات الألومنيوم المتنقلة", "Data Sheet — Aluminium Mobile Scaffolding"),
+      pages: (1..3).map { |i| "SCAFFOLDING TECH DETAILS (1)-#{i}.webp" } },
+    { key: "scaffolding-double", group: "scaffolding", product: "ladders/mobile-aluminum-scaffolding", title: bi("نشرة فنية — سقالة إنشائية مزدوجة العرض (بسلم جانبي)", "Data Sheet — Double-Width Construction Scaffolding (with Side Ladder)"),
+      pages: [ "scaffolding with a ladder.webp" ] },
+    { key: "scaffolding-single", group: "scaffolding", product: "ladders/mobile-aluminum-scaffolding", title: bi("نشرة فنية — سقالة إنشائية مفردة العرض", "Data Sheet — Single-Width Construction Scaffolding"),
+      pages: [ "scaffolding without a ladder.webp" ] },
+    { key: "roof-hatch", group: "covers", product: "covers/roof-hatch",        title: bi("نشرة فنية — فتحة السطح بباب مفرد", "Data Sheet — Single-Door Roof Access Hatch"),
+      pages: (1..3).map { |i| "ROOF HATCH - SINGLE DOOR-#{i}.webp" } },
+    { key: "roof-hatch-tech", group: "covers", product: "covers/roof-hatch",   title: bi("نشرة فنية — فتحة السطح (التفاصيل الفنية)", "Data Sheet — Roof Access Hatch (Technical Details)"),
+      pages: [ "ROOF HATCH TECH DETAILS (1)-1.webp" ] },
+    { key: "ceiling-access-panel", group: "covers", product: "covers/ceiling-access-panel", title: bi("نشرة فنية — فتحة صيانة الأسقف", "Data Sheet — Ceiling Access Panel"),
+      pages: (1..3).map { |i| "MAZAYA ACCESS PANEL-#{i}.webp" } },
+    { key: "wall-access-panel", group: "covers", product: "covers/aluminum-wall-access-panel", title: bi("نشرة فنية — فتحة صيانة الجدران المقاومة للحريق", "Data Sheet — Fire-Resistant Wall Access Panel"),
+      pages: [ "DATA SHEET ACCESS PANEL WALL Fire Resistant-1.webp" ] },
+    { key: "diwan-manhole", group: "covers", product: "covers/manhole-cover",     title: bi("نشرة فنية — غطاء منهل ديوان", "Data Sheet — Diwan Manhole Cover"), pages: [ "DEWAN MANHOL COVER-1.webp" ] },
+    { key: "water-tank-cover", group: "covers", product: "covers/water-tank-normal",  title: bi("نشرة فنية — غطاء خزان المياه", "Data Sheet — Water Tank Cover"),
+      pages: [ "WATER TANK MANHOLE COVER- NORMAL-1.webp", "WATER TANK MANHOLE COVER- NORMAL-2.webp" ] },
+    { key: "inspection-cover", group: "covers", product: "covers/manhole-cover-6-5-cm",  title: bi("نشرة فنية — غطاء غرفة التفتيش", "Data Sheet — Inspection Chamber Cover"), pages: [ "Inspection room.webp" ] },
+    { key: "drainage-honeycomb", group: "drainage", product: "flooring/honeycomb-runoff-water-drainage", title: bi("نشرة فنية — تصريف مزايا (قرص العسل / حراشف السمك)", "Data Sheet — Mazaya Drainage (Honeycomb / Fish Scale)"),
+      pages: [ "MZY-DRG-HONEY COMB and FISH SCALE (1)-1.webp" ] },
+    { key: "drainage-fishscale", group: "drainage", product: "flooring/fish-scale-drainage-channel", title: bi("نشرة فنية — تصريف مزايا (حراشف السمك)", "Data Sheet — Mazaya Drainage (Fish Scale)"), pages: [ "fish scale Drainag-1.webp" ] },
+    { key: "stream-channel", group: "drainage", product: "flooring/runoff-water-drainage",    title: bi("نشرة فنية — قناة تصريف المياه", "Data Sheet — Stream Channel Drainage"), pages: [ "stream channel.webp" ] },
+    { key: "floor-mat-strip", group: "mats", product: "flooring/floor-mats",   title: bi("نشرة فنية — دعّاسة أرضيات بالشرائح", "Data Sheet — Strip Floor Mat"), pages: [ "9c. FLOORMAT - STRIP - FLOORMAT-1.webp" ] },
+    { key: "remal-floor-mat", group: "mats", product: "flooring/rimal-floor-mat",   title: bi("نشرة فنية — دعّاسة رمال", "Data Sheet — Remal Floor Mat"), pages: [ "Floor Mat REMAL-1.webp" ] },
+    { key: "wire-mesh", group: "other",         title: bi("نشرة فنية — الشبك المجلفن", "Data Sheet — Galvanized Wire Mesh"),
+      pages: [ "GALVANIZED WIRE MESH (1)-1.webp", "GALVANIZED WIRE MESH (1)-2.webp" ] }
+  ])
 
   QUALITY_STEPS = [
     [ bi("التصنيع", "Manufacturing"),               bi("تنفيذ المنتج وفق متطلباته ومواصفاته المحددة.", "Products are manufactured according to their defined requirements and specifications.") ],

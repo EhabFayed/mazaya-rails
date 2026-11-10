@@ -2,43 +2,8 @@
 <% content_for :description, t("quality.description") %>
 <% content_for :nav_active, "quality" %>
 <style>
-  .video-slot{position:relative;height:460px;border-radius:26px;overflow:hidden;background:#0D1744;box-shadow:0 24px 64px rgba(0,0,0,.35)}
-  .video-slot .ph-slot::before{display:none}
-  .video-slot .play{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 44px rgba(0,0,0,.45);margin-bottom:6px}
-  .video-slot .play::after{content:'';width:0;height:0;border-block:17px solid transparent;border-inline-start:28px solid #192C7B;margin-inline-end:-7px}
   .doc-slot{height:160px;border-radius:14px;overflow:hidden;border:1.5px dashed #C9CDD6;margin-bottom:22px}
 
-  /* Certificate scans + lightbox */
-  .cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(222px,1fr));gap:28px 24px}
-  .cert-doc{margin:0}
-  .cert-open{display:block;width:100%;padding:0;border:1px solid #E3E6EC;background:#fff;border-radius:14px;overflow:hidden;cursor:zoom-in;position:relative;box-shadow:0 6px 22px rgba(25,44,123,.07);transition:box-shadow .25s,transform .25s,border-color .25s}
-  .cert-open:hover,.cert-open:focus-visible{transform:translateY(-4px);border-color:#C3CBE6;box-shadow:0 16px 40px rgba(25,44,123,.17);outline:none}
-  .cert-open img{display:block;width:100%;height:auto;aspect-ratio:580/683;object-fit:cover;object-position:top center;background:#F4F5F8}
-  .cert-open::after{content:'';position:absolute;inset-block-end:10px;inset-inline-end:10px;width:34px;height:34px;border-radius:50%;background:#192C7B url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M15.8 15.8L20 20M11 8.5v5M8.5 11h5'/%3E%3C/svg%3E") center/19px no-repeat;opacity:0;transform:scale(.8);transition:opacity .25s,transform .25s}
-  .cert-open:hover::after,.cert-open:focus-visible::after{opacity:1;transform:scale(1)}
-  .cert-doc figcaption{margin-top:13px;color:#192C7B;font-size:14.5px;font-weight:700;line-height:1.55;text-align:center}
-
-  .cert-lb{position:fixed;inset:0;z-index:1200;background:rgba(9,13,32,.93);display:flex;align-items:center;justify-content:center;padding:clamp(14px,4vw,40px)}
-  .cert-lb[hidden]{display:none}
-  .cert-lb figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:16px;max-height:100%}
-  .cert-lb img{max-width:min(92vw,860px);max-height:78vh;width:auto;height:auto;border-radius:10px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-  .cert-lb figcaption{color:#fff;font-size:16px;font-weight:700;text-align:center;line-height:1.5}
-  .cert-lb figcaption small{display:block;margin-top:6px;font-weight:500;opacity:.62;font-size:13.5px}
-  .cert-nav{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
-  .cert-nav:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.55)}
-  .cert-nav.prev{inset-inline-start:clamp(10px,3vw,34px)}
-  .cert-nav.next{inset-inline-end:clamp(10px,3vw,34px)}
-  /* Chevrons use physical borders so the glyph geometry is direction-independent;
-     the rotation is then chosen per writing direction (RTL is the default here). */
-  .cert-nav::before{content:'';width:13px;height:13px;border-top:2.4px solid #fff;border-left:2.4px solid #fff}
-  .cert-nav.prev::before{transform:rotate(135deg);margin-left:4px}
-  .cert-nav.next::before{transform:rotate(-45deg);margin-right:4px}
-  body.ltr .cert-nav.prev::before{transform:rotate(-45deg);margin-left:0;margin-right:4px}
-  body.ltr .cert-nav.next::before{transform:rotate(135deg);margin-right:0;margin-left:4px}
-  .cert-close{position:absolute;top:clamp(10px,2.4vw,26px);inset-inline-end:clamp(10px,2.4vw,26px);width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:26px;line-height:1;cursor:pointer;transition:background .2s}
-  .cert-close:hover{background:rgba(255,255,255,.22)}
-  @media (max-width:640px){.cert-nav{width:42px;height:42px}.cert-lb img{max-height:66vh}}
-  @media (prefers-reduced-motion:reduce){.cert-open,.cert-open::after{transition:none}.cert-open:hover{transform:none}}
 </style>
 
 <%# 01 — Hero %>
@@ -64,7 +29,7 @@
   <div class="wrap">
     <%= render "shared/section_head", label: t("quality.certifications.label"), h2: t("quality.certifications.h2"), desc: t("quality.certifications.intro"), center: true %>
     <%# certification key -> the scan it opens in the lightbox (section 06) %>
-    <% scan_for = { "iso" => "iso-9001-2019", "sgs" => "sgs-test-report-1", "saso" => "saso-quality-mark" } %>
+    <% scan_for = { "iso" => "iso-9001-2019", "sgs" => "sgs-test-report", "saso" => "saso-quality-mark" } %>
     <div class="grid-4">
       <% @certifications.each do |c| %>
       <div data-reveal class="feature-card card-hover">
@@ -87,15 +52,7 @@
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 20%,rgba(185,198,242,.14),transparent 70%)"></div>
   <div class="wrap" style="position:relative">
     <%= render "shared/section_head", label: t("quality.load.label"), h2: t("quality.load.h2"), desc: t("quality.load.desc"), dark: true, center: true %>
-    <div data-reveal class="video-slot">
-      <div class="ph-slot dark video" style="color:#fff;font-size:18px"><span class="play" aria-hidden="true"></span><%= t("quality.load.video") %></div>
-    </div>
-    <div class="grid-3" style="margin-top:24px">
-      <% 3.times do |i| %>
-      <div data-reveal style="height:200px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14)"><div class="ph-slot dark"><%= t("quality.load.images") %> <%= num(i + 1) %></div></div>
-      <% end %>
-    </div>
-    <div data-reveal style="text-align:center;margin-top:44px"><a href="#documents" class="btn-white"><%= t("quality.load.cta") %></a></div>
+    <%= render "pages/cert_grid", docs: @load_tests, per_page: 8, live: @live_products %>
   </div>
 </section>
 
@@ -115,94 +72,15 @@
   </div>
 </section>
 
-<%# 06 — Documents %>
+<%# 06 — Documents (one card per document; paginated client-side, all cards render without JS) %>
 <section id="documents" class="section-pad bg-white">
   <div class="wrap">
     <%= render "shared/section_head", label: t("quality.documents.label"), h2: t("quality.documents.h2"), desc: t("quality.documents.desc") %>
-    <div class="cert-grid">
-      <% @certificate_scans.each_with_index do |doc, i| %>
-      <figure data-reveal class="cert-doc">
-        <button type="button" class="cert-open" data-cert-index="<%= i %>" data-cert-key="<%= doc[:key] %>" data-cert-src="<%= doc[:image] %>" data-cert-title="<%= doc[:title] %>">
-          <img src="<%= doc[:image] %>" alt="<%= doc[:title] %>" width="580" height="683" loading="lazy" decoding="async">
-          <span class="sr-only"><%= t("quality.documents.view") %></span>
-        </button>
-        <figcaption><%= doc[:title] %></figcaption>
-      </figure>
-      <% end %>
-    </div>
+    <%= render "pages/cert_grid", docs: @certificate_scans, per_page: 8 %>
   </div>
 </section>
 
-<%# 06b — Certificate lightbox %>
-<div class="cert-lb" id="certLightbox" role="dialog" aria-modal="true" aria-label="<%= t("quality.documents.label") %>" hidden>
-  <button type="button" class="cert-close" data-cert-close aria-label="<%= t("quality.documents.close") %>">&times;</button>
-  <button type="button" class="cert-nav prev" data-cert-step="-1" aria-label="<%= t("quality.documents.prev") %>"></button>
-  <figure>
-    <img id="certLightboxImg" src="" alt="">
-    <figcaption id="certLightboxCap"></figcaption>
-  </figure>
-  <button type="button" class="cert-nav next" data-cert-step="1" aria-label="<%= t("quality.documents.next") %>"></button>
-</div>
-
-<script>
-  (function () {
-    var lb = document.getElementById("certLightbox");
-    if (!lb) return;
-    var img = document.getElementById("certLightboxImg");
-    var cap = document.getElementById("certLightboxCap");
-    var triggers = [].slice.call(document.querySelectorAll(".cert-open"));
-    if (!triggers.length) return;
-    var OF = <%= t("quality.documents.counter_of").to_json.html_safe %>;
-    var i = 0, last = null;
-
-    function show(n) {
-      i = (n + triggers.length) % triggers.length;
-      var t = triggers[i];
-      img.src = t.dataset.certSrc;
-      img.alt = t.dataset.certTitle;
-      cap.innerHTML = "";
-      cap.appendChild(document.createTextNode(t.dataset.certTitle));
-      var s = document.createElement("small");
-      s.textContent = (i + 1) + " " + OF + " " + triggers.length;
-      cap.appendChild(s);
-    }
-    function open(n) {
-      last = document.activeElement;
-      show(n);
-      lb.hidden = false;
-      document.body.style.overflow = "hidden";
-      lb.querySelector("[data-cert-close]").focus();
-    }
-    function close() {
-      lb.hidden = true;
-      img.src = "";
-      document.body.style.overflow = "";
-      if (last && last.focus) last.focus();
-    }
-
-    triggers.forEach(function (t, n) {
-      t.addEventListener("click", function () { open(n); });
-    });
-    // certification cards (section 03) open their matching scan directly
-    document.querySelectorAll("a.card-link[data-cert-key]").forEach(function (a) {
-      var n = triggers.findIndex(function (t) { return t.dataset.certKey === a.dataset.certKey; });
-      if (n < 0) return;
-      a.addEventListener("click", function (e) { e.preventDefault(); open(n); });
-    });
-    lb.addEventListener("click", function (e) {
-      if (e.target === lb || e.target.closest("[data-cert-close]")) return close();
-      var step = e.target.closest("[data-cert-step]");
-      if (step) show(i + parseInt(step.dataset.certStep, 10));
-    });
-    document.addEventListener("keydown", function (e) {
-      if (lb.hidden) return;
-      if (e.key === "Escape") return close();
-      var rtl = document.documentElement.dir === "rtl" || document.body.classList.contains("rtl");
-      if (e.key === "ArrowRight") show(i + (rtl ? -1 : 1));
-      if (e.key === "ArrowLeft") show(i + (rtl ? 1 : -1));
-    });
-  })();
-</script>
+<%= render "shared/doc_viewer" %>
 
 <%# 07 — Link to products %>
 <section class="section-pad bg-soft" style="padding-bottom:60px">

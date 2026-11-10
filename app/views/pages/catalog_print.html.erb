@@ -201,7 +201,7 @@
     <p><%= t("catalog.print.contact_desc") %></p>
     <dl>
       <% if (phone = SiteData::PHONE.presence || SiteData::WHATSAPP_DISPLAY.presence) %><dt><%= t("catalog.download.phone") %></dt><dd dir="ltr"><%= phone %></dd><% end %>
-      <% if SiteData::EMAIL.present? %><dt><%= t("catalog.download.email") %></dt><dd dir="ltr"><%= SiteData::EMAIL %></dd><% end %>
+      <% if SiteData::EMAILS.any? %><dt><%= t("catalog.download.email") %></dt><dd dir="ltr"><%= safe_join(SiteData::EMAILS, tag.br) %></dd><% end %>
       <% if SiteData::ADDRESS.present? %><dt><%= t("contact.location.label", default: "") %></dt><dd><%= SiteData::ADDRESS %></dd><% end %>
       <dt>Web</dt><dd dir="ltr"><%= host %></dd>
     </dl>

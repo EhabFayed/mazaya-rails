@@ -14,7 +14,7 @@
 <link rel="alternate" hreflang="en" href="<%= request.base_url %><%= request.path.start_with?("/en") ? request.path : "/en#{request.path}".chomp("/") %>">
 <link rel="canonical" href="<%= request.original_url.split('?').first %>">
 <link rel="icon" type="image/png" href="/assets/logo.png">
-<link rel="stylesheet" href="/site.css?v=20261108a">
+<link rel="stylesheet" href="/site.css?v=20261110a">
 <%= csrf_meta_tags %>
 <%= organization_jsonld %>
 <%= content_for :head %>

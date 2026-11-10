@@ -1,0 +1,233 @@
+<%# Document viewer shared by the quality and product pages: styles for pages/_cert_grid cards,
+    the zoom lightbox, and the script that filters/paginates every [data-cert-grid] and opens the lightbox.
+    Render once per page, after the grids. %>
+<style>
+  /* product page: smaller cards under the technical-documents cards */
+  .cert-grid.compact{grid-template-columns:repeat(auto-fill,minmax(170px,210px))}
+  .pd-load{margin-top:44px;padding-top:36px;border-top:1px solid #E6E8EC}
+  .pd-load-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap;margin-bottom:24px}
+  .pd-load-head h3{margin:0 0 6px;color:#192C7B;font-size:22px;font-weight:900}
+  .pd-load-head p{margin:0;color:#686B70;font-size:15.5px;line-height:1.7}
+  .pd-load-head .card-link{margin:0}
+  /* Certificate scans + lightbox */
+  .cert-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 24px}
+  .cert-doc{margin:0;animation:certIn .35s ease both}
+  .cert-doc[hidden]{display:none}
+  @keyframes certIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .cert-pages{position:absolute;top:10px;inset-inline-start:10px;display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;background:rgba(25,44,123,.9);color:#fff;font-size:12.5px;font-weight:700;line-height:1}
+  /* pagination */
+  .cert-pager{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-top:40px}
+  .cert-pager[hidden]{display:none}
+  .cert-pager button{min-width:42px;height:42px;padding:0 10px;border-radius:12px;border:1px solid #E3E6EC;background:#fff;color:#192C7B;font:inherit;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s,color .2s}
+  .cert-pager button:hover{border-color:#192C7B}
+  .cert-pager button.active{background:#192C7B;border-color:#192C7B;color:#fff}
+  .cert-pager button:disabled{opacity:.35;cursor:default;pointer-events:none}
+  .cert-pager button:focus-visible{outline:2px solid #2A44B8;outline-offset:2px}
+  .cert-pager .pg-arrow::before{content:'';width:9px;height:9px;border-top:2.2px solid currentColor;border-left:2.2px solid currentColor}
+  .cert-pager .prev::before{transform:rotate(135deg);margin-left:3px}
+  .cert-pager .next::before{transform:rotate(-45deg);margin-right:3px}
+  body.ltr .cert-pager .prev::before{transform:rotate(-45deg);margin:0 0 0 0;margin-right:3px}
+  body.ltr .cert-pager .next::before{transform:rotate(135deg);margin:0;margin-left:3px}
+  /* type filters (load testing) */
+  .cert-filters{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:-8px 0 34px}
+  .cert-filters[hidden]{display:none}
+  .cert-filters button{padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+  .cert-filters button:hover{border-color:#B9C6F2}
+  .cert-filters button.active{background:#fff;border-color:#fff;color:#192C7B}
+  .cert-filters button:focus-visible{outline:2px solid #B9C6F2;outline-offset:2px}
+  .cert-product{display:inline-block;margin-top:6px;font-size:13.5px;font-weight:700;color:#2A44B8}
+  .cert-product:hover{text-decoration:underline}
+  .bg-dark .cert-product{color:#B9C6F2}
+  .bg-dark .cert-product:hover{color:#fff}
+  .cert-doc figcaption{display:flex;flex-direction:column;align-items:center}
+  @media (max-width:640px){.cert-filters{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin-inline:-16px;padding:0 16px 4px}.cert-filters button{flex:0 0 auto}}
+  /* same grid on the dark load-testing section */
+  .bg-dark .cert-open{border-color:rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .bg-dark .cert-open:hover,.bg-dark .cert-open:focus-visible{border-color:rgba(185,198,242,.6);box-shadow:0 18px 44px rgba(0,0,0,.4)}
+  .bg-dark .cert-doc figcaption{color:#fff}
+  .bg-dark .cert-pager button{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:#fff}
+  .bg-dark .cert-pager button:hover{border-color:#B9C6F2}
+  .bg-dark .cert-pager button.active{background:#fff;border-color:#fff;color:#192C7B}
+  @media (max-width:1024px){.cert-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:640px){.cert-grid{grid-template-columns:repeat(2,1fr);gap:20px 14px}.cert-doc figcaption{font-size:13.5px}}
+  .cert-open{display:block;width:100%;padding:0;border:1px solid #E3E6EC;background:#fff;border-radius:14px;overflow:hidden;cursor:zoom-in;position:relative;box-shadow:0 6px 22px rgba(25,44,123,.07);transition:box-shadow .25s,transform .25s,border-color .25s}
+  .cert-open:hover,.cert-open:focus-visible{transform:translateY(-4px);border-color:#C3CBE6;box-shadow:0 16px 40px rgba(25,44,123,.17);outline:none}
+  .cert-open img{display:block;width:100%;height:auto;aspect-ratio:580/683;object-fit:cover;object-position:top center;background:#F4F5F8}
+  .cert-open::after{content:'';position:absolute;inset-block-end:10px;inset-inline-end:10px;width:34px;height:34px;border-radius:50%;background:#192C7B url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M15.8 15.8L20 20M11 8.5v5M8.5 11h5'/%3E%3C/svg%3E") center/19px no-repeat;opacity:0;transform:scale(.8);transition:opacity .25s,transform .25s}
+  .cert-open:hover::after,.cert-open:focus-visible::after{opacity:1;transform:scale(1)}
+  .cert-doc figcaption{margin-top:13px;color:#192C7B;font-size:14.5px;font-weight:700;line-height:1.55;text-align:center}
+
+  .cert-lb{position:fixed;inset:0;z-index:1200;background:rgba(9,13,32,.93);display:flex;align-items:center;justify-content:center;padding:clamp(14px,4vw,40px)}
+  .cert-lb[hidden]{display:none}
+  .cert-lb figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:16px;max-height:100%}
+  .cert-lb img{max-width:min(92vw,860px);max-height:78vh;width:auto;height:auto;border-radius:10px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .cert-lb figcaption{color:#fff;font-size:16px;font-weight:700;text-align:center;line-height:1.5}
+  .cert-lb figcaption small{display:block;margin-top:6px;font-weight:500;opacity:.62;font-size:13.5px}
+  .cert-nav{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+  .cert-nav:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.55)}
+  .cert-nav.prev{inset-inline-start:clamp(10px,3vw,34px)}
+  .cert-nav.next{inset-inline-end:clamp(10px,3vw,34px)}
+  /* Chevrons use physical borders so the glyph geometry is direction-independent;
+     the rotation is then chosen per writing direction (RTL is the default here). */
+  .cert-nav::before{content:'';width:13px;height:13px;border-top:2.4px solid #fff;border-left:2.4px solid #fff}
+  .cert-nav.prev::before{transform:rotate(135deg);margin-left:4px}
+  .cert-nav.next::before{transform:rotate(-45deg);margin-right:4px}
+  body.ltr .cert-nav.prev::before{transform:rotate(-45deg);margin-left:0;margin-right:4px}
+  body.ltr .cert-nav.next::before{transform:rotate(135deg);margin-right:0;margin-left:4px}
+  .cert-close{position:absolute;top:clamp(10px,2.4vw,26px);inset-inline-end:clamp(10px,2.4vw,26px);width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:26px;line-height:1;cursor:pointer;transition:background .2s}
+  .cert-close:hover{background:rgba(255,255,255,.22)}
+  @media (max-width:640px){.cert-nav{width:42px;height:42px}.cert-lb img{max-height:66vh}}
+  @media (prefers-reduced-motion:reduce){.cert-open,.cert-open::after{transition:none}.cert-open:hover{transform:none}}
+</style>
+
+<%# 06b — Certificate lightbox %>
+<div class="cert-lb" id="certLightbox" role="dialog" aria-modal="true" aria-label="<%= t("quality.documents.label") %>" hidden>
+  <button type="button" class="cert-close" data-cert-close aria-label="<%= t("quality.documents.close") %>">&times;</button>
+  <button type="button" class="cert-nav prev" data-cert-step="-1" aria-label="<%= t("quality.documents.prev") %>"></button>
+  <figure>
+    <img id="certLightboxImg" src="" alt="">
+    <figcaption id="certLightboxCap"></figcaption>
+  </figure>
+  <button type="button" class="cert-nav next" data-cert-step="1" aria-label="<%= t("quality.documents.next") %>"></button>
+</div>
+
+<script>
+  (function () {
+    var grids = [].slice.call(document.querySelectorAll("[data-cert-grid]"));
+    if (!grids.length) return;
+    var OF = <%= t("quality.documents.counter_of").to_json.html_safe %>;
+    var PAGE = <%= t("quality.documents.page").to_json.html_safe %>;
+    var PREV = <%= t("common.prev").to_json.html_safe %>, NEXT = <%= t("common.next").to_json.html_safe %>;
+
+    // ---- per grid: type filter (optional) + pagination over the cards that pass the filter ----
+    function setup(grid) {
+      var pager = grid.nextElementSibling;
+      var bar = grid.previousElementSibling && grid.previousElementSibling.classList.contains("cert-filters") ? grid.previousElementSibling : null;
+      var cards = [].slice.call(grid.children), per = parseInt(grid.dataset.perPage, 10) || 8;
+      var list = cards, cur = 0;
+      var pages = function () { return Math.ceil(list.length / per); };
+
+      function goPage(p, scroll) {
+        cur = Math.min(Math.max(p, 0), Math.max(pages() - 1, 0));
+        cards.forEach(function (c) {
+          var n = list.indexOf(c);
+          c.hidden = n < 0 || Math.floor(n / per) !== cur;
+        });
+        pager.querySelectorAll("[data-page]").forEach(function (b) {
+          var on = +b.dataset.page === cur;
+          b.classList.toggle("active", on);
+          if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+        });
+        var prev = pager.querySelector(".prev"), next = pager.querySelector(".next");
+        if (prev) { prev.disabled = cur === 0; next.disabled = cur === pages() - 1; }
+        if (scroll) grid.closest("section").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      function buildPager() {
+        pager.innerHTML = "";
+        pager.hidden = pages() < 2;
+        if (pager.hidden) return;
+        var btn = function (cls, label, page, text) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = cls; b.setAttribute("aria-label", label);
+          if (page != null) b.dataset.page = page;
+          if (text != null) b.textContent = text;
+          pager.appendChild(b); return b;
+        };
+        btn("pg-arrow prev", PREV).addEventListener("click", function () { goPage(cur - 1, true); });
+        for (var p = 0; p < pages(); p++) btn("pg-num", PAGE + " " + (p + 1), p, p + 1);
+        btn("pg-arrow next", NEXT).addEventListener("click", function () { goPage(cur + 1, true); });
+      }
+      pager.addEventListener("click", function (e) { var b = e.target.closest("[data-page]"); if (b) goPage(+b.dataset.page, true); });
+
+      if (bar) {
+        bar.hidden = false;
+        bar.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-cert-filter]");
+          if (!b) return;
+          var g = b.dataset.certFilter;
+          bar.querySelectorAll("[data-cert-filter]").forEach(function (x) {
+            x.classList.toggle("active", x === b);
+            x.setAttribute("aria-pressed", x === b ? "true" : "false");
+          });
+          list = g ? cards.filter(function (c) { return c.dataset.group === g; }) : cards;
+          buildPager();
+          goPage(0, false);
+        });
+      }
+      buildPager();
+      goPage(0, false);
+
+      var s = {
+        list: function () { return list; },
+        showCard: function (card) { var n = list.indexOf(card); if (n >= 0) goPage(Math.floor(n / per), false); }
+      };
+      cards.forEach(function (c) { c.querySelector(".cert-open").addEventListener("click", function () { open(s, c); }); });
+      return s;
+    }
+
+    // ---- lightbox: walks every page of every document currently listed in the clicked grid ----
+    var lb = document.getElementById("certLightbox");
+    var img = document.getElementById("certLightboxImg");
+    var cap = document.getElementById("certLightboxCap");
+    var set = null, seq = [], docs = [], i = 0, last = null;
+    var sets = grids.map(setup);
+
+    function show(n) {
+      i = (n + seq.length) % seq.length;
+      var s = seq[i], t = docs[s.doc].querySelector(".cert-open");
+      img.src = s.src;
+      img.alt = t.dataset.certTitle;
+      cap.innerHTML = "";
+      cap.appendChild(document.createTextNode(t.dataset.certTitle));
+      var small = document.createElement("small");
+      small.textContent = s.count > 1
+        ? PAGE + " " + (s.page + 1) + " " + OF + " " + s.count
+        : (s.doc + 1) + " " + OF + " " + docs.length;
+      cap.appendChild(small);
+      var nx = seq[(i + 1) % seq.length]; if (nx) (new Image()).src = nx.src;   // preload next
+    }
+    function open(s, card) {
+      set = s; docs = s.list().slice(); seq = [];
+      var first = 0;
+      docs.forEach(function (c, d) {
+        var srcs = JSON.parse(c.querySelector(".cert-open").dataset.certPages);
+        if (c === card) first = seq.length;
+        srcs.forEach(function (src, p) { seq.push({ doc: d, page: p, count: srcs.length, src: src }); });
+      });
+      last = document.activeElement;
+      show(first);
+      lb.hidden = false;
+      document.body.style.overflow = "hidden";
+      lb.querySelector("[data-cert-close]").focus();
+    }
+    function close() {
+      lb.hidden = true;
+      img.src = "";
+      document.body.style.overflow = "";
+      set.showCard(docs[seq[i].doc]);   // keep the grid on the page of the document last viewed
+      if (last && last.focus) last.focus();
+    }
+
+    // certification cards (section 03) open their matching document directly
+    document.querySelectorAll("a.card-link[data-cert-key]").forEach(function (a) {
+      sets.some(function (s) {
+        var card = s.list().find(function (c) { return c.querySelector(".cert-open").dataset.certKey === a.dataset.certKey; });
+        if (!card) return false;
+        a.addEventListener("click", function (e) { e.preventDefault(); open(s, card); });
+        return true;
+      });
+    });
+    lb.addEventListener("click", function (e) {
+      if (e.target === lb || e.target.closest("[data-cert-close]")) return close();
+      var step = e.target.closest("[data-cert-step]");
+      if (step) show(i + parseInt(step.dataset.certStep, 10));
+    });
+    document.addEventListener("keydown", function (e) {
+      if (lb.hidden) return;
+      if (e.key === "Escape") return close();
+      var rtl = document.documentElement.dir === "rtl" || document.body.classList.contains("rtl");
+      if (e.key === "ArrowRight") show(i + (rtl ? -1 : 1));
+      if (e.key === "ArrowLeft") show(i + (rtl ? 1 : -1));
+    });
+  })();
+</script>

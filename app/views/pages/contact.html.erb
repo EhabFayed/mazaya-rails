@@ -10,15 +10,22 @@
   .dept-card.is-active{box-shadow:0 0 0 2.5px #192C7B}
   .dept-card .card-link{margin-top:auto;padding-top:14px}
   .loc-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:stretch}
-  .map-box{height:420px;border-radius:24px;overflow:hidden;background:#E9EBF0}
-  .map-box iframe{width:100%;height:100%;border:0;display:block}
-  .info-row{display:flex;flex-direction:column;gap:6px;padding:18px 0;border-bottom:1px solid #E6E8EC}
-  .info-row:last-of-type{border-bottom:none}
+  .map-box{position:relative;min-height:420px;border-radius:24px;overflow:hidden;background:#E9EBF0}
+  .map-box iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  /* location + contact details (address, hours, phone, WhatsApp, email) in one card */
+  .loc-card{background:#fff;border-radius:24px;padding:10px 30px 28px;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(25,44,123,.06)}
+  .info-row{display:flex;flex-direction:column;gap:6px;padding:16px 0;border-bottom:1px solid #E6E8EC}
+  .info-pair{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;border-bottom:1px solid #E6E8EC}
+  .info-pair .info-row{border-bottom:none}
   .info-label{color:#192C7B;font-size:14px;font-weight:800}
   .info-value{color:#686B70;font-size:15.5px;line-height:1.7}
-  .wa-info{display:flex;gap:28px;flex-wrap:wrap;margin-top:26px;color:rgba(255,255,255,.7);font-size:14.5px}
-  .wa-info b{display:block;color:#fff;font-size:13px;letter-spacing:1px;margin-bottom:6px}
-  @media (max-width:960px){.contact-grid,.loc-grid{grid-template-columns:1fr;gap:32px}.map-box{height:300px}}
+  .info-link{color:#2A44B8;font-weight:700;unicode-bidi:isolate;white-space:nowrap;text-underline-offset:3px}
+  .info-link:hover{color:#192C7B;text-decoration:underline}
+  .info-link:focus-visible{outline:2px solid #2A44B8;outline-offset:2px;border-radius:4px}
+  .loc-card > .info-row:nth-last-child(2){border-bottom:none}
+  .loc-actions{margin-top:auto;padding-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+  .loc-actions > *{flex:1 1 auto;justify-content:center}
+  @media (max-width:960px){.contact-grid,.loc-grid{grid-template-columns:1fr;gap:32px}.map-box{min-height:300px}}
 </style>
 
 <%# 01 — Hero %>
@@ -118,7 +125,7 @@
           <div class="ph-slot"><%= t("contact.location.map_pending") %></div>
         <% end %>
       </div>
-      <div data-reveal class="feature-card" style="padding:14px 30px 30px">
+      <div data-reveal class="loc-card">
         <div class="info-row">
           <span class="info-label"><%= t("contact.location.address") %></span>
           <span class="info-value"><%= SiteData::ADDRESS.presence || raw("<span class=\"pending\">#{ERB::Util.h(t("contact.location.address_pending"))}</span>") %></span>
@@ -127,35 +134,33 @@
           <span class="info-label"><%= t("contact.location.hours") %></span>
           <span class="info-value"><%= SiteData::HOURS.presence || raw("<span class=\"pending\">#{ERB::Util.h(t("contact.location.hours_pending"))}</span>") %></span>
         </div>
-        <div style="margin-top:auto;padding-top:22px">
-          <% if SiteData::ADDRESS.present? %>
-            <a href="https://www.google.com/maps/search/?api=1&query=<%= ERB::Util.url_encode(SiteData::ADDRESS) %>" target="_blank" rel="noopener" class="btn-navy"><%= t("contact.location.cta") %></a>
+        <div class="info-pair">
+          <div class="info-row">
+            <span class="info-label"><%= t("contact.whatsapp.phone") %></span>
+            <span class="info-value"><% if SiteData::PHONE.present? %><a href="tel:<%= SiteData::PHONE.delete('^0-9+') %>" dir="ltr" class="info-link"><%= SiteData::PHONE %></a><% else %><span class="pending"><%= t("contact.whatsapp.phone_pending") %></span><% end %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><%= t("footer.whatsapp") %></span>
+            <span class="info-value"><a data-wa href="#" dir="ltr" class="info-link" data-wa-display><%= SiteData::WHATSAPP_DISPLAY %></a></span>
+          </div>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><%= t("contact.whatsapp.email") %></span>
+          <span class="info-value"><% if SiteData::EMAILS.any? %><%= safe_join(SiteData::EMAILS.map { |e| link_to(e, "mailto:#{e}", dir: "ltr", class: "info-link") }, tag.br) %><% else %><span class="pending"><%= t("contact.whatsapp.email_pending") %></span><% end %></span>
+        </div>
+        <div class="loc-actions">
+          <% if SiteData::MAP_LINK.present? %>
+            <a href="<%= SiteData::MAP_LINK %>" target="_blank" rel="noopener" class="btn-navy"><%= t("contact.location.cta") %></a>
           <% else %>
             <span class="btn-disabled" aria-disabled="true"><%= t("contact.location.cta") %></span>
           <% end %>
+          <a data-wa href="#" class="btn-wa"><%= render "shared/wa_icon", size: 20 %> <%= t("common.whatsapp") %></a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<%# 05 — WhatsApp %>
-<section id="whatsapp" class="section-pad bg-dark" style="position:relative;overflow:hidden">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(37,211,102,.12),transparent 70%);pointer-events:none"></div>
-  <div class="wrap" style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap">
-    <div data-reveal style="max-width:640px">
-      <div class="kicker"><%= t("contact.whatsapp.label") %></div>
-      <h2 style="margin:0 0 14px;color:#fff;font-size:40px;font-weight:900;line-height:1.25"><%= t("contact.whatsapp.h2") %></h2>
-      <p style="margin:0;color:rgba(255,255,255,.75);font-size:17px;line-height:1.8"><%= t("contact.whatsapp.desc") %></p>
-      <div class="wa-info">
-        <div><b><%= t("contact.whatsapp.phone") %></b><% if SiteData::PHONE.present? %><span dir="ltr" style="unicode-bidi:isolate"><%= SiteData::PHONE %></span><% else %><span class="pending"><%= t("contact.whatsapp.phone_pending") %></span><% end %></div>
-        <div><b><%= t("contact.whatsapp.email") %></b><% if SiteData::EMAIL.present? %><a href="mailto:<%= SiteData::EMAIL %>" style="color:#B9C6F2"><%= SiteData::EMAIL %></a><% else %><span class="pending"><%= t("contact.whatsapp.email_pending") %></span><% end %></div>
-        <div><b><%= t("footer.whatsapp") %></b><span dir="ltr" style="unicode-bidi:isolate" data-wa-display></span></div>
-      </div>
-    </div>
-    <a data-wa href="#" data-reveal class="btn-wa" style="font-size:18px;padding:18px 36px"><%= render "shared/wa_icon", size: 22 %> <%= t("common.whatsapp") %></a>
-  </div>
-</section>
 
 <%# 06 — Quick links %>
 <section id="quick" class="section-pad bg-white">

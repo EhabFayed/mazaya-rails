@@ -1,0 +1,29 @@
+<%# Document cards (cover = first page, badge = page count) + optional type filters + pager; paginated,
+    filtered and zoomed by the script in quality.html.erb. Every card renders, so without JS the full list shows.
+    Docs may carry group: (filter) and product: "category/slug" (link shown while that product is published). %>
+<% groups = docs.filter_map { |d| d[:group] }.uniq %>
+<% if groups.size > 1 %>
+<div class="cert-filters" role="group" aria-label="<%= t("quality.load.filter_label") %>" hidden>
+  <button type="button" class="active" aria-pressed="true" data-cert-filter=""><%= t("quality.load.groups.all") %></button>
+  <% groups.each do |g| %><button type="button" aria-pressed="false" data-cert-filter="<%= g %>"><%= t("quality.load.groups.#{g}") %></button><% end %>
+</div>
+<% end %>
+<div class="cert-grid<%= ' compact' if local_assigns[:compact] %>" data-cert-grid data-per-page="<%= per_page %>">
+  <% docs.each do |doc| %>
+  <figure class="cert-doc" <% if doc[:group] %>data-group="<%= doc[:group] %>"<% end %>>
+    <button type="button" class="cert-open" data-cert-key="<%= doc[:key] %>" data-cert-title="<%= doc[:title] %>" data-cert-pages="<%= doc[:pages].to_json %>">
+      <img src="<%= doc[:image] %>" alt="<%= doc[:title] %>" width="580" height="683" loading="lazy" decoding="async">
+      <% if doc[:pages].size > 1 %><span class="cert-pages" title="<%= t("quality.documents.pages") %>"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3h8l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M4 7v13a2 2 0 0 0 2 2h10"/></svg><%= doc[:pages].size %></span><% end %>
+      <span class="sr-only"><%= t("quality.documents.view") %></span>
+    </button>
+    <figcaption>
+      <%= doc[:title] %>
+      <% if doc[:product] && local_assigns[:live]&.include?(doc[:product]) %>
+        <% cat, slug = doc[:product].split("/") %>
+        <a href="<%= product_path(category: cat, slug: slug) %>" class="cert-product"><%= t("quality.load.view_product") %> ←</a>
+      <% end %>
+    </figcaption>
+  </figure>
+  <% end %>
+</div>
+<nav class="cert-pager" aria-label="<%= t("quality.documents.pagination") %>" hidden></nav>

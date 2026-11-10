@@ -25,7 +25,8 @@
       </div>
       <div>
         <%= f.label :email, "البريد الإلكتروني", class: "field-label" %>
-        <%= f.email_field :email, class: "field sm", dir: "ltr", placeholder: "info@mazaya.com" %>
+        <%= f.text_field :email, class: "field sm", dir: "ltr", placeholder: "sales@mazaya.com.sa, projects@mazaya.com.sa" %>
+        <div class="hint">يمكن إضافة أكثر من بريد مفصولة بفاصلة؛ يظهر كل بريد في سطر.</div>
       </div>
     </div>
   </div>
@@ -44,7 +45,7 @@
     <p class="sub">خريطة Google Maps في صفحة تواصل.</p>
     <%= f.label :map_embed, "رابط التضمين (Embed)", class: "field-label" %>
     <%= f.text_area :map_embed, class: "field sm", dir: "ltr", rows: 3, placeholder: "https://www.google.com/maps/embed?pb=…" %>
-    <div class="hint">الصق رابط src من Google Maps → مشاركة → تضمين خريطة. لو لصقت كود &lt;iframe&gt; كاملًا سنستخرج الرابط تلقائيًا.</div>
+    <div class="hint">الصق رابط src من Google Maps → مشاركة → تضمين خريطة. لو لصقت كود &lt;iframe&gt; كاملًا سنستخرج الرابط تلقائيًا. زر «عرض الاتجاهات» يفتح نفس المكان.</div>
     <% if @setting.map_embed.present? %>
       <div style="margin-top:14px;border-radius:12px;overflow:hidden;border:1px solid var(--line)"><iframe src="<%= @setting.map_embed %>" title="معاينة الخريطة" loading="lazy" style="width:100%;height:220px;border:0;display:block"></iframe></div>
     <% end %>

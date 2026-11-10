@@ -9,7 +9,7 @@ module SiteData
   PENDING = nil
 
   DYNAMIC = %i[
-    FOUNDED WHATSAPP_DISPLAY WHATSAPP_HREF EMAIL PHONE ADDRESS HOURS MAP_EMBED
+    FOUNDED WHATSAPP_DISPLAY WHATSAPP_HREF EMAIL EMAILS PHONE ADDRESS HOURS MAP_EMBED MAP_LINK
     STATS PARTNER_STATS SOCIAL CLIENTS DEPARTMENTS INQUIRY_TYPES ORG_TYPES DOWNLOADS
     CATEGORIES PRODUCTS SOLUTIONS CUSTOM_FEATURES CUSTOM_STEPS PROJECTS PROJECT_FIELDS
     CERTIFICATIONS DOCUMENTS QUALITY_STEPS SAFETY_CHOOSE SAFETY_CHECKLIST SAFETY_USE SAFETY
@@ -49,6 +49,20 @@ module SiteData
     def address          = SiteData.setting&.address_ar.present? ? SiteData.setting.address : nil
     def hours            = SiteData.setting&.hours_ar.present? ? SiteData.setting.hours : nil
     def map_embed        = SiteData.setting&.map_embed.presence
+    # the email setting may hold several addresses (sales, projects…), comma separated
+    def emails           = email.to_s.split(/[,\s;]+/).reject(&:blank?)
+
+    # "Get directions" target: the place the embed points at (?q= or the pb "!1s<place>" part), else the address
+    def map_link
+      q = begin
+        params = CGI.parse(URI(map_embed).query.to_s)
+        params["q"].first.presence || params["pb"].first.to_s[/!1s([^!]+)/, 1]&.tr("+", " ")
+      rescue StandardError
+        nil
+      end
+      q = q.presence || address&.to_s.presence
+      "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(q)}" if q
+    end
 
     def stats         = list("stats", Defaults::STATS) { |r| { value: r["value"].to_i, suffix: r["suffix"].to_s, label: bi(r, "label"), sub: bi(r, "sub") } }
     def partner_stats = list("partner_stats", Defaults::PARTNER_STATS) { |r| { value: r["value"].to_i, suffix: r["suffix"].to_s, label: bi(r, "label"), sub: bi(r, "sub") } }
