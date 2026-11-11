@@ -83,13 +83,13 @@
         <div class="feature-card guide-card card-hover" data-guide="<%= p[:name] %> <%= p[:slug] %>" data-guide-cat="<%= p[:category] %>">
           <div class="guide-cat"><%= cat[:name] %></div>
           <h3><%= p[:name] %></h3>
-          <p class="guide-line"><span><%= t("safety.library.code") %>:</span> <span class="pending"><%= t("common.pending") %></span></p>
+          <% if p[:code].present? %><p class="guide-line"><span><%= t("safety.library.code") %>:</span> <span dir="ltr"><%= p[:code] %></span></p><% end %>
           <div class="guide-docs">
             <% SiteData::GUIDE_DOCS.each do |d| %><span class="chip"><%= d %></span><% end %>
           </div>
           <div class="guide-actions">
             <a href="<%= product_path(p[:category], p[:slug]) %>" class="btn-outline"><%= t("safety.library.view") %></a>
-            <a href="<%= download_path("user-guide") %>" class="chip"><%= t("safety.library.download") %></a>
+            <% if download_ready?("user-guide") %><a href="<%= download_path("user-guide") %>" class="chip"><%= t("safety.library.download") %></a><% end %>
           </div>
         </div>
         <% end %>

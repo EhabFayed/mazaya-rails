@@ -17,7 +17,7 @@
     <div data-reveal style="display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap">
       <span class="tag tag-custom"><%= t("common.custom") %></span>
       <span class="chip" dir="ltr" style="unicode-bidi:isolate"><%= @solution[:en] %></span>
-      <a href="<%= product_category_path(@category[:slug]) %>" class="chip" style="color:#192C7B"><%= @category[:name] %></a>
+      <% if @category %><a href="<%= product_category_path(@category[:slug]) %>" class="chip" style="color:#192C7B"><%= @category[:name] %></a><% end %>
     </div>
     <%= render "shared/section_head", label: t("solutions.capabilities.label"), h2: t("solutions.capabilities.h2"), desc: t("solutions.capabilities.desc") %>
     <div class="grid-5">
@@ -62,7 +62,8 @@
   </div>
 </section>
 
-<%# 05 — Ready-made products in the same category %>
+<%# 05 — Ready-made products in the same category (only when the solution is linked to one) %>
+<% if @category %>
 <section id="category" class="section-pad bg-navy" style="position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(185,198,242,.16),transparent 70%)"></div>
   <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
@@ -72,12 +73,13 @@
       <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= @category[:desc] %></p>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
         <a href="<%= product_category_path(@category[:slug], anchor: "products") %>" class="btn-white"><%= t("common.explore_category") %></a>
-        <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= SiteData.download(@category[:catalog])[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="btn-ghost"><%= t("common.download_catalog") %></a>
+        <a data-gate="catalog-b2b" data-gate-title="<%= SiteData.download(@category[:catalog])[:title] %>" href="<%= download_path("catalog-b2b") %>" class="btn-ghost"><%= t("common.download_catalog") %></a>
       </div>
     </div>
     <a href="<%= product_category_path(@category[:slug], anchor: "products") %>" data-reveal style="display:block;height:380px;border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3)"><img src="<%= @category[:image] %>" alt="<%= @category[:name] %>" class="cover" loading="lazy"></a>
   </div>
 </section>
+<% end %>
 
 <%# 06 — Other solutions %>
 <section id="others" class="section-pad bg-soft">

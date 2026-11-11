@@ -3,9 +3,9 @@
   <div class="footer-inner">
     <div class="footer-grid footer-grid-6">
       <div class="footer-brand">
-        <img src="/assets/logo-white.png" alt="<%= t("brand") %>">
+        <a href="<%= root_path %>" class="footer-logo" aria-label="<%= t("brand") %>"><img src="/assets/logo-white.png" alt="<%= t("brand") %>"></a>
         <p><%= t("footer.about_blurb") %></p>
-        <div class="social-row">
+        <div class="social-row" id="footer-social">
           <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" title="<%= s[:label] %>" aria-label="<%= s[:label] %>" target="_blank" rel="noopener"><%= social_icon(s) %></a><% end %>
         </div>
       </div>
@@ -24,6 +24,7 @@
       <div>
         <div class="footer-head"><%= t("footer.business_title") %></div>
         <div class="footer-links">
+          <a href="<%= b2b_path %>" class="footer-link"><%= t("nav.b2b") %></a>
           <a href="<%= solutions_path %>" class="footer-link"><%= t("nav.custom_solutions") %></a>
           <a href="<%= projects_path %>" class="footer-link"><%= t("nav.projects") %></a>
           <a href="<%= catalog_path %>" class="footer-link"><%= t("nav.ecatalog") %></a>
@@ -35,6 +36,7 @@
       <div>
         <div class="footer-head"><%= t("footer.products_title") %></div>
         <div class="footer-links">
+          <a href="<%= products_path %>" class="footer-link"><%= t("nav.b2c_hub") %></a>
           <% SiteData::CATEGORIES.each do |c| %><a href="<%= product_category_path(c[:slug]) %>" class="footer-link"><%= c[:name] %></a><% end %>
         </div>
       </div>
@@ -42,22 +44,23 @@
       <div>
         <div class="footer-head"><%= t("footer.contact_title") %></div>
         <div class="footer-links">
+          <a href="<%= contact_path %>" class="footer-link"><%= t("nav.contact") %></a>
           <a href="<%= contact_path(dept: 'sales') %>#form" class="footer-link"><%= t("footer.sales") %></a>
           <a href="<%= contact_path(dept: 'export') %>#form" class="footer-link"><%= t("footer.export") %></a>
           <a href="<%= contact_path(dept: 'technical') %>#form" class="footer-link"><%= t("footer.technical") %></a>
           <a data-wa href="#" class="footer-link"><%= t("footer.whatsapp") %> <span dir="ltr" style="unicode-bidi:isolate;white-space:nowrap" data-wa-display></span></a>
-          <a href="#social" class="footer-link"><%= t("footer.social") %></a>
+          <a href="#footer-social" class="footer-link"><%= t("footer.social") %></a>
         </div>
       </div>
 
       <div class="footer-catalog">
         <div class="footer-head"><%= t("footer.catalog_title") %></div>
-        <a data-gate="catalog-full" href="<%= download_path("catalog-full") %>" class="catalog-cover" aria-label="<%= t("footer.catalog_headline") %>">
+        <a data-gate="<%= track_catalog %>" href="<%= download_path(track_catalog) %>" class="catalog-cover" aria-label="<%= t("footer.catalog_headline") %>">
           <img src="/assets/logo-white.png" alt="">
-          <span><%= SiteData::DOWNLOADS["catalog-full"][:title] %></span>
+          <span><%= SiteData::DOWNLOADS[track_catalog][:title] %></span>
         </a>
         <p class="catalog-blurb"><%= t("footer.catalog_headline") %> <%= t("footer.catalog_desc") %></p>
-        <a data-gate="catalog-full" href="<%= download_path("catalog-full") %>" class="footer-cta"><%= t("common.download_catalog") %> ←</a>
+        <a data-gate="<%= track_catalog %>" href="<%= download_path(track_catalog) %>" class="footer-cta"><%= t("common.download_catalog") %> ←</a>
       </div>
     </div>
 

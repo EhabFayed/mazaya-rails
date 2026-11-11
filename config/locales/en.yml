@@ -95,6 +95,9 @@ en:
     org_type: "Organization Type"
     submit: "Download File"
     close: "Close"
+    done_h: "Thank you, we have received your details."
+    done_p: "Your download has started. If it does not start automatically, use the button below."
+    done_cta: "Download File"
 
   home:
     title: "Mazaya Aluminum — The Original. The Trusted Name."

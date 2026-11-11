@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     get  "login",  to: "sessions#new"
     post "login",  to: "sessions#create"
     delete "logout", to: "sessions#destroy"
-    resources :leads, only: [ :index, :show, :update ]
+    resources :leads, only: [ :index, :show, :update, :destroy ] do
+      member { patch :toggle_read }
+    end
     resources :products do
       collection { get :import; post :import, action: :run_import }
       member { delete :purge_image; patch :reorder }

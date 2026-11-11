@@ -4,10 +4,6 @@
 
 <style>
 /* 5 cards: 3 on the first row, 2 wider on the second */
-.grid-32{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
-.grid-32>*{grid-column:span 2}
-.grid-32>*:nth-child(n+4){grid-column:span 3}
-@media(max-width:960px){.grid-32{grid-template-columns:1fr}.grid-32>*{grid-column:auto}}
 </style>
 
 <%# 01 — Hero %>
@@ -15,7 +11,7 @@
       label: t("b2b.hero.label"), h1: t("b2b.hero.h1"), desc: t("b2b.hero.desc"),
       image: "/assets/proj-tower.jpg",
       primary: [ t("common.request_quote"), rfq_path ],
-      secondary: [ t("b2b.hero.secondary"), download_path("technical-catalog"), "technical-catalog" ] %>
+      secondary: [ t("b2b.hero.secondary"), download_path("catalog-b2b"), "catalog-b2b" ] %>
 
 <%# 02 — Business solutions: the five categories, B2B wording %>
 <section id="solutions" class="section-pad bg-soft">
@@ -67,9 +63,9 @@
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 50%,rgba(185,198,242,.16),transparent 70%)"></div>
   <div class="wrap grid-2" style="position:relative;align-items:center;gap:60px">
     <div data-reveal style="display:flex;justify-content:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:48px 32px">
-      <a data-gate="catalog-full" data-gate-title="<%= SiteData::DOWNLOADS["catalog-full"][:title] %>" href="<%= download_path("catalog-full") %>" class="catalog-cover" style="max-width:240px;width:100%;padding:26px;font-size:17px">
+      <a data-gate="catalog-b2b" data-gate-title="<%= SiteData::DOWNLOADS["catalog-b2b"][:title] %>" href="<%= download_path("catalog-b2b") %>" class="catalog-cover" style="max-width:240px;width:100%;padding:26px;font-size:17px">
         <img src="/assets/logo-white.png" alt="">
-        <span><%= SiteData::DOWNLOADS["catalog-full"][:title] %></span>
+        <span><%= SiteData::DOWNLOADS["catalog-b2b"][:title] %></span>
       </a>
     </div>
     <div data-reveal>
@@ -78,7 +74,7 @@
       <p style="margin:0 0 36px;color:rgba(255,255,255,.75);font-size:17.5px;line-height:1.8"><%= t("b2b.catalog.desc") %></p>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
         <a href="<%= catalog_path %>" class="btn-white"><%= t("b2b.catalog.primary") %></a>
-        <a data-gate="catalog-full" data-gate-title="<%= SiteData::DOWNLOADS["catalog-full"][:title] %>" href="<%= download_path("catalog-full") %>" class="btn-ghost"><%= t("common.download_catalog") %></a>
+        <a data-gate="catalog-b2b" data-gate-title="<%= SiteData::DOWNLOADS["catalog-b2b"][:title] %>" href="<%= download_path("catalog-b2b") %>" class="btn-ghost"><%= t("common.download_catalog") %></a>
       </div>
     </div>
   </div>

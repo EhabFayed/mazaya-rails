@@ -33,7 +33,7 @@
       <td dir="ltr" style="text-align:end;white-space:nowrap"><%= p.published_on&.strftime("%Y-%m-%d") || "—" %></td>
       <td><%= p.featured ? "★" : "—" %></td>
       <td><%= p.template ? '<span class="status status-new">قالب</span>'.html_safe : "—" %></td>
-      <td><%= yes_no(p.published) %></td>
+      <td><%= p.published && p.template ? content_tag(:span, "مخفي (قالب)", class: "pill-off", title: "القوالب لا تظهر في الموقع حتى يُلغى خيار «قالب»") : yes_no(p.published) %></td>
       <td><a href="<%= edit_admin_post_path(p) %>">تعديل</a></td>
     </tr>
     <% end %>

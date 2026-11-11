@@ -3,14 +3,11 @@
 <% content_for :nav_active, "b2b" %>
 
 <style>
-.grid-32{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
-.grid-32>*{grid-column:span 2}
-.grid-32>*:nth-child(n+4){grid-column:span 3}
 .stat-grid.stat-grid-3{grid-template-columns:repeat(3,1fr)}
 .split-form{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:start}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .sticky-intro{position:sticky;top:110px}
-@media(max-width:960px){.grid-32,.split-form,.f2,.stat-grid.stat-grid-3{grid-template-columns:1fr}.grid-32>*{grid-column:auto}.sticky-intro{position:static}}
+@media(max-width:960px){.split-form,.f2,.stat-grid.stat-grid-3{grid-template-columns:1fr}.sticky-intro{position:static}}
 </style>
 
 <%# 01 — Hero %>
@@ -94,7 +91,7 @@
     </div>
 
     <form data-reveal data-lead-form data-kind="partner" data-source="partners-page" data-wa-title="<%= t('partners.form.cta') %>" class="form-card">
-      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input type="text" name="mz_trap" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
       <div class="form-section"><%= t("partners.form.s1") %></div>
       <div class="f2">

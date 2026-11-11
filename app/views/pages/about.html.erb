@@ -38,8 +38,8 @@
 <%= render "shared/page_hero",
       crumbs: [ [ t("nav.company"), nil ], [ t("nav.about"), nil ] ],
       label: t("about.hero.label"), h1: t("about.hero.h1"), desc: t("about.hero.desc"),
-      primary: [ t("about.profile.cta"), download_path("company-profile"), "company-profile" ],
-      secondary: [ t("common.explore_products"), products_path ],
+      primary: (download_ready?("company-profile") ? [ t("about.profile.cta"), download_path("company-profile"), "company-profile" ] : [ t("common.explore_products"), products_path ]),
+      secondary: (download_ready?("company-profile") ? [ t("common.explore_products"), products_path ] : :whatsapp),
       image: "/assets/hero.jpg" %>
 
 <%# 02 — Story %>
@@ -86,7 +86,8 @@
   </div>
 </section>
 
-<%# 05 — Company profile %>
+<%# 05 — Company profile (only once the profile PDF exists) %>
+<% if download_ready?("company-profile") %>
 <section id="profile" class="section-pad bg-white">
   <div data-reveal class="cta-band" style="background:#0D1744">
     <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap">
@@ -105,6 +106,7 @@
     </div>
   </div>
 </section>
+<% end %>
 
 <%# 06 — What we do %>
 <section id="what" class="section-pad bg-soft">

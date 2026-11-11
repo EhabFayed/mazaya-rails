@@ -17,5 +17,17 @@ module ApplicationHelper
     [ File.basename(f, ".svg"), svg.html_safe ]
   end.freeze
 
+  # True when a download has a real file: an admin upload (blob path) or an existing file under
+  # public/downloads that isn't the placeholder. Buttons for files not delivered yet are hidden.
+  def download_ready?(key)
+    file = SiteData.download(key)&.dig(:file).to_s
+    return false if file.blank? || file.end_with?("placeholder.pdf")
+    return true unless file.start_with?("/downloads/")
+    File.exist?(Rails.public_path.join(file.delete_prefix("/")))
+  end
+
+  # Download key of the catalog for the current page's track (pages set content_for :nav_active).
+  def track_catalog = content_for(:nav_active) == "b2b" ? "catalog-b2b" : "catalog-b2c"
+
   def social_icon(s) = SOCIAL_ICONS[s[:key].to_s] || s[:abbr]
 end

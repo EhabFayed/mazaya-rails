@@ -1,6 +1,6 @@
-<% content_for :title, "الوثائق والكتالوجات" %>
+<% content_for :title, "الكتالوجات والملفات" %>
 <div class="page-head">
-  <div><h1>الوثائق والكتالوجات</h1><p><%= @documents.size %> وثيقة · <%= @documents.count { |d| d.file.attached? } %> بملف مرفوع. المفتاح (key) يُستخدم في روابط التحميل.</p></div>
+  <div><h1>الكتالوجات والملفات</h1><p><%= @documents.size %> وثيقة · <%= @documents.count(&:has_file?) %> لها ملف (مرفوع من هنا أو موجود على الخادم في public/downloads). المفتاح (key) يُستخدم في روابط التحميل. ملف مرفوع من هنا يحل محل ملف الخادم.</p></div>
   <div class="head-actions"><a href="<%= new_admin_document_path %>" class="btn-navy sm">+ وثيقة جديدة</a></div>
 </div>
 
@@ -18,7 +18,7 @@
       <td><%= d.gated ? "مطلوب" : "—" %></td>
       <td dir="ltr" style="text-align:end"><%= d.version.presence || "—" %></td>
       <td dir="ltr" style="text-align:end;white-space:nowrap"><%= d.version_date&.strftime("%Y-%m-%d") || "—" %></td>
-      <td><% if d.file.attached? %><a href="<%= rails_blob_path(d.file, disposition: "inline") %>" target="_blank" rel="noopener">PDF</a> <span style="color:#9AA0A8;font-size:12.5px">(<%= number_to_human_size(d.file.byte_size) %>)</span><% else %><span class="status status-new">بدون ملف</span><% end %></td>
+      <td><% if d.file.attached? %><a href="<%= rails_blob_path(d.file, disposition: "inline") %>" target="_blank" rel="noopener">PDF</a> <span style="color:#9AA0A8;font-size:12.5px">(<%= number_to_human_size(d.file.byte_size) %>)</span><% elsif d.static_file? %><a href="<%= d.static_path %>" target="_blank" rel="noopener" title="ملف على الخادم: <%= d.static_path %>">PDF</a> <span style="color:#9AA0A8;font-size:12.5px">(<%= d.file_size %> · على الخادم)</span><% else %><span class="status status-new">بدون ملف</span><% end %></td>
       <td><%= yes_no(d.published) %></td>
       <td><%= d.position %></td>
       <td><a href="<%= edit_admin_document_path(d) %>">تعديل</a></td>

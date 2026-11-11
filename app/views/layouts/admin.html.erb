@@ -6,34 +6,49 @@
 <meta name="robots" content="noindex, nofollow">
 <title><%= content_for(:title) || "لوحة التحكم" %> — مزايا</title>
 <link rel="icon" type="image/png" href="/assets/logo.png">
-<link rel="stylesheet" href="/site.css?v=20261110a">
-<link rel="stylesheet" href="/admin.css">
+<link rel="stylesheet" href="/site.css?v=20261111f">
+<link rel="stylesheet" href="/admin.css?v=20261111b">
 <%= csrf_meta_tags %>
 </head>
 <body class="adm">
 <aside class="adm-side">
   <a href="<%= admin_root_path %>" class="adm-brand"><img src="/assets/logo-white.png" alt="مزايا"><span>لوحة التحكم</span></a>
+  <%# Sidebar grouped by job: [group heading or nil, [[section key, label, path, permission area, icon, badge], ...]] %>
   <% nav = [
-       [ "dashboard", "الرئيسية", admin_root_path, nil ],
-       [ "leads", "الطلبات", admin_leads_path, :leads, Lead.where(status: "new").count ],
-       [ "products", "المنتجات", admin_products_path, :content ],
-       [ "categories", "الفئات", admin_categories_path, :content ],
-       [ "solutions", "الحلول المخصصة", admin_solutions_path, :content ],
-       [ "projects", "المشاريع", admin_projects_path, :content ],
-       [ "posts", "الأخبار والمقالات", admin_posts_path, :content ],
-       [ "safety_articles", "أدلة السلامة", admin_safety_articles_path, :content ],
-       [ "documents", "الوثائق والكتالوجات", admin_documents_path, :content ],
-       [ "content_lists", "القوائم والبلوكات", admin_content_lists_path, :content ],
-       [ "clients", "شعارات العملاء", admin_clients_path, :content ],
-       [ "departments", "الأقسام", admin_departments_path, :content ],
-       [ "translations", "نصوص الصفحات", admin_translations_path, :content ],
-       [ "settings", "الإعدادات", admin_settings_path, :settings ],
-       [ "users", "المستخدمون", admin_users_path, :users ]
+       [ nil, [
+         [ "dashboard", "الرئيسية", admin_root_path, nil, :home ],
+         [ "leads", "الطلبات الواردة", admin_leads_path, :leads, :inbox, Lead.unread.count ]
+       ] ],
+       [ "المنتجات والكتالوج", [
+         [ "products", "المنتجات", admin_products_path, :content, :box ],
+         [ "categories", "فئات المنتجات", admin_categories_path, :content, :grid ],
+         [ "documents", "الكتالوجات والملفات", admin_documents_path, :content, :file ]
+       ] ],
+       [ "حلول الأعمال", [
+         [ "solutions", "الحلول المخصصة", admin_solutions_path, :content, :tool ],
+         [ "projects", "المشاريع", admin_projects_path, :content, :building ],
+         [ "clients", "شعارات العملاء", admin_clients_path, :content, :star ]
+       ] ],
+       [ "محتوى الموقع", [
+         [ "posts", "الأخبار والمقالات", admin_posts_path, :content, :news ],
+         [ "safety_articles", "أدلة السلامة", admin_safety_articles_path, :content, :shield ],
+         [ "translations", "نصوص الصفحات", admin_translations_path, :content, :type ],
+         [ "content_lists", "أقسام الصفحات", admin_content_lists_path, :content, :list ]
+       ] ],
+       [ "الإعدادات", [
+         [ "settings", "بيانات التواصل والإعدادات", admin_settings_path, :settings, :gear ],
+         [ "departments", "أقسام التواصل", admin_departments_path, :content, :phone ],
+         [ "users", "المستخدمون والصلاحيات", admin_users_path, :users, :users ]
+       ] ]
      ] %>
   <nav class="adm-nav">
-    <% nav.each do |key, label, href, area, badge| %>
-      <% next if area && !can?(area) %>
-      <a href="<%= href %>" class="<%= 'active' if admin_section == key %>"><%= label %><% if badge.to_i.positive? %><span class="badge"><%= badge %></span><% end %></a>
+    <% nav.each do |heading, items| %>
+      <% items = items.select { |_, _, _, area| area.nil? || can?(area) } %>
+      <% next if items.empty? %>
+      <% if heading %><div class="adm-nav-head"><%= heading %></div><% end %>
+      <% items.each do |key, label, href, _area, icon, badge| %>
+        <a href="<%= href %>" class="<%= 'active' if admin_section == key %>"><span class="adm-nav-label"><%= admin_icon(icon) %><%= label %></span><% if badge.to_i.positive? %><span class="badge" title="غير مقروء"><%= badge %></span><% end %></a>
+      <% end %>
     <% end %>
   </nav>
   <div class="adm-user">

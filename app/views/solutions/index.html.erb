@@ -3,10 +3,6 @@
 <% content_for :nav_active, "b2b" %>
 
 <style>
-.grid-32{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
-.grid-32>*{grid-column:span 2}
-.grid-32>*:nth-child(n+4){grid-column:span 3}
-@media(max-width:960px){.grid-32{grid-template-columns:1fr}.grid-32>*{grid-column:auto}}
 </style>
 
 <%# 01 — Hero %>
@@ -61,7 +57,7 @@
         <div class="cat-body">
           <div class="product-cat" dir="ltr" style="text-align:end;color:#B9C6F2"><%= s[:en] %></div>
           <h3><%= s[:name] %></h3>
-          <p><%= SiteData.category(s[:category])[:b2b] %></p>
+          <p><%= SiteData.category(s[:category])&.dig(:b2b) || s[:desc] %></p>
           <span class="card-link"><%= t("common.explore_solutions") %> ←</span>
         </div>
       </a>

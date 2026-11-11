@@ -11,75 +11,62 @@
       primary: [ t("common.request_quote"), rfq_path ],
       secondary: :whatsapp %>
 
-<%# 02 — Overview: 4 data cells (admin-supplied values, or pending) %>
+<%# Sections below render only the data that exists, so a project with no details yet shows no placeholders. %>
+<% filled = @fields.each_with_index.filter_map { |label, i| v = Array(@project[:fields])[i]; [ label, v ] if v.present? } %>
+<% if filled.any? %>
+<%# 02 — Overview: the data cells that have values (admin) %>
 <section id="overview" class="section-pad bg-white">
   <div class="wrap">
     <%= render "shared/section_head", label: t("projects.show.label"), h2: t("projects.show.overview") %>
     <div class="grid-4">
-      <% @fields.each_with_index do |label, i| %>
-      <% value = Array(@project[:fields])[i] %>
+      <% filled.each_with_index do |(label, value), i| %>
       <div data-reveal class="pillar">
         <div class="num-badge"><%= num(i + 1) %></div>
         <div style="color:#686B70;font-size:13.5px;font-weight:700;letter-spacing:.5px;margin-bottom:10px"><%= label %></div>
-        <% if value.present? %>
-          <div style="color:#192C7B;font-size:20px;font-weight:900;line-height:1.4"><%= value %></div>
-        <% else %>
-          <span class="pending" style="background:#fff"><%= t("common.pending") %></span>
-        <% end %>
+        <div style="color:#192C7B;font-size:20px;font-weight:900;line-height:1.4"><%= value %></div>
       </div>
       <% end %>
     </div>
   </div>
 </section>
+<% end %>
 
-<%# 03 — Requirements & solution %>
+<% story = [ [ t("projects.show.requirements_h2"), @project[:requirements] ], [ t("projects.show.solution_h2"), @project[:solution] ] ].select { |_, v| v.present? } %>
+<% if story.any? %>
+<%# 03 — Requirements & solution (whichever exist) %>
 <section id="story" class="section-pad bg-soft">
-  <div class="wrap grid-2">
+  <div class="wrap <%= story.size > 1 ? 'grid-2' : '' %>">
+    <% story.each_with_index do |(h2, text), i| %>
     <div data-reveal class="feature-card" style="padding:40px 36px">
-      <div class="num-badge soft"><%= num(1) %></div>
-      <h2 style="margin:0 0 14px;color:#192C7B;font-size:28px;font-weight:900"><%= t("projects.show.requirements_h2") %></h2>
-      <% if @project[:requirements].present? %>
-        <p style="margin:0;color:#686B70;font-size:16px;line-height:1.9;white-space:pre-line"><%= @project[:requirements] %></p>
-      <% else %>
-        <p class="pending" style="display:block;padding:16px 20px;font-size:15px;line-height:1.8"><%= t("projects.show.requirements_pending") %></p>
-      <% end %>
+      <div class="num-badge soft"><%= num(i + 1) %></div>
+      <h2 style="margin:0 0 14px;color:#192C7B;font-size:28px;font-weight:900"><%= h2 %></h2>
+      <p style="margin:0;color:#686B70;font-size:16px;line-height:1.9;white-space:pre-line"><%= text %></p>
     </div>
-    <div data-reveal class="feature-card" style="padding:40px 36px">
-      <div class="num-badge soft"><%= num(2) %></div>
-      <h2 style="margin:0 0 14px;color:#192C7B;font-size:28px;font-weight:900"><%= t("projects.show.solution_h2") %></h2>
-      <% if @project[:solution].present? %>
-        <p style="margin:0;color:#686B70;font-size:16px;line-height:1.9;white-space:pre-line"><%= @project[:solution] %></p>
-      <% else %>
-        <p class="pending" style="display:block;padding:16px 20px;font-size:15px;line-height:1.8"><%= t("projects.show.solution_pending") %></p>
-      <% end %>
-    </div>
+    <% end %>
   </div>
 </section>
+<% end %>
 
+<% if @project[:gallery].present? %>
 <%# 04 — Gallery %>
 <section id="gallery" class="section-pad bg-white">
   <div class="wrap">
     <%= render "shared/section_head", h2: t("projects.show.gallery_h2") %>
     <div class="grid-3">
-      <% if @project[:gallery].present? %>
-        <% @project[:gallery].each_with_index do |src, i| %>
-        <div data-reveal style="height:260px;border-radius:20px;overflow:hidden"><img src="<%= src %>" alt="<%= @project[:name] %> — <%= i + 1 %>" class="cover" loading="lazy"></div>
-        <% end %>
-      <% else %>
-        <% 3.times do %>
-        <div data-reveal style="height:260px;border-radius:20px;overflow:hidden"><div class="ph-slot"><%= t("projects.show.gallery_pending") %></div></div>
-        <% end %>
+      <% @project[:gallery].each_with_index do |src, i| %>
+      <div data-reveal style="height:260px;border-radius:20px;overflow:hidden"><img src="<%= src %>" alt="<%= @project[:name] %> — <%= i + 1 %>" class="cover" loading="lazy"></div>
       <% end %>
     </div>
   </div>
 </section>
+<% end %>
 
+<% if @solutions.any? %>
 <%# 05 — Solutions used in this project %>
 <section id="solutions" class="section-pad bg-navy" style="position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 85% 20%,rgba(185,198,242,.16),transparent 70%)"></div>
   <div class="wrap" style="position:relative">
     <%= render "shared/section_head", dark: true, label: t("nav.custom_solutions"), h2: t("projects.show.solutions_h2"), link: [ t("common.explore_solutions"), solutions_path ] %>
-    <% if @solutions.any? %>
     <div class="grid-2">
       <% @solutions.each do |s| %>
       <a href="<%= solution_path(s[:slug]) %>" data-reveal class="cat-card dark card-hover" style="flex-direction:row;align-items:stretch">
@@ -87,17 +74,15 @@
         <div class="cat-body">
           <div class="product-cat" dir="ltr" style="text-align:end;color:#B9C6F2"><%= s[:en] %></div>
           <h3><%= s[:name] %></h3>
-          <p><%= SiteData.category(s[:category])[:b2b] %></p>
+          <p><%= SiteData.category(s[:category])&.dig(:b2b) || s[:desc] %></p>
           <span class="card-link"><%= t("common.explore_solutions") %> ←</span>
         </div>
       </a>
       <% end %>
     </div>
-    <% else %>
-    <p data-reveal><span class="pending"><%= t("common.pending") %></span></p>
-    <% end %>
   </div>
 </section>
+<% end %>
 
 <%# 06 — More projects %>
 <section id="more" class="section-pad bg-soft">

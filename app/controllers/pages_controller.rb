@@ -14,7 +14,7 @@ class PagesController < ApplicationController
   end
 
   def catalog
-    @full = site.download("catalog-full")
+    @full = site.download("catalog-b2b")
     @by_category = site::CATEGORIES.map { |c| [ c, site.download(c[:catalog]) ] }
   end
 

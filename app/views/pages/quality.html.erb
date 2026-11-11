@@ -30,7 +30,7 @@
     <%= render "shared/section_head", label: t("quality.certifications.label"), h2: t("quality.certifications.h2"), desc: t("quality.certifications.intro"), center: true %>
     <%# certification key -> the scan it opens in the lightbox (section 06) %>
     <% scan_for = { "iso" => "iso-9001-2019", "sgs" => "sgs-test-report", "saso" => "saso-quality-mark" } %>
-    <div class="grid-4">
+    <div class="grid-4 cert-cards">
       <% @certifications.each do |c| %>
       <div data-reveal class="feature-card card-hover">
         <% if c[:image] %>

@@ -2,20 +2,17 @@
 <% content_for :description, t("catalog.description") %>
 <% content_for :nav_active, "b2b" %>
 <%# DownloadsController redirects gated deep links here with ?gate=KEY — preselect that file in the form. %>
-<% gate_key = SiteData::DOWNLOADS.key?(params[:gate].to_s) ? params[:gate].to_s : "catalog-full" %>
+<% gate_key = SiteData::DOWNLOADS.key?(params[:gate].to_s) ? params[:gate].to_s : "catalog-b2b" %>
 <% gate_doc = SiteData.download(gate_key) %>
 
 <style>
-.grid-32{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
-.grid-32>*{grid-column:span 2}
-.grid-32>*:nth-child(n+4){grid-column:span 3}
 .split{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center}
 .split-form{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:start}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .info-row{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid #E6E8EC;font-size:15px}
 .info-row:last-child{border-bottom:none}
 .info-row b{color:#192C7B;font-weight:800}
-@media(max-width:960px){.grid-32,.split,.split-form,.f2{grid-template-columns:1fr}.grid-32>*{grid-column:auto}}
+@media(max-width:960px){.split,.split-form,.f2{grid-template-columns:1fr}}
 </style>
 
 <%# 01 — Hero %>
@@ -23,30 +20,32 @@
       crumbs: [ [ t("nav.b2b"), b2b_path ], [ t("nav.ecatalog"), nil ] ],
       label: t("catalog.hero.label"), h1: t("catalog.hero.h1"), desc: t("catalog.hero.desc"),
       primary: [ t("catalog.hero.primary"), "#viewer" ],
-      secondary: [ t("catalog.hero.secondary"), download_path("catalog-full"), "catalog-full" ] %>
+      secondary: [ t("catalog.hero.secondary"), download_path("catalog-b2b"), "catalog-b2b" ] %>
 
 <%# 02 — Main catalog + viewer %>
 <section id="viewer" class="section-pad bg-white">
   <div class="wrap split">
-    <div data-reveal style="position:relative;background:#0D1744;border-radius:26px;overflow:hidden;min-height:540px;display:flex;align-items:center;justify-content:center;padding:48px 32px;box-sizing:border-box;box-shadow:0 24px 60px rgba(13,23,68,.25)">
+    <div data-reveal class="catalog-stage" style="position:relative;background:#0D1744;border-radius:26px;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:48px 32px;box-sizing:border-box;box-shadow:0 24px 60px rgba(13,23,68,.25)">
       <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 30%,rgba(185,198,242,.18),transparent 70%)"></div>
-      <object data="<%= @full[:file] %>#toolbar=0&navpanes=0&view=FitH" type="application/pdf" style="position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff" aria-label="<%= t("catalog.main.viewer") %>">
-        <div class="catalog-cover" style="position:relative;max-width:260px;width:100%;padding:28px;font-size:18px;margin:60px auto">
-          <img src="/assets/logo-white.png" alt="">
-          <span><%= @full[:title] %></span>
-        </div>
-      </object>
+      <%# cover only (no embedded PDF): the file stays behind the download form %>
+      <a data-gate="catalog-b2b" data-gate-title="<%= @full[:title] %>" href="<%= download_path("catalog-b2b") %>" class="catalog-cover" style="position:relative;max-width:260px;width:100%;padding:28px;font-size:18px;margin:60px auto">
+        <img src="/assets/logo-white.png" alt="">
+        <span><%= @full[:title] %></span>
+      </a>
     </div>
     <div data-reveal>
       <div class="kicker-gray"><%= t("catalog.main.label") %></div>
       <h2 style="margin:0 0 18px;color:#192C7B;font-size:40px;font-weight:900;line-height:1.25"><%= t("catalog.main.h2") %></h2>
       <p style="margin:0 0 28px;color:#686B70;font-size:17px;line-height:1.8"><%= t("catalog.main.desc") %></p>
+      <%# version / last update: shown only once set (admin → documents) %>
+      <% if @full[:version] || @full[:updated] %>
       <div style="background:#F4F5F7;border-radius:18px;padding:8px 24px;margin-bottom:32px">
-        <div class="info-row"><b><%= t("catalog.main.version") %>:</b> <span class="pending" style="background:#fff"><%= @full[:version] || t("catalog.main.pending") %></span></div>
-        <div class="info-row"><b><%= t("catalog.main.updated") %>:</b> <span class="pending" style="background:#fff"><%= @full[:updated] || t("catalog.main.pending") %></span></div>
+        <% if @full[:version] %><div class="info-row"><b><%= t("catalog.main.version") %>:</b> <span><%= @full[:version] %></span></div><% end %>
+        <% if @full[:updated] %><div class="info-row"><b><%= t("catalog.main.updated") %>:</b> <span><%= @full[:updated] %></span></div><% end %>
       </div>
+      <% end %>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
-        <a data-gate="catalog-full" data-gate-title="<%= @full[:title] %>" href="<%= download_path("catalog-full") %>" class="btn-navy"><%= t("catalog.hero.secondary") %></a>
+        <a data-gate="catalog-b2b" data-gate-title="<%= @full[:title] %>" href="<%= download_path("catalog-b2b") %>" class="btn-navy"><%= t("catalog.hero.secondary") %></a>
         <a href="<%= products_path %>" class="btn-outline"><%= t("common.explore_products") %></a>
       </div>
     </div>
@@ -67,7 +66,7 @@
           <p><%= c[:desc] %></p>
           <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:auto;padding-top:6px">
             <a href="<%= product_category_path(c[:slug]) %>" class="card-link"><%= t("catalog.categories.cta") %> ←</a>
-            <a data-gate="<%= c[:catalog] %>" data-gate-title="<%= d[:title] %>" href="<%= download_path(c[:catalog]) %>" class="card-link" style="color:rgba(255,255,255,.7)">↓ <%= t("catalog.categories.download") %></a>
+            <a data-gate="catalog-b2b" data-gate-title="<%= d[:title] %>" href="<%= download_path("catalog-b2b") %>" class="card-link" style="color:rgba(255,255,255,.7)">↓ <%= t("catalog.categories.download") %></a>
           </div>
         </div>
       </div>
@@ -93,7 +92,7 @@
     </div>
     <form data-reveal data-lead-form data-kind="quote" data-source="catalog-download" data-wa-title="<%= t('catalog.download.cta') %>" class="form-card">
       <input type="hidden" name="lead[download_key]" value="<%= gate_key %>">
-      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input type="text" name="mz_trap" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="f2">
         <div><label class="field-label" for="dl-name"><%= t("catalog.download.name") %>*</label><input id="dl-name" name="lead[name]" class="field" data-label="<%= t("catalog.download.name") %>" required></div>
         <div><label class="field-label" for="dl-company"><%= t("catalog.download.company") %></label><input id="dl-company" name="company" class="field" data-label="<%= t("catalog.download.company") %>"></div>

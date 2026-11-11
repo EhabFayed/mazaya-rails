@@ -37,23 +37,6 @@
     <%# ---- B2C ---- %>
     <div class="nav-item<%= ' current' if active == 'b2c' %>">
       <a href="<%= products_path %>"><%= t("nav.b2c") %></a>
-      <div class="mega">
-        <div class="mega-inner">
-          <div class="mega-intro">
-            <div class="mega-title"><%= t("nav.b2c") %></div>
-            <p><%= t("nav.b2c_intro") %></p>
-            <a href="<%= products_path %>" class="mega-cta"><%= t("nav.b2c_hub") %> ←</a>
-          </div>
-          <% SiteData::CATEGORIES.each_slice(2) do |pair| %>
-          <div class="mega-col">
-            <% pair.each do |c| %>
-            <div class="mega-head"><a href="<%= product_category_path(c[:slug], kind: "custom") %>"><%= c[:name] %></a></div>
-            <% c[:subcategories].each do |s| %><a href="<%= product_category_path(c[:slug], sub: s[:slug], kind: "custom") %>"><%= s[:name] %></a><% end %>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </div>
     </div>
 
     <%# ---- Quality & Safety ---- %>
@@ -62,19 +45,9 @@
       <div class="mega mega-sm">
         <div class="mega-inner">
           <div class="mega-col">
-            <div class="mega-head"><a href="<%= quality_path %>"><%= t("nav.quality_page") %></a></div>
-            <% SiteData::CERTIFICATIONS.each do |c| %><a href="<%= quality_path %>#certifications"><%= c[:name] %></a><% end %>
-            <a href="<%= quality_path %>#load-testing"><%= t("quality.load.label") %></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-head"><a href="<%= safety_path %>"><%= t("nav.safety_page") %></a></div>
-            <% SiteData::SAFETY.each do |a| %><a href="<%= safety_article_path(a[:slug]) %>"><%= a[:name] %></a><% end %>
-            <a href="<%= safety_path %>#library"><%= t("nav.guides") %></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-head"><a href="<%= original_path %>"><%= t("nav.original") %></a></div>
-            <a href="<%= original_path %>#identify"><%= t("original.identify.h2") %></a>
-            <a href="<%= original_path %>#verify"><%= t("original.verify.label") %></a>
+            <a href="<%= quality_path %>"><%= t("nav.quality_page") %></a>
+            <a href="<%= original_path %>"><%= t("nav.original") %></a>
+            <a href="<%= safety_path %>"><%= t("nav.safety_page") %></a>
           </div>
         </div>
       </div>
@@ -83,40 +56,16 @@
     <%# ---- Company ---- %>
     <div class="nav-item<%= ' current' if active == 'company' %>">
       <a href="<%= about_path %>"><%= t("nav.company") %></a>
-      <div class="mega mega-sm">
-        <div class="mega-inner">
-          <div class="mega-col">
-            <div class="mega-head"><%= t("nav.company") %></div>
-            <a href="<%= about_path %>"><%= t("nav.about") %></a>
-            <a href="<%= projects_path %>"><%= t("nav.projects") %></a>
-            <a href="<%= partners_path %>"><%= t("nav.partner") %></a>
-            <a data-gate="company-profile" href="<%= download_path("company-profile") %>"><%= t("about.profile.cta") %></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-head"><a href="<%= news_path %>"><%= t("nav.news") %></a></div>
-            <% SiteData::TOPICS.each do |key, label| %><a href="<%= news_path(topic: key) %>"><%= label %></a><% end %>
-          </div>
-        </div>
-      </div>
+    </div>
+
+    <%# ---- News ---- %>
+    <div class="nav-item<%= ' current' if active == 'news' %>">
+      <a href="<%= news_path %>"><%= t("nav.news") %></a>
     </div>
 
     <%# ---- Contact ---- %>
     <div class="nav-item<%= ' current' if active == 'contact' %>">
       <a href="<%= contact_path %>"><%= t("nav.contact") %></a>
-      <div class="mega mega-sm">
-        <div class="mega-inner">
-          <div class="mega-col">
-            <div class="mega-head"><%= t("nav.departments") %></div>
-            <% SiteData::DEPARTMENTS.each do |d| %><a href="<%= contact_path(dept: d[:key]) %>#form"><%= d[:name] %></a><% end %>
-          </div>
-          <div class="mega-col">
-            <div class="mega-head"><%= t("nav.contact") %></div>
-            <a href="<%= rfq_path %>"><%= t("nav.rfq") %></a>
-            <a href="<%= contact_path %>#form"><%= t("contact.form.label") %></a>
-            <a data-wa href="#"><%= t("common.whatsapp") %></a>
-          </div>
-        </div>
-      </div>
     </div>
   </nav>
 
@@ -145,20 +94,14 @@
     <a href="<%= rfq_path %>"><%= t("nav.rfq") %></a>
     <a href="<%= partners_path %>"><%= t("nav.partner") %></a>
   </details>
-  <details<%= ' open' if active == 'b2c' %>><summary><%= t("nav.b2c") %></summary>
-    <a href="<%= products_path %>"><%= t("nav.b2c_hub") %></a>
-    <% SiteData::CATEGORIES.each do |c| %><a href="<%= product_category_path(c[:slug], kind: "custom") %>"><%= c[:name] %></a><% end %>
-  </details>
+  <a href="<%= products_path %>" class="mobile-link"><%= t("nav.b2c") %></a>
   <details<%= ' open' if active == 'quality' %>><summary><%= t("nav.quality") %></summary>
     <a href="<%= quality_path %>"><%= t("nav.quality_page") %></a>
-    <a href="<%= safety_path %>"><%= t("nav.safety_page") %></a>
     <a href="<%= original_path %>"><%= t("nav.original") %></a>
+    <a href="<%= safety_path %>"><%= t("nav.safety_page") %></a>
   </details>
-  <details<%= ' open' if active == 'company' %>><summary><%= t("nav.company") %></summary>
-    <a href="<%= about_path %>"><%= t("nav.about") %></a>
-    <a href="<%= news_path %>"><%= t("nav.news") %></a>
-    <a href="<%= projects_path %>"><%= t("nav.projects") %></a>
-  </details>
+  <a href="<%= about_path %>" class="mobile-link"><%= t("nav.company") %></a>
+  <a href="<%= news_path %>" class="mobile-link"><%= t("nav.news") %></a>
   <a href="<%= contact_path %>" class="mobile-link"><%= t("nav.contact") %></a>
   <a href="<%= rfq_path %>" class="mobile-link strong"><%= t("common.request_quote") %></a>
   <a href="<%= switch_locale_path %>" class="mobile-link"><%= t("nav.lang_en") %></a>

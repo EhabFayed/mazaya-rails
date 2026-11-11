@@ -12,6 +12,10 @@ class Lead < ApplicationRecord
   STATUSES = %w[new contacted quoted won lost spam].freeze
   validates :status, inclusion: { in: STATUSES }
   scope :with_status, ->(s) { s.present? ? where(status: s) : all }
+  scope :unread, -> { where(read_at: nil) }
+
+  def read? = read_at.present?
+  def mark_read! = (update_column(:read_at, Time.current) unless read?)
 
   has_many_attached :files
 

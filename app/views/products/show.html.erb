@@ -142,7 +142,8 @@
               <% if sizes.any? %>
                 <% sizes.each do |row| %>
                 <% row = row.to_h.stringify_keys %>
-                <tr><% size_cols.each_with_index do |_col, i| %><td<% if i.zero? %> dir="ltr" style="unicode-bidi:isolate"<% end %>><%= (I18n.locale == :en ? nil : row["c#{i}_ar"]).presence || row["c#{i}"] %></td><% end %></tr>
+                <%# short values (codes, "150 كجم") never wrap on phones; long text still wraps %>
+                <tr><% size_cols.each_with_index do |_col, i| %><% v = (I18n.locale == :en ? nil : row["c#{i}_ar"]).presence || row["c#{i}"] %><td<% if i.zero? || v.to_s.length <= 14 %> class="nw"<% end %><% if i.zero? %> dir="ltr" style="unicode-bidi:isolate"<% end %>><%= v %></td><% end %></tr>
                 <% end %>
               <% else %>
                 <% 2.times do %>
@@ -162,19 +163,22 @@
   <div class="wrap">
     <%= render "shared/section_head", label: t("product.docs_label"), h2: t("product.docs_h2") %>
     <div class="grid-3">
+      <%# TDS card only when this product has its own TDS or a general one exists %>
+      <% if @product[:tds].present? || download_ready?("tds") %>
       <div data-reveal class="feature-card soft">
         <div class="num-badge">PDF</div>
         <h3><%= t("product.tds_h3") %></h3>
         <p style="margin-bottom:22px"><%= t("product.tds_desc") %></p>
         <div style="margin-top:auto"><a data-gate="tds" data-gate-title="TDS — <%= @product[:name] %>" href="<%= @product[:tds].presence || download_path("tds") %>" class="btn-outline"><%= t("product.tds_cta") %></a></div>
       </div>
+      <% end %>
       <div data-reveal class="feature-card soft">
         <div class="num-badge">✓</div>
         <h3><%= t("product.guide_safety_h3") %></h3>
         <p style="margin-bottom:22px"><%= t("product.guide_desc") %></p>
         <div style="margin-top:auto;display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center">
           <a href="<%= safety_path(anchor: 'library') %>" class="btn-outline"><%= t("product.guide_cta") %></a>
-          <a href="<%= @product[:guide].presence || download_path("user-guide") %>" class="card-link" style="margin:0"><%= t("common.download_pdf") %> ←</a>
+          <% if @product[:guide].present? || download_ready?("user-guide") %><a href="<%= @product[:guide].presence || download_path("user-guide") %>" class="card-link" style="margin:0"><%= t("common.download_pdf") %> ←</a><% end %>
         </div>
       </div>
       <div data-reveal class="feature-card soft">

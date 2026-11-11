@@ -97,7 +97,7 @@ module SiteData
     def downloads
       rows = Document.published.ordered.with_attached_file.to_a
       return Defaults::DOWNLOADS if rows.empty?
-      rows.to_h { |d| [ d.key, { title: d.title, desc: d.desc, file: d.file_path, gated: d.gated, version: d.version.presence, updated: d.version_date && I18n.l(d.version_date, format: :month), size: d.file.attached? ? ActiveSupport::NumberHelper.number_to_human_size(d.file.byte_size) : nil, doc_type: d.doc_type } ] }
+      rows.to_h { |d| [ d.key, { title: d.title, desc: d.desc, file: d.file_path, gated: d.gated, version: d.version.presence, updated: d.version_date && I18n.l(d.version_date, format: :month), size: d.file_size, doc_type: d.doc_type } ] }
     end
 
     def documents
@@ -184,8 +184,9 @@ module SiteData
     private
 
     def posts_of(type, fallback)
-      rows = Post.published.where(post_type: type).ordered.with_attached_image.to_a
-      return fallback if rows.empty?
+      # Template posts are unfilled placeholders: never shown on the public site.
+      return fallback.reject { |n| n[:template] } unless Post.published.where(post_type: type).exists?
+      rows = Post.published.where(post_type: type, template: false).ordered.with_attached_image.to_a
       rows.map do |n|
         h = { slug: n.slug, type: n.post_type.to_sym, topic: n.topic, category: n.category, date: n.published_on && I18n.l(n.published_on, format: :default),
               featured: n.featured, template: n.template, image: n.image.attached? ? image_path(n.image) : "/assets/hero.jpg",

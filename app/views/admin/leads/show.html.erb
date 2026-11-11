@@ -14,6 +14,11 @@
     </p>
   </div>
   <div class="head-actions">
+    <%# opening the lead marks it read; "unread" returns to the list so it stays unread %>
+    <%= button_to "تحديد كغير مقروء", toggle_read_admin_lead_path(@lead, back: "list"), method: :patch, class: "btn-outline sm", form_class: "inline-form" %>
+    <% if current_user.admin? %>
+      <%= button_to "حذف الطلب", admin_lead_path(@lead), method: :delete, class: "btn-danger sm", form_class: "inline-form", data: { confirm: "حذف الطلب ##{@lead.id} (#{@lead.name}) نهائيًا؟ لا يمكن التراجع." } %>
+    <% end %>
     <% if next_lead %><a href="<%= admin_lead_path(next_lead) %>" class="btn-outline sm">→ الأحدث #<%= next_lead.id %></a><% end %>
     <% if prev_lead %><a href="<%= admin_lead_path(prev_lead) %>" class="btn-outline sm">الأقدم #<%= prev_lead.id %> ←</a><% end %>
   </div>

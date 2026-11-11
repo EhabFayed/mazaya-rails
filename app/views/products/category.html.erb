@@ -167,7 +167,7 @@
 <section id="catalog" class="section-pad bg-white" style="padding-bottom:40px">
   <div data-reveal class="cta-band" style="background:#0D1744">
     <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap">
-      <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="catalog-cover" style="width:150px;flex-shrink:0" aria-label="<%= @catalog[:title] %>">
+      <a data-gate="catalog-b2c" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path("catalog-b2c") %>" class="catalog-cover" style="width:150px;flex-shrink:0" aria-label="<%= @catalog[:title] %>">
         <img src="/assets/logo-white.png" alt="">
         <span><%= @catalog[:title] %></span>
       </a>
@@ -177,7 +177,7 @@
         <p style="margin:0;color:rgba(255,255,255,.75);font-size:16.5px;line-height:1.8"><%= t("category.catalog_desc", name: @category[:name]) %></p>
       </div>
     </div>
-    <a data-gate="<%= @category[:catalog] %>" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path(@category[:catalog]) %>" class="btn-white"><%= t("category.catalog_cta") %></a>
+    <a data-gate="catalog-b2c" data-gate-title="<%= @catalog[:title] %>" href="<%= download_path("catalog-b2c") %>" class="btn-white"><%= t("category.catalog_cta") %></a>
   </div>
 </section>
 

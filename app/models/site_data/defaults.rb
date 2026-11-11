@@ -46,12 +46,12 @@ module SiteData::Defaults
   ].freeze
 
   SOCIAL = [
-    { key: "instagram", label: bi("إنستجرام", "Instagram"), url: "#", abbr: "IG" },
-    { key: "linkedin",  label: bi("لينكدإن", "LinkedIn"),   url: "#", abbr: "in" },
-    { key: "x",         label: bi("إكس", "X"),              url: "#", abbr: "X" },
-    { key: "youtube",   label: bi("يوتيوب", "YouTube"),     url: "#", abbr: "YT" },
-    { key: "tiktok",    label: bi("تيك توك", "TikTok"),     url: "#", abbr: "TT" },
-    { key: "snapchat",  label: bi("سناب شات", "Snapchat"),  url: "#", abbr: "SC" }
+    { key: "instagram", label: bi("إنستجرام", "Instagram"), url: "https://www.instagram.com/mazayaalu", abbr: "IG" },
+    { key: "linkedin",  label: bi("لينكدإن", "LinkedIn"),   url: "https://www.linkedin.com/in/%D8%A3%D9%84%D9%85%D9%86%D9%8A%D9%88%D9%85-%D9%85%D8%B2%D8%A7%D9%8A%D8%A7-aluminum-mazaya-856a80432", abbr: "in" },
+    { key: "x",         label: bi("إكس", "X"),              url: "https://x.com/Mazayaalu", abbr: "X" },
+    { key: "tiktok",    label: bi("تيك توك", "TikTok"),     url: "https://www.tiktok.com/@mazayaaluminum", abbr: "TT" },
+    { key: "snapchat",  label: bi("سناب شات", "Snapchat"),  url: "https://www.snapchat.com/@mazaya-alminum/0da3ede2-7112-437a-b26f-97db341d9ac2", abbr: "SC" },
+    { key: "pinterest", label: bi("بنترست", "Pinterest"),   url: "https://pin.it/3j96OT9wG", abbr: "P" }
   ].freeze
 
   # TODO(client): confirm which client logos may appear in the trust strip.
@@ -79,13 +79,17 @@ module SiteData::Defaults
   # placeholders until the client delivers the real PDFs.
   # ---------------------------------------------------------------------------
   DOWNLOADS = {
-    "catalog-full"      => { title: bi("كتالوج مزايا للمنتجات والحلول", "Mazaya Products & Solutions Catalog"), file: "/downloads/placeholder.pdf", gated: true, version: PENDING, updated: PENDING },
-    "catalog-ladders"   => { title: bi("كتالوج السلالم وحلول الوصول", "Ladders & Access Solutions Catalog"),    file: "/downloads/placeholder.pdf", gated: true },
-    "catalog-trolleys"  => { title: bi("كتالوج العربات وحلول المناولة", "Trolleys & Material Handling Catalog"), file: "/downloads/placeholder.pdf", gated: true },
-    "catalog-flooring"  => { title: bi("كتالوج حلول الأرضيات والتصريف", "Flooring & Drainage Solutions Catalog"), file: "/downloads/placeholder.pdf", gated: true },
-    "catalog-covers"    => { title: bi("كتالوج أغطية وفتحات الوصول", "Covers & Access Hatches Catalog"),         file: "/downloads/placeholder.pdf", gated: true },
-    "catalog-aluminium" => { title: bi("كتالوج منتجات وحلول الألومنيوم", "Aluminum Products & Solutions Catalog"), file: "/downloads/placeholder.pdf", gated: true },
-    "technical-catalog" => { title: bi("الكتالوج الفني", "Technical Catalog"),                                   file: "/downloads/placeholder.pdf", gated: true },
+    # One catalog per track: B2B pages (b2b, solutions, projects, catalog, rfq, partners) give catalog-b2b,
+    # product pages give catalog-b2c; the footer follows the current page (ApplicationHelper#track_catalog).
+    "catalog-b2b"       => { title: bi("كتالوج حلول الأعمال", "Business Solutions Catalog"), file: "/downloads/mazaya-catalog-b2b.pdf", gated: true },
+    "catalog-b2c"       => { title: bi("كتالوج منتجات مزايا", "Mazaya Products Catalog"),     file: "/downloads/mazaya-catalog-b2c.pdf", gated: true },
+    "catalog-full"      => { title: bi("كتالوج مزايا للمنتجات والحلول", "Mazaya Products & Solutions Catalog"), file: "/downloads/mazaya-catalog-b2c.pdf", gated: true, version: PENDING, updated: PENDING },
+    "catalog-ladders"   => { title: bi("كتالوج السلالم وحلول الوصول", "Ladders & Access Solutions Catalog"),    file: "/downloads/mazaya-catalog-b2c.pdf", gated: true },
+    "catalog-trolleys"  => { title: bi("كتالوج العربات وحلول المناولة", "Trolleys & Material Handling Catalog"), file: "/downloads/mazaya-catalog-b2c.pdf", gated: true },
+    "catalog-flooring"  => { title: bi("كتالوج حلول الأرضيات والتصريف", "Flooring & Drainage Solutions Catalog"), file: "/downloads/mazaya-catalog-b2c.pdf", gated: true },
+    "catalog-covers"    => { title: bi("كتالوج أغطية وفتحات الوصول", "Covers & Access Hatches Catalog"),         file: "/downloads/mazaya-catalog-b2c.pdf", gated: true },
+    "catalog-aluminium" => { title: bi("كتالوج منتجات وحلول الألومنيوم", "Aluminum Products & Solutions Catalog"), file: "/downloads/mazaya-catalog-b2c.pdf", gated: true },
+    "technical-catalog" => { title: bi("الكتالوج الفني", "Technical Catalog"),                                   file: "/downloads/mazaya-catalog-b2b.pdf", gated: true },
     "tds"               => { title: bi("ورقة البيانات الفنية (TDS)", "Technical Data Sheet (TDS)"),              file: "/downloads/placeholder.pdf", gated: true },
     "user-guide"        => { title: bi("دليل الاستخدام والتركيب", "User & Installation Guide"),                  file: "/downloads/placeholder.pdf", gated: false },
     "company-profile"   => { title: bi("الملف التعريفي لشركة مزايا", "Mazaya Company Profile"),                  file: "/downloads/placeholder.pdf", gated: true, size: PENDING }
@@ -429,12 +433,7 @@ module SiteData::Defaults
         bi("واليوم، تجمع مزايا بين المنتجات القياسية الجاهزة والحلول المخصصة، بما يتيح لنا التعامل مع متطلبات متنوعة من حيث التصميم والمقاسات والمواصفات وطبيعة الاستخدام.", "Today, Mazaya combines standard ready-made products with custom solutions, allowing us to address diverse requirements in design, dimensions, specifications, and applications.")
       ],
       related_products: [ "multi-position-ladder", "single-ladder", "extension-ladder" ]
-    },
-    # Templates until real news is available (per the copy deck).
-    { slug: "event-template",   type: :news, topic: "news", category: bi("المعارض والفعاليات", "Exhibitions & Events"), date: PENDING, template: true, image: "/assets/proj-tower.jpg",
-      title: bi("[اسم المعرض أو الفعالية]", "[Exhibition or Event Name]"), excerpt: bi("[نبذة مختصرة عن مشاركة مزايا.]", "[A brief overview of Mazaya's participation.]"), body: [], related_products: [] },
-    { slug: "product-template", type: :news, topic: "products", category: bi("منتجات جديدة", "New Products"), date: PENDING, template: true, image: "/assets/cat-custom.jpg",
-      title: bi("[اسم المنتج أو الحل الجديد]", "[New Product or Solution Name]"), excerpt: bi("[تعريف مختصر بالمنتج أو الحل.]", "[A brief introduction to the new product or solution.]"), body: [], related_products: [] }
+    }
   ].freeze
 
   ARTICLES = [
@@ -442,32 +441,6 @@ module SiteData::Defaults
       title: bi("كيف تختار السلم المناسب لطبيعة عملك؟", "How to Choose the Right Ladder for the Job"),
       excerpt: bi("تعرف على أهم العوامل التي يجب مراعاتها عند اختيار السلم، من طبيعة المهمة والارتفاع المطلوب إلى بيئة العمل والحمولة.", "Explore the key factors to consider when choosing a ladder, from the type of task and required height to the working environment and load capacity."),
       body: [ bi("تختلف المنتجات باختلاف الاستخدام والارتفاع المطلوب وبيئة العمل ومتطلبات التحمل. لذلك، تبدأ السلامة باختيار المنتج المناسب للمهمة ومراجعة مواصفاته قبل الاستخدام.", "Products vary depending on the application, required height, working environment, and load requirements. Safe use therefore begins with selecting the right product for the task and reviewing its specifications before use.") ],
-      points: SAFETY_CHOOSE, related_products: [ "multi-position-ladder", "single-ladder", "extension-ladder" ], related_safety: "choose-right-product" },
-    { slug: "what-to-check-before-use", type: :article, topic: "safety", category: bi("السلامة", "Safety"), date: PENDING, image: "/assets/hero.jpg",
-      title: bi("ما الذي يجب فحصه في السلم قبل الاستخدام؟", "What Should You Check Before Using a Ladder?"),
-      excerpt: bi("خطوات أساسية تساعدك على فحص حالة السلم ونقاط التثبيت والقواعد وآليات القفل قبل بدء العمل.", "Essential steps for checking the ladder structure, fixing points, base, and locking mechanisms before use."),
-      body: [ bi("يساعد الفحص البصري قبل كل استخدام على اكتشاف أي تلف أو مشكلة ظاهرة قد تؤثر على الاستخدام.", "A visual inspection before each use can help identify visible damage or issues that may affect safe operation.") ],
-      checklist: SAFETY_CHECKLIST, related_products: [ "single-ladder", "extension-ladder" ], related_safety: "inspect-before-use" },
-    { slug: "ladder-types-compared", type: :article, topic: "products", category: bi("السلالم وحلول الوصول", "Ladders & Access Solutions"), date: PENDING, image: "/assets/cat-ladders.jpg",
-      title: bi("سلم مفرد أم متعدد الأوضاع أم قابل للتمديد؟", "Single, Multi-Position, or Extension Ladder: Which One Do You Need?"),
-      excerpt: bi("مقارنة تساعدك على فهم الاختلاف بين أنواع السلالم واختيار النوع الأقرب لطبيعة الاستخدام.", "A practical comparison to help you understand the differences between ladder types and choose the right option for your application."),
-      body: [ bi("تختلف المنتجات باختلاف الاستخدام والارتفاع المطلوب وبيئة العمل ومتطلبات التحمل.", "Products vary depending on the application, required height, working environment, and load requirements.") ],
-      points: [ [ bi("سلم مفرد", "Single Ladder"), bi("خيار عملي للاستخدامات المباشرة.", "A practical option for straightforward tasks.") ], [ bi("سلم متعدد الأوضاع", "Multi-Position Ladder"), bi("مرونة في أكثر من وضع استخدام.", "Flexibility across multiple positions of use.") ], [ bi("سلم قابل للتمديد", "Extension Ladder"), bi("حل للوصول إلى ارتفاعات مختلفة.", "A solution for reaching different heights.") ] ],
-      related_products: [ "single-ladder", "multi-position-ladder", "extension-ladder" ], related_safety: "choose-right-product" },
-    { slug: "when-you-need-a-custom-solution", type: :article, topic: "projects", category: bi("المشاريع", "Projects"), date: PENDING, image: "/assets/cat-custom.jpg",
-      title: bi("متى يحتاج مشروعك إلى حل ألومنيوم مخصص؟", "When Does Your Project Need a Custom Aluminum Solution?"),
-      excerpt: bi("ليست كل متطلبات المشاريع قابلة للحل بمنتج قياسي. تعرّف على الحالات التي قد يكون فيها التخصيص خيارًا أنسب للمشروع.", "Not every project requirement can be met with a standard product. Discover when a custom solution may be the better fit."),
-      body: [ bi("نطوّر حلولًا مخصصة وفق متطلبات المشروع، بداية من التصميم والمقاسات، وحتى السماكات والأحمال والتشطيبات المطلوبة. يمكنك تزويد فريقنا بالرسم الهندسي، أو العمل معنا على تطوير التصميم المناسب للتطبيق.", "We develop custom solutions around project requirements, from design and dimensions to thicknesses, load requirements, finishes, and colors. You can provide your own engineering drawings or work with the Mazaya team to develop a design suited to your application.") ],
-      points: CUSTOM_FEATURES, related_products: [ "flat-platform-trolley", "custom-aluminium-solution", "floor-mats" ], related_safety: nil },
-    { slug: "why-load-testing-matters", type: :article, topic: "quality", category: bi("الجودة", "Quality"), date: PENDING, image: "/assets/cat-ladders.jpg",
-      title: bi("لماذا تُعد اختبارات الأحمال مهمة في منتجات الوصول؟", "Why Is Load Testing Important for Access Products?"),
-      excerpt: bi("نظرة مبسطة على أهمية اختبارات الأحمال ودورها عند تقييم منتجات مثل السلالم والسقالات ومنصات العمل.", "A simple overview of load testing and its importance when evaluating products such as ladders, scaffolding, and work platforms."),
-      body: [ bi("تُجرى اختبارات جودة واختبارات تحميل على المنتجات، وتكتسب هذه الاختبارات أهمية خاصة في منتجات مثل السلالم والسقالات ومنصات العمل، حيث تمثل بيانات التحمل والسلامة جزءًا أساسيًا من تقييم المنتج قبل اعتماده للاستخدام.", "Quality and load tests are conducted on products, with particular importance for ladders, scaffolding, and work platforms, where load capacity and safety data are essential considerations when evaluating a product for use.") ],
-      points: QUALITY_STEPS, related_products: [ "multi-position-ladder", "extension-ladder" ], related_safety: nil },
-    { slug: "how-to-verify-an-original", type: :article, topic: "original", category: bi("الأصلي مقابل المقلد", "Original vs Counterfeit"), date: PENDING, image: "/assets/hero.jpg",
-      title: bi("كيف تتحقق من منتج مزايا الأصلي قبل الشراء؟", "How to Identify an Original Mazaya Product Before You Buy"),
-      excerpt: bi("تعرف على المعلومات والعلامات الأساسية التي يجب مراجعتها، وأهمية الحصول على المنتج من مصدر موثوق.", "Learn what product information and authenticity indicators to check, and why purchasing from a trusted source matters."),
-      body: [ bi("المنتج الأصلي من مزايا يأتي ضمن منظومة تصنيع وجودة واختبارات واضحة، بينما قد لا يوفر المنتج المقلد المستوى نفسه من التحقق أو المعلومات المرتبطة بمصدره وتصنيعه. لذلك، التحقق من أصالة المنتج ليس مجرد تفصيل عند الشراء، بل خطوة مهمة قبل الاستخدام.", "Original Mazaya products are backed by established manufacturing, quality, and testing processes. Counterfeit products, on the other hand, may not provide the same level of verification or reliable information about their origin and manufacturing. Verifying product authenticity is therefore more than a purchasing detail; it is an important step before use.") ],
-      points: AUTHENTICITY_CHECKS, related_products: [ "multi-position-ladder", "single-ladder" ], related_safety: nil }
+      points: SAFETY_CHOOSE, related_products: [ "multi-position-ladder", "single-ladder", "extension-ladder" ], related_safety: "choose-right-product" }
   ].freeze
 end

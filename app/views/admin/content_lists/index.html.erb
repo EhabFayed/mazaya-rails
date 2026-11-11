@@ -1,19 +1,44 @@
-<% content_for :title, "القوائم والبلوكات" %>
+<% content_for :title, "أقسام الصفحات" %>
+<%# Lists grouped by the page they appear on: [page, page path, { key => where/what }] %>
+<% groups = [
+     [ "عام (كل الصفحات)", nil, { "social" => "روابط حسابات السوشيال — أيقونات الهيدر والفوتر والرئيسية" } ],
+     [ "الصفحة الرئيسية", root_path, { "stats" => "شريط الأرقام: سنوات الخبرة، عدد السلالم، الموزعين…" } ],
+     [ "الجودة والاعتمادات", quality_path, { "certifications" => "كروت الشهادات (ISO، SGS، SASO…) — تظهر في الرئيسية وصفحة الجودة",
+                                              "quality_steps" => "خطوات الجودة داخل المصنع" } ],
+     [ "الحلول المخصصة", solutions_path, { "custom_features" => "ما يمكن تخصيصه: المقاسات، السماكات، الأحمال…",
+                                            "custom_steps" => "مراحل التصنيع حسب الطلب" } ],
+     [ "المشاريع", projects_path, { "project_fields" => "عناوين خانات بيانات المشروع (المنتج المورّد، النطاق…)" } ],
+     [ "الشراكة والتوزيع", partners_path, { "partner_stats" => "أرقام صفحة الشراكة" } ],
+     [ "السلامة ودليل الاستخدام", safety_path, { "safety_choose" => "قبل الاستخدام: اختيار المنتج المناسب",
+                                                  "safety_checklist" => "قائمة الفحص قبل الاستخدام",
+                                                  "safety_use" => "أثناء الاستخدام",
+                                                  "guide_docs" => "أنواع الوثائق في مكتبة الأدلة" } ],
+     [ "الأصلي مقابل المقلد", original_path, { "authenticity_checks" => "علامات التحقق من المنتج الأصلي",
+                                               "comparison" => "جدول المقارنة بين الأصلي والمقلد" } ],
+     [ "الأخبار والمقالات", news_path, { "topics" => "تصنيفات الفلترة في صفحة الأخبار" } ],
+     [ "النماذج (تواصل وتحميل)", contact_path, { "inquiry_types" => "خيارات «نوع الاستفسار» في نموذج التواصل",
+                                                  "org_types" => "خيارات «نوع الجهة» في نموذج تحميل الكتالوج" } ]
+   ] %>
+<% by_key = @lists.index_by(&:key) %>
 <div class="page-head">
-  <div><h1>القوائم والبلوكات</h1><p>الأرقام، الروابط، الخطوات، الجداول، والقوائم الثابتة في الصفحات. القائمة الفارغة تعرض المحتوى الافتراضي.</p></div>
+  <div><h1>أقسام الصفحات</h1><p>القوائم الثابتة داخل صفحات الموقع (أرقام، خطوات، جداول، روابط)، مرتبة حسب الصفحة التي تظهر فيها. القائمة التي لم تُعدّل تعرض المحتوى الافتراضي.</p></div>
 </div>
 
-<table class="adm-table">
-  <thead><tr><th>القائمة</th><th>المفتاح</th><th>الحقول</th><th>العناصر</th><th></th></tr></thead>
-  <tbody>
-    <% @lists.each do |l| %>
-    <tr>
-      <td><a href="<%= edit_admin_content_list_path(l.key) %>"><%= l.label %></a></td>
-      <td><span class="tr-key"><%= l.key %></span></td>
-      <td style="color:#686B70;font-size:12.5px" dir="ltr"><%= l.fields.join(", ") %></td>
-      <td><% if l.items.any? %><%= l.items.size %><% else %><span style="color:#9AA0A8">افتراضي</span><% end %></td>
-      <td><a href="<%= edit_admin_content_list_path(l.key) %>">تعديل</a></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="list-groups">
+  <% groups.each do |page, path, keys| %>
+    <% rows = keys.filter_map { |k, desc| [ by_key[k], desc ] if by_key[k] } %>
+    <% next if rows.empty? %>
+    <div class="card list-group">
+      <div class="card-head">
+        <h2><%= page %></h2>
+        <% if path %><a href="<%= path %>" target="_blank" rel="noopener" class="muted" style="font-size:13px">عرض الصفحة ↗</a><% end %>
+      </div>
+      <% rows.each do |l, desc| %>
+      <a href="<%= edit_admin_content_list_path(l.key) %>" class="list-row" title="<%= l.key %>">
+        <span class="list-main"><span class="list-name"><%= l.label %></span><span class="list-desc"><%= desc %></span></span>
+        <span class="list-meta"><% if l.items.any? %><span class="chip"><%= l.items.size %> عناصر</span><% else %><span class="chip muted-chip">افتراضي</span><% end %><span class="list-edit">تعديل ←</span></span>
+      </a>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -16,6 +16,7 @@
   .loc-card{background:#fff;border-radius:24px;padding:10px 30px 28px;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(25,44,123,.06)}
   .info-row{display:flex;flex-direction:column;gap:6px;padding:16px 0;border-bottom:1px solid #E6E8EC}
   .info-pair{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;border-bottom:1px solid #E6E8EC}
+  @media (max-width:440px){.info-pair{grid-template-columns:1fr}.info-pair .info-row+.info-row{border-top:1px solid #E6E8EC}}
   .info-pair .info-row{border-bottom:none}
   .info-label{color:#192C7B;font-size:14px;font-weight:800}
   .info-value{color:#686B70;font-size:15.5px;line-height:1.7}
@@ -65,7 +66,7 @@
     </div>
 
     <form data-reveal data-lead-form data-kind="contact" data-source="contact-page" data-wa-title="<%= t('contact.form.cta') %>" class="form-card" novalidate="false">
-      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input type="text" name="mz_trap" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="department" data-label="<%= t("nav.departments") %>" value="<%= @dept %>">
       <div>
         <label class="field-label" for="lead_name"><%= t("contact.form.name") %> *</label>

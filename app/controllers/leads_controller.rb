@@ -6,7 +6,12 @@ class LeadsController < ApplicationController
   KINDS = %w[rfq quote partner download contact].freeze
 
   def create
-    return head :ok if params[:website].present? # honeypot
+    # Honeypot (hidden field humans never see): don't save, but answer like a success so the page
+    # never shows a false "connection failed" — and a mis-flagged human still gets the file.
+    if params[:mz_trap].present?
+      key = params.dig(:lead, :download_key).presence
+      return render json: { ok: true, file: key && site.download(key)&.dig(:file) }, status: :ok
+    end
 
     lead = Lead.new(lead_params.except(:files))
     lead.kind = KINDS.include?(lead.kind) ? lead.kind : "contact"

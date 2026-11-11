@@ -1,46 +1,80 @@
 <% content_for :title, "الرئيسية" %>
 <div class="page-head">
-  <div><h1>أهلًا <%= current_user.name %></h1><p>نظرة سريعة على الطلبات والمحتوى واللي لسه ناقص قبل الإطلاق.</p></div>
-  <div class="head-actions"><a href="<%= admin_leads_path(status: 'new') %>" class="btn-navy sm">الطلبات الجديدة (<%= @lead_counts["new"] || 0 %>)</a></div>
+  <div><h1>أهلًا <%= current_user.name %></h1><p>الطلبات الجديدة، اختصارات سريعة، وما تبقّى قبل إطلاق الموقع.</p></div>
+  <div class="head-actions">
+    <a href="<%= root_path %>" target="_blank" rel="noopener" class="btn-outline sm"><%= admin_icon(:external, size: 15) %> عرض الموقع</a>
+  </div>
 </div>
 
+<%# 1 — numbers %>
 <div class="kpis">
+  <a href="<%= admin_leads_path(unread: 1) %>" class="kpi kpi-link<%= ' kpi-alert' if @unread.positive? %>"><div class="kpi-num"><%= @unread %></div><div class="kpi-label">طلبات غير مقروءة</div></a>
   <div class="kpi"><div class="kpi-num"><%= @leads_today %></div><div class="kpi-label">طلبات اليوم</div></div>
-  <div class="kpi"><div class="kpi-num"><%= @leads_week %></div><div class="kpi-label">آخر 7 أيام</div></div>
-  <div class="kpi"><div class="kpi-num"><%= @lead_counts["new"] || 0 %></div><div class="kpi-label">بانتظار التواصل</div></div>
-  <div class="kpi"><div class="kpi-num"><%= @lead_counts["won"] || 0 %></div><div class="kpi-label">تم إغلاقها (won)</div></div>
+  <div class="kpi"><div class="kpi-num"><%= @leads_week %></div><div class="kpi-label">طلبات آخر 7 أيام</div></div>
+  <div class="kpi"><div class="kpi-num"><%= @downloads_30 %></div><div class="kpi-label">تحميلات الكتالوج (30 يومًا)</div></div>
+</div>
+
+<%# 2 — shortcuts %>
+<div class="quick">
+  <% if can?(:leads) %><a href="<%= admin_leads_path(unread: 1) %>" class="quick-item"><%= admin_icon(:inbox, size: 22) %><span>الطلبات غير المقروءة</span></a><% end %>
+  <% if can?(:content) %>
+    <a href="<%= new_admin_product_path %>" class="quick-item"><%= admin_icon(:plus, size: 22) %><span>إضافة منتج</span></a>
+    <a href="<%= new_admin_post_path %>" class="quick-item"><%= admin_icon(:news, size: 22) %><span>إضافة خبر أو مقال</span></a>
+    <a href="<%= admin_documents_path %>" class="quick-item"><%= admin_icon(:file, size: 22) %><span>رفع كتالوج أو ملف</span></a>
+    <a href="<%= admin_translations_path %>" class="quick-item"><%= admin_icon(:type, size: 22) %><span>تعديل نصوص الصفحات</span></a>
+  <% end %>
+  <% if can?(:settings) %><a href="<%= admin_settings_path %>" class="quick-item"><%= admin_icon(:gear, size: 22) %><span>بيانات التواصل</span></a><% end %>
 </div>
 
 <div class="grid-2" style="gap:22px;align-items:start;margin-top:22px">
+  <%# 3 — latest leads %>
   <div class="card">
     <div class="card-head"><h2>آخر الطلبات</h2><a href="<%= admin_leads_path %>">كل الطلبات ←</a></div>
-    <% if @recent_leads.empty? %><p class="muted">لا توجد طلبات بعد.</p><% else %>
+    <% if @recent_leads.empty? %><p class="muted">لا توجد طلبات بعد. أي نموذج يُرسل من الموقع يظهر هنا.</p><% else %>
     <table class="adm-table">
       <thead><tr><th>#</th><th>النوع</th><th>الاسم</th><th>الحالة</th><th>الوقت</th></tr></thead>
       <tbody>
         <% @recent_leads.each do |l| %>
-        <tr><td><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td><td><span class="kind kind-<%= l.kind %>"><%= LeadMailer::KIND_LABELS[l.kind] %></span></td><td><a href="<%= admin_lead_path(l) %>"><%= l.name %></a></td><td><span class="status status-<%= l.status %>"><%= t("admin.lead_status.#{l.status}", default: l.status) %></span></td><td dir="ltr" style="text-align:end"><%= l.created_at.strftime("%m-%d %H:%M") %></td></tr>
+        <tr class="<%= 'is-unread' unless l.read? %>">
+          <td><% unless l.read? %><span class="unread-dot" title="غير مقروء"></span><% end %><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td>
+          <td><span class="kind kind-<%= l.kind %>"><%= LeadMailer::KIND_LABELS[l.kind] %></span></td>
+          <td><a href="<%= admin_lead_path(l) %>"><%= l.name %></a></td>
+          <td><span class="status status-<%= l.status %>"><%= AdminHelper::LEAD_STATUS.fetch(l.status, l.status) %></span></td>
+          <td dir="ltr" style="text-align:end;white-space:nowrap"><%= l.created_at.strftime("%m-%d %H:%M") %></td>
+        </tr>
         <% end %>
       </tbody>
     </table>
     <% end %>
-    <div class="chips" style="margin-top:14px"><% @leads_by_kind.each do |k, n| %><span class="chip"><%= LeadMailer::KIND_LABELS[k] %>: <%= n %> (30 يوم)</span><% end %></div>
+    <% if @leads_by_kind.any? %>
+    <div class="chips" style="margin-top:14px"><% @leads_by_kind.each do |k, n| %><span class="chip"><%= LeadMailer::KIND_LABELS[k] %>: <%= n %></span><% end %><span class="chip" style="background:none">آخر 30 يومًا</span></div>
+    <% end %>
   </div>
 
   <div style="display:grid;gap:22px">
+    <%# 4 — what's left %>
     <div class="card">
-      <div class="card-head"><h2>ناقص قبل الإطلاق</h2></div>
-      <% if @pending.empty? %><p class="muted">كل البيانات مكتملة.</p><% else %>
-      <ul class="todo"><% @pending.each do |label, href| %><li><a href="<%= href %>"><%= label %></a></li><% end %></ul>
+      <div class="card-head"><h2>ما تبقّى قبل الإطلاق</h2><% if @pending.any? %><span class="muted" style="font-size:13px"><%= @pending.size %> بند</span><% end %></div>
+      <% if @pending.empty? %><p class="muted">كل شيء مكتمل.</p><% else %>
+      <ul class="todo">
+        <% @pending.each do |label, href, level| %><li class="todo-<%= level %>"><a href="<%= href %>"><%= label %></a></li><% end %>
+      </ul>
+      <p class="muted" style="font-size:12.5px;margin-top:10px">البنود الصفراء مهمة قبل الإطلاق، والرمادية للمتابعة.</p>
       <% end %>
     </div>
-    <% if can?(:content) %>
+
+    <%# 5 — content at a glance %>
+    <% if @content %>
     <div class="card">
-      <div class="card-head"><h2>المحتوى</h2></div>
-      <table class="adm-table">
-        <thead><tr><th>القسم</th><th>الإجمالي</th><th>منشور / بملف</th><th></th></tr></thead>
-        <tbody><% @content.each do |label, (total, pub, href)| %><tr><td><a href="<%= href %>"><%= label %></a></td><td><%= total %></td><td><%= pub %></td><td><a href="<%= href %>">إدارة ←</a></td></tr><% end %></tbody>
-      </table>
+      <div class="card-head"><h2>محتوى الموقع</h2></div>
+      <div class="content-tiles">
+        <% @content.each do |label, n, sub, href, icon| %>
+        <a href="<%= href %>" class="content-tile">
+          <span class="ct-ico"><%= admin_icon(icon, size: 20) %></span>
+          <span class="ct-body"><span class="ct-num"><%= n %></span><span class="ct-label"><%= label %></span><span class="ct-sub"><%= sub %></span></span>
+        </a>
+        <% end %>
+      </div>
     </div>
     <% end %>
   </div>

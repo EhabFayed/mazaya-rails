@@ -13,7 +13,7 @@ class ProductsController < ApplicationController
     @q = params[:q].to_s.strip.presence
     @sort = params[:sort].presence
     @products = site.products_in(@category[:slug]) # filtering is client-side; ?sub= ?kind= ?q= ?sort= pre-select
-    @catalog = site.download(@category[:catalog])
+    @catalog = site.download(@category[:catalog])   # title of the section catalog; the file is the B2C catalog
   end
 
   def show

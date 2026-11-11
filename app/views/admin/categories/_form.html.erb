@@ -6,7 +6,7 @@
     <div class="form-grid">
       <div class="full"><%= bi_field f, :name, "الاسم", required: true %></div>
       <div><label class="field-label" for="category_slug">الرابط (slug)</label><%= f.text_field :slug, class: "field sm", dir: "ltr", placeholder: "ladders", data: { slug_target: "" } %><div class="hint">يُولَّد من الاسم الإنجليزي إن تُرك فارغًا. يظهر في عنوان الصفحة /products/…</div></div>
-      <div><label class="field-label" for="category_catalog_key">الكتالوج المرتبط</label><%= f.select :catalog_key, options_from_collection_for_select(@catalog_docs, :key, :title_ar, @category.catalog_key), { include_blank: "— الافتراضي —" }, class: "field sm" %><div class="hint">من صفحة الوثائق (كتالوج أو كتالوج فني).</div></div>
+      <div><label class="field-label" for="category_catalog_key">الكتالوج المرتبط</label><%= f.select :catalog_key, options_from_collection_for_select(@catalog_docs, :key, :title_ar, @category.catalog_key), { include_blank: "— الافتراضي —" }, class: "field sm" %><div class="hint">من صفحة «الكتالوجات والملفات».</div></div>
       <div><label class="field-label" for="category_position">الترتيب</label><%= f.number_field :position, class: "field sm", dir: "ltr", step: 1 %></div>
       <div style="display:flex;align-items:end"><label style="display:flex;align-items:center;gap:8px;font-weight:700;color:#192C7B;padding-bottom:10px"><%= f.check_box :published %> منشورة على الموقع</label></div>
       <div class="full"><%= bi_field f, :finder, "سؤال «مساعد الاختيار»", hint: "سطر قصير يظهر في بطاقة الفئة بالصفحة الرئيسية." %></div>

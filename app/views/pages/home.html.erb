@@ -96,7 +96,7 @@
 <section id="certifications" class="section-pad bg-soft">
   <div class="wrap">
     <%= render "shared/section_head", label: t("home.certifications.label"), h2: t("home.certifications.h2"), desc: t("home.certifications.desc"), center: true %>
-    <div class="grid-4">
+    <div class="grid-4 cert-cards">
       <% SiteData::CERTIFICATIONS.each do |c| %>
       <a data-reveal href="<%= quality_path %>#certifications" class="feature-card card-hover">
         <% if c[:image] %>
@@ -169,8 +169,8 @@
     <div class="grid-3">
       <% @latest_news.each do |post| %><%= render "shared/post_card", post: post %><% end %>
     </div>
-    <div data-reveal style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px" id="social">
-      <span style="align-self:center;color:#686B70;font-weight:700;font-size:15px"><%= t("home.news.cta") %></span>
+    <div data-reveal class="social-follow" id="social">
+      <span class="social-follow-label"><%= t("home.news.cta") %></span>
       <% SiteData::SOCIAL.each do |s| %><a href="<%= s[:url] %>" class="social" style="background:#192C7B" title="<%= s[:label] %>" aria-label="<%= s[:label] %>" target="_blank" rel="noopener"><%= social_icon(s) %></a><% end %>
     </div>
   </div>

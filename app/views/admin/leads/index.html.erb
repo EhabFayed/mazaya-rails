@@ -29,16 +29,20 @@
     <a href="<%= admin_leads_path(kind: k, status: @status, q: @q.presence) %>" class="filter<%= ' active' if @kind == k %>"><%= LeadMailer::KIND_LABELS[k] %> (<%= @counts[k] || 0 %>)</a>
   <% end %>
 </div>
+<div class="filters chips">
+  <a href="<%= admin_leads_path(kind: @kind, status: @status, q: @q.presence) %>" class="filter<%= ' active' unless @unread %>">الكل</a>
+  <a href="<%= admin_leads_path(kind: @kind, status: @status, q: @q.presence, unread: 1) %>" class="filter<%= ' active' if @unread %>">غير مقروء (<%= @unread_count %>)</a>
+</div>
 
 <% if @leads.empty? %>
-  <div class="card" style="text-align:center"><p class="muted"><%= @q.present? || @kind || @status ? "لا توجد طلبات مطابقة لهذا الفلتر." : "لا توجد طلبات بعد." %></p></div>
+  <div class="card" style="text-align:center"><p class="muted"><%= @q.present? || @kind || @status || @unread ? "لا توجد طلبات مطابقة لهذا الفلتر." : "لا توجد طلبات بعد." %></p></div>
 <% else %>
 <table class="adm-table">
-  <thead><tr><th>#</th><th>الوقت</th><th>النوع</th><th>الاسم</th><th>التواصل</th><th>الاهتمام / الملف</th><th>الحالة</th><th>المسؤول</th><th>مرفقات</th></tr></thead>
+  <thead><tr><th>#</th><th>الوقت</th><th>النوع</th><th>الاسم</th><th>التواصل</th><th>الاهتمام / الملف</th><th>الحالة</th><th>المسؤول</th><th>مرفقات</th><th>إجراءات</th></tr></thead>
   <tbody>
     <% @leads.each do |l| %>
-    <tr>
-      <td><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td>
+    <tr class="<%= 'is-unread' unless l.read? %>">
+      <td><% unless l.read? %><span class="unread-dot" title="غير مقروء"></span><% end %><a href="<%= admin_lead_path(l) %>"><%= l.id %></a></td>
       <td dir="ltr" style="white-space:nowrap;text-align:end"><%= l.created_at.strftime("%Y-%m-%d %H:%M") %></td>
       <td><span class="kind kind-<%= l.kind %>"><%= LeadMailer::KIND_LABELS.fetch(l.kind, l.kind) %></span></td>
       <td><a href="<%= admin_lead_path(l) %>"><%= l.name %></a><% if l.payload["company"].present? %><div class="hint"><%= l.payload["company"] %></div><% end %></td>
@@ -47,6 +51,14 @@
       <td><span class="status status-<%= l.status %>"><%= AdminHelper::LEAD_STATUS.fetch(l.status, l.status) %></span></td>
       <td><%= l.assigned_to&.name || "—" %></td>
       <td><%= l.files.attached? ? l.files.size : "—" %></td>
+      <td>
+        <div class="row-actions">
+          <%= button_to (l.read? ? "غير مقروء" : "مقروء"), toggle_read_admin_lead_path(l), method: :patch, class: "btn-outline sm", form_class: "inline-form", title: (l.read? ? "تحديد كغير مقروء" : "تحديد كمقروء") %>
+          <% if current_user.admin? %>
+            <%= button_to "حذف", admin_lead_path(l, request.query_parameters.slice("kind", "status", "q", "unread", "page")), method: :delete, class: "btn-danger sm", form_class: "inline-form", data: { confirm: "حذف الطلب ##{l.id} (#{l.name}) نهائيًا؟ لا يمكن التراجع." } %>
+          <% end %>
+        </div>
+      </td>
     </tr>
     <% end %>
   </tbody>

@@ -1,6 +1,6 @@
 <% content_for :title, "#{@post[:title]} — #{t("nav.news")} — #{t("brand")}" %>
 <% content_for :description, @post[:excerpt] %>
-<% content_for :nav_active, "company" %>
+<% content_for :nav_active, "news" %>
 <% kind_label = @post[:type] == :news ? t("news.show.news") : t("news.show.article") %>
 <style>
   .article{max-width:760px;margin:0 auto}

@@ -99,7 +99,7 @@
       <a data-wa href="#" class="btn-wa"><%= render "shared/wa_icon", size: 18 %> <%= t("common.whatsapp") %></a>
     </div>
     <form data-reveal data-lead-form data-kind="contact" data-source="original-verify" data-wa-title="<%= t('original.verify.cta') %>" class="form-card">
-      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input type="text" name="mz_trap" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div>
         <label class="field-label" for="verify-product"><%= t("original.verify.product") %></label>
         <input id="verify-product" name="product" class="field" data-label="<%= t("original.verify.product") %>" required>

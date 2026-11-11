@@ -119,7 +119,7 @@
     form.querySelectorAll('input, select, textarea').forEach(function (f) {
       if (!f.name || f.type === 'submit') return;
       if (f.type === 'file') { Array.prototype.forEach.call(f.files, function (file) { fd.append('lead[files][]', file); }); if (f.files.length) lines.push((f.getAttribute('data-label') || 'مرفقات') + ': ' + f.files.length); return; }
-      if (f.name === 'website') { fd.append('website', f.value); return; }
+      if (f.name === 'mz_trap') { fd.append('mz_trap', f.value); return; }   // honeypot, not shown in the WhatsApp text
       var val = f.value;
       if (f.tagName === 'SELECT' && f.multiple) val = Array.prototype.map.call(f.selectedOptions, function (o) { return o.value; }).filter(Boolean).join('، ');
       else if (f.tagName === 'SELECT' && f.selectedIndex === 0 && !f.options[0].value) val = '';
@@ -192,7 +192,7 @@
     gate.hidden = false; body.style.overflow = 'hidden';
     var first = gate.querySelector('input:not([type=hidden]):not(.hp)'); if (first) first.focus();
   }
-  function closeGate() { gate.hidden = true; body.style.overflow = ''; }
+  function closeGate() { gate.hidden = true; body.style.overflow = ''; if (gateForm) gateForm.classList.remove('is-done'); }
   if (gate) {
     document.addEventListener('click', function (e) {
       var a = e.target.closest('[data-gate]');
@@ -205,8 +205,17 @@
       e.preventDefault();
       submitLead(gateForm, function (j) {
         try { sessionStorage.setItem('mz_gate', '1'); } catch (err) {}
-        closeGate(); gateForm.reset();
-        window.open(j.file || pendingHref, '_blank', 'noopener');
+        var file = j.file || pendingHref;
+        gateForm.reset();
+        // lead saved: show the confirmation with a real download link, and start the download.
+        // A download link click (not window.open) is not treated as a popup, so browsers don't block it.
+        var link = gateForm.querySelector('[data-gate-file]');
+        link.href = file;
+        gateForm.classList.add('is-done');
+        var a = document.createElement('a');
+        a.href = file; a.download = ''; a.rel = 'noopener';
+        document.body.appendChild(a); a.click(); a.remove();
+        link.focus();
       }, function () {});
     });
   }
