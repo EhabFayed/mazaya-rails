@@ -465,8 +465,8 @@
   if (finder) {
     finder.addEventListener('submit', function (e) {
       e.preventDefault();
-      // the finder lives on منتجات حسب الطلب, so every answer lands on the custom (B2C) list;
-      // the category options already carry ?kind=custom
+      // every answer lands on the category with the "all" filter;
+      // the category options carry no ?kind=
       var cat = finder.querySelector('[name=q1]:checked');
       location.href = cat ? cat.value : '/products';
     });

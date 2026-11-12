@@ -1837,40 +1837,69 @@ body.ltr .ph-slot.video::after {
   }
 }
 
-/* Same hover behaviour for any two-card grid marked .expand-pair (about → "What we do").
-   The narrowed card fades back with a filter: the scroll-reveal pins inline opacity on each card. */
+/* Two-card grid marked .expand-pair (about → "What we do"): the same idea as the home doors
+   (hovering a card widens it), tuned for white cards with text so it reads calm, not jumpy:
+   - a smaller swap (1.2 / 0.8) over a soft ease, so the text barely re-wraps;
+   - a short hover-intent delay, so crossing the gap between the cards doesn't flicker;
+   - the other card fades into the page background instead of under a dark veil (no white→navy flash);
+   - the paragraph always reserves three lines, so no card ever changes height (nothing collapses). */
 @media (hover: hover) and (min-width: 961px) {
+  /* the resting tracks must be spelled out: .grid-2 gives repeat(2, 1fr), and browsers won't
+     interpolate repeat() to an explicit list, so the swap would jump with no transition */
   .expand-pair {
-    transition: grid-template-columns 0.6s cubic-bezier(0.22, 0.8, 0.24, 1);
+    grid-template-columns: 1fr 1fr;
+    transition: grid-template-columns 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.06s;
   }
 
   .expand-pair:has(> :first-child:hover, > :first-child:focus-visible) {
-    grid-template-columns: 1.4fr 0.6fr;
+    grid-template-columns: 1.2fr 0.8fr;
   }
 
   .expand-pair:has(> :last-child:hover, > :last-child:focus-visible) {
-    grid-template-columns: 0.6fr 1.4fr;
+    grid-template-columns: 0.8fr 1.2fr;
   }
 
+  /* shadow eases in at the same unhurried pace; no lift (the width change is the motion) */
   .expand-pair>* {
-    transition: filter 0.45s;
+    position: relative;
+    transition: box-shadow 0.5s ease;
   }
 
-  .expand-pair .cat-body p {
-    max-height: 12em;
-    overflow: hidden;
-    transition:
-      opacity 0.35s,
-      max-height 0.5s;
+  .expand-pair>.card-hover-lg:hover {
+    transform: none;
   }
 
-  .expand-pair:has(> :hover, > :focus-visible)> :not(:hover):not(:focus-visible) {
-    filter: grayscale(0.6) opacity(0.7);
+  .expand-pair .cat-media img {
+    transition: transform 6s ease;
   }
 
-  .expand-pair:has(> :hover, > :focus-visible)> :not(:hover):not(:focus-visible) .cat-body p {
+  .expand-pair>*:hover .cat-media img {
+    transform: scale(1.05);
+  }
+
+  /* the other card softly recedes into the page background */
+  .expand-pair>*::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(244, 245, 247, 0.45);
     opacity: 0;
-    max-height: 0;
+    transition: opacity 0.5s ease 0.06s;
+    pointer-events: none;
+  }
+
+  .expand-pair:has(> :hover, > :focus-visible)> :not(:hover):not(:focus-visible)::after {
+    opacity: 1;
+  }
+
+  /* fixed text box: three lines reserved and clamped, so re-wrapping never moves anything */
+  .expand-pair .cat-body p {
+    min-height: calc(1.8em * 3);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 

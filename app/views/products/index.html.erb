@@ -16,7 +16,10 @@
   .chip-opt:hover span{border-color:#192C7B;color:#192C7B}
   .chip-opt input:checked+span{background:#192C7B;border-color:#192C7B;color:#fff}
   .chip-opt input:focus-visible+span{outline:2px solid #B9C6F2;outline-offset:2px}
-  @media (max-width:960px){.cat-grid{grid-template-columns:1fr}.cat-grid>*{grid-column:auto}}
+  /* one column below desktop; the reset must out-rank :nth-child(n+4), or cards 4–5 keep "span 3"
+     and force three implicit columns that squeeze every card */
+  @media (max-width:960px){.cat-grid{grid-template-columns:1fr;gap:16px}.cat-grid>*,.cat-grid>*:nth-child(n+4){grid-column:auto}}
+  @media (min-width:641px) and (max-width:960px){.cat-grid{grid-template-columns:1fr 1fr}.cat-grid>*:last-child:nth-child(odd){grid-column:1 / -1}}
 </style>
 
 <%# 01 — Hero %>
@@ -32,7 +35,7 @@
     <%= render "shared/section_head", label: t("b2c.categories.label"), h2: t("b2c.categories.h2"), desc: t("b2c.categories.desc"), center: true %>
     <div class="cat-grid">
       <% @categories.each do |c| %>
-      <%= render "shared/category_card", category: c, desc: c[:b2c], cta: t("common.explore_category"), kind: "custom" %>
+      <%= render "shared/category_card", category: c, desc: c[:b2c], cta: t("common.explore_category"), kind: @kind %>
       <% end %>
     </div>
   </div>
@@ -47,7 +50,7 @@
         <legend class="finder-label" style="padding:0;margin-bottom:12px"><%= num(1) %> — <%= t("b2c.finder.q1") %></legend>
         <div class="chips">
           <% @categories.each_with_index do |c, i| %>
-          <label class="chip-opt"><input type="radio" name="q1" value="<%= product_category_path(c[:slug], kind: "custom") %>"<%= ' required' if i.zero? %>><span><%= c[:finder] %></span></label>
+          <label class="chip-opt"><input type="radio" name="q1" value="<%= product_category_path(c[:slug], kind: @kind) %>"<%= ' required' if i.zero? %>><span><%= c[:finder] %></span></label>
           <% end %>
         </div>
       </fieldset>

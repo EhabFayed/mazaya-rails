@@ -3,6 +3,7 @@ class ProductsController < ApplicationController
   def index
     @categories = site::CATEGORIES
     @popular = site.popular_products
+    @kind = params[:kind].presence_in(%w[ready custom]) # carried on to the category pages (e.g. from the home page's "custom" card)
   end
 
   def category
